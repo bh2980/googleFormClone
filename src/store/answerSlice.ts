@@ -17,7 +17,10 @@ const answerSlice = createSlice({
   name: "answer",
   initialState,
   reducers: {
-    setAnswer(state, action: PayloadAction<AnswerInterface>) {
+    addAnswer(state, action: PayloadAction<AnswerInterface>) {
+      state[action.payload.answerID] = action.payload;
+    },
+    editAnswer(state, action: PayloadAction<AnswerInterface>) {
       state[action.payload.answerID] = action.payload;
     },
     removeAnswer(state, action: PayloadAction<AnswerInterface>) {
@@ -26,7 +29,7 @@ const answerSlice = createSlice({
   },
 });
 
-export const { setAnswer, removeAnswer } = answerSlice.actions;
+export const { addAnswer, editAnswer, removeAnswer } = answerSlice.actions;
 
 const answerReducer = answerSlice.reducer;
 export default answerReducer;
