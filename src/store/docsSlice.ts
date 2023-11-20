@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { removeQuestion } from "./questionSlice";
+import { addQuestion, copyQuestion, removeQuestion } from "./questionSlice";
 
 interface DocsInterface {
   title: string;
@@ -26,10 +26,18 @@ const docsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(removeQuestion, (state, action) => {
-      console.log(action);
-      state.questionIDList = state.questionIDList.filter((qID) => qID !== action.payload.questionID);
-    });
+    builder
+      .addCase(removeQuestion, (state, action) => {
+        console.log("docs에서", action.payload.questionID, "삭제");
+        state.questionIDList = state.questionIDList.filter((qID) => qID !== action.payload.questionID);
+      })
+      .addCase(addQuestion, (state, action) => {
+        console.log("docs에", action.payload.questionID, "추가");
+        state.questionIDList.push(action.payload.questionID);
+      })
+      .addCase(copyQuestion, (state, action) => {
+        //들어온 action.payload.questionID를 parentQuestionID의 idx 뒤에 삽입
+      });
   },
 });
 
