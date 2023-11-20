@@ -8,17 +8,17 @@ import Switch from "./common/Switch";
 import Dropdown from "./common/Dropdown";
 import { useState } from "react";
 
-type BlockType = "short" | "long" | "radio" | "checkbox" | "dropdown";
+import type { QuestionKindType } from "../store/questionSlice";
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
-  type?: BlockType;
+  type?: QuestionKindType;
   isForm?: boolean;
 }
 /**
  * QuestionBlock은 BlockID를 받아서 QuestionManager에게 전달
  */
 const QuestionBlock = ({ type = "short", ...props }: QuestionBlockProps) => {
-  const [blockType, setBlockType] = useState<BlockType>(type);
+  const [blockType, setBlockType] = useState<QuestionKindType>(type);
 
   const changeBlockType = (idx: number) => {
     //blockType이 변경되면 block의 questionList 초기화
@@ -33,8 +33,8 @@ const QuestionBlock = ({ type = "short", ...props }: QuestionBlockProps) => {
 
   return (
     <Block className="w-full" {...props}>
-      <div className="flex justify-center w-full py-2 cursor-move" onClick={dragBlock}>
-        <RiDraggable className="rotate-90" />
+      <div className="flex justify-center w-full py-2 cursor-move group" onClick={dragBlock}>
+        <RiDraggable className="invisible rotate-90 group-hover:visible" />
       </div>
       <div className="flex flex-col gap-6 px-6 pb-6">
         <div className="flex items-center justify-between gap-4 group">
