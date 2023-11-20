@@ -11,7 +11,7 @@ interface DropdownItem {
 interface DropdownProps {
   className?: string;
   itemList: DropdownItem[];
-  onChange?: (...params: unknown[]) => unknown;
+  onChange?: (idx: number) => void;
 }
 
 const Dropdown = ({ className, itemList = [], onChange }: DropdownProps) => {
