@@ -17,6 +17,7 @@ import {
   RiRadioButtonLine,
   RiDropdownList,
 } from "react-icons/ri";
+import TitleBlock from "./component/TitleBlock";
 
 function App() {
   return (
@@ -28,13 +29,7 @@ function App() {
           <RiAddCircleLine className="w-[24px] h-[24px]" />
         </div>
 
-        <div className="w-[720px] bg-white rounded-xl flex flex-col justify-between overflow-hidden">
-          <div className="w-full h-[8px] bg-violet-800"></div>
-          <div className="flex flex-col gap-6 p-8">
-            <div className="text-3xl">제목 없는 설문지</div>
-            <div>안녕하세요</div>
-          </div>
-        </div>
+        <TitleBlock />
 
         <fieldset className="w-[720px] bg-white rounded-xl p-8 flex flex-col gap-8 justify-between">
           <div>
