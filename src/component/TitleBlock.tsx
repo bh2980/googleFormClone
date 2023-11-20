@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../hook/storeHook";
 import { editContent, editTitle } from "../store/titleSlice";
+import Block from "./common/Block";
 import Input from "./common/Input";
 
 const TitleBlock = () => {
@@ -15,13 +16,10 @@ const TitleBlock = () => {
   };
 
   return (
-    <div className="w-[720px] bg-white rounded-xl flex flex-col justify-between overflow-hidden">
-      <div className="w-full h-[8px] bg-violet-800"></div>
-      <div className="flex flex-col gap-6 p-8">
-        <Input className="text-3xl" onChange={changeTitle} value={title} placeholder="제목을 입력하세요" />
-        <Input value={content} onChange={changeContent} placeholder="설명을 입력하세요" />
-      </div>
-    </div>
+    <Block className="flex flex-col w-full gap-6 p-6" isTitleBlock>
+      <Input className="text-3xl" onChange={changeTitle} value={title} placeholder="제목을 입력하세요" />
+      <Input value={content} onChange={changeContent} placeholder="설명을 입력하세요" />
+    </Block>
   );
 };
 
