@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../hook/storeHook";
-import { editContent, editTitle } from "../store/titleSlice";
+import { editContent, editTitle } from "../store/docsSlice";
 import Block from "./common/Block";
 import Input from "./common/Input";
 

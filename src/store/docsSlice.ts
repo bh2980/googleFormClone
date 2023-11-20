@@ -1,13 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-const initialState = {
-  id: "title",
+interface initialStateType {
+  title: string;
+  content: string;
+  blockIDList: string[];
+}
+
+const initialState: initialStateType = {
   title: "",
   content: "",
+  blockIDList: [],
 };
 
-const titleSlice = createSlice({
+const docsSlice = createSlice({
   name: "title",
   initialState,
   reducers: {
@@ -20,7 +26,7 @@ const titleSlice = createSlice({
   },
 });
 
-export const { editTitle, editContent } = titleSlice.actions;
+export const { editTitle, editContent } = docsSlice.actions;
 
-const titleReducer = titleSlice.reducer;
-export default titleReducer;
+const docsReducer = docsSlice.reducer;
+export default docsReducer;

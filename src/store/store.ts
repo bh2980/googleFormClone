@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import titleReducer from "./titleSlice";
+import docsReducer from "./docsSlice";
 
 export const store = configureStore({
   reducer: {
-    title: titleReducer,
+    title: docsReducer,
   },
 });
 
