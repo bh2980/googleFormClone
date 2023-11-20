@@ -1,20 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-interface initialStateType {
+interface DocsInterface {
   title: string;
   content: string;
   blockIDList: string[];
 }
 
-const initialState: initialStateType = {
+const initialState: DocsInterface = {
   title: "",
   content: "",
   blockIDList: [],
 };
 
 const docsSlice = createSlice({
-  name: "title",
+  name: "docs",
   initialState,
   reducers: {
     editTitle(state, action: PayloadAction<string>) {

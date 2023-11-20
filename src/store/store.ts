@@ -3,7 +3,7 @@ import docsReducer from "./docsSlice";
 
 export const store = configureStore({
   reducer: {
-    title: docsReducer,
+    docs: docsReducer,
   },
 });
 

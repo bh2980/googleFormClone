@@ -5,7 +5,7 @@ import Input from "./common/Input";
 
 const TitleBlock = () => {
   const dispatch = useAppDispatch();
-  const { title, content } = useAppSelector((store) => store.title);
+  const { title, content } = useAppSelector((store) => store.docs);
 
   const changeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(editTitle(e.target.value));
