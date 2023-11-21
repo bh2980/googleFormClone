@@ -106,14 +106,10 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
 
         if (lastUnderBlockIdx.current > underQBlockIdx) {
           console.log("hello");
-          questionBlock.style.transform = `translateY(${
-            draggedElementHeight + (findQuestionIdx(questionID) - underQBlockIdx) * gap
-          }px)`;
+          questionBlock.style.transform = `translateY(${draggedElementHeight + gap}px)`;
         } else {
           console.log("below");
-          questionBlock.style.transform = `translateY(-${
-            draggedElementHeight - (findQuestionIdx(questionID) - underQBlockIdx) * gap
-          }px)`;
+          questionBlock.style.transform = `translateY(-${draggedElementHeight + gap}px)`;
         }
 
         lastUnderBlockIdx.current = underQBlockIdx;
