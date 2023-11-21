@@ -33,12 +33,15 @@ const QuestionBlock = ({ questionID, type = "short", ...props }: QuestionBlockPr
   };
 
   const copyQuestionBlock = () => {
-    // answerList로부터 answer를 가져와 deepcopy -> answerMap에 새로 등록
-    // 새 uuid 발급
-    // 그 외 정보 그대로 복사해서 copyQuestion
-    // REDUX에서는 copyQuestion시 questionMap에 신규 등록
-    // docsSlice에서 splice를 통해 이전 questionID 이후에 삽입
-    // dispatch(copyQuestion(questionInfo));
+    const NEW_QUESTION_ID = v4();
+
+    dispatch(
+      copyQuestion({ ...questionInfo, questionID: NEW_QUESTION_ID, answerIDList: [], parentQuestionID: questionID })
+    );
+
+    answerIDList.map((aID) => {
+      dispatch(addAnswer({ ...answerMap[aID], answerID: v4(), questionID: NEW_QUESTION_ID }));
+    });
   };
 
   const changeQuestionType = (idx: number) => {
@@ -57,10 +60,6 @@ const QuestionBlock = ({ questionID, type = "short", ...props }: QuestionBlockPr
   const changeRequired = () => {
     dispatch(editQuestion({ ...questionInfo, required: !required }));
   };
-
-  useEffect(() => {
-    console.log("정보 변경", questionInfo);
-  }, [questionInfo]);
 
   // 나중에
   const dragBlock = () => {

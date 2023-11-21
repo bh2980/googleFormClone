@@ -30,7 +30,7 @@ const questionSlice = createSlice({
       state[action.payload.questionID] = action.payload;
     },
     copyQuestion(state, action: PayloadAction<QuestionInterface>) {
-      //들어온 action.payload를 Map에 등록
+      state[action.payload.questionID] = action.payload;
     },
     removeQuestion(state, action: PayloadAction<QuestionInterface>) {
       delete state[action.payload.questionID];

@@ -36,7 +36,8 @@ const docsSlice = createSlice({
         state.questionIDList.push(action.payload.questionID);
       })
       .addCase(copyQuestion, (state, action) => {
-        //들어온 action.payload.questionID를 parentQuestionID의 idx 뒤에 삽입
+        const parentIdx = state.questionIDList.findIndex((qID) => qID === action.payload.parentQuestionID);
+        state.questionIDList.splice(parentIdx + 1, 0, action.payload.questionID);
       });
   },
 });
