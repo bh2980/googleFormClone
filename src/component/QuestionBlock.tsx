@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from "../hook/storeHook";
 import AnswerManager from "./AnswerItemManager";
 import { addAnswer, removeAnswer } from "../store/answerSlice";
 import { v4 } from "uuid";
-import { useRef, useState } from "react";
+import useDnDList from "../hook/useDnDList";
 import { editQuestionBlockOrder } from "../store/docsSlice";
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
@@ -24,11 +24,26 @@ interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
  */
 const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
   const dispatch = useAppDispatch();
-  const questionInfo = useAppSelector((store) => store.question[questionID]);
-  const { questionContent, required, answerIDList, type } = questionInfo;
-  const answerMap = useAppSelector((store) => store.answer);
+  const GAP = 16;
 
+  const questionInfo = useAppSelector((store) => store.question[questionID]);
+  const answerMap = useAppSelector((store) => store.answer);
   const questionIDList = useAppSelector((store) => store.docs.questionIDList);
+
+  const { questionContent, required, answerIDList, type } = questionInfo;
+
+  const changeDnDOrder = (fromIdx: number, toIdx: number) => {
+    console.log(fromIdx, toIdx);
+    dispatch(editQuestionBlockOrder({ fromIdx, toIdx }));
+  };
+
+  const { handleDrag, divRef, WrapperStyle } = useDnDList({
+    itemIDList: questionIDList,
+    itemID: questionID,
+    gap: GAP,
+    dataAttrName: "data-question-id",
+    orderItem: changeDnDOrder,
+  });
 
   const removeQuestionBlock = () => {
     dispatch(removeQuestion(questionInfo));
@@ -63,106 +78,10 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
     dispatch(editQuestion({ ...questionInfo, required: !required }));
   };
 
-  // 이하 드래그 앤 드롭 낙서장
-
-  const findQuestionIdx = (findQID: string) => questionIDList.findIndex((qID) => qID === findQID);
-
-  const divRef = useRef<HTMLDivElement>(null);
-  const lastUnderBlockIdx = useRef<number>(findQuestionIdx(questionID));
-
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-
-  const onMouseDown = (clickEvent: React.MouseEvent<Element, MouseEvent>) => {
-    clickEvent.preventDefault();
-
-    if (!divRef?.current) return;
-
-    divRef.current.style.pointerEvents = "none";
-    divRef.current.style.opacity = "80%";
-
-    const mouseMoveHandler = (moveEvent: MouseEvent) => {
-      const deltaY = moveEvent.clientY - clickEvent.clientY;
-
-      setMousePos({
-        x: mousePos.x,
-        y: mousePos.y + deltaY,
-      });
-
-      const itemUnderCursor = document.elementFromPoint(moveEvent.clientX, moveEvent.clientY) as HTMLElement;
-
-      const questionBlock = itemUnderCursor.closest("[data-question-id]") as HTMLElement;
-
-      if (questionBlock) {
-        const underQBlockIdx = findQuestionIdx(questionBlock.dataset.questionId!);
-
-        // 같을 때 처리
-        if (lastUnderBlockIdx.current === underQBlockIdx || !divRef.current) return;
-
-        const draggedElementHeight = divRef.current.offsetHeight;
-
-        // 모듈화 시 받을 것
-        const gap = 16;
-
-        questionBlock.style.position = "relative";
-
-        const top = parseInt((questionBlock.style.top ? questionBlock.style.top : "0px").replace("px", ""));
-
-        if (lastUnderBlockIdx.current > underQBlockIdx) {
-          //위로
-          // questionBlock.style.transform = `translateY(${draggedElementHeight + gap}px)`;
-          questionBlock.style.top = `${top + draggedElementHeight + gap}px`;
-          lastUnderBlockIdx.current = underQBlockIdx - 0.1;
-        } else {
-          // 아래로 가는 경우
-          questionBlock.style.top = `${top - draggedElementHeight - gap}px`;
-          lastUnderBlockIdx.current = underQBlockIdx + 0.1;
-        }
-      }
-    };
-
-    document.addEventListener("mousemove", mouseMoveHandler);
-    document.addEventListener(
-      "mouseup",
-      (upEvent) => {
-        document.removeEventListener("mousemove", mouseMoveHandler);
-
-        if (!divRef?.current) return;
-
-        divRef.current.style.pointerEvents = "";
-        divRef.current.style.opacity = "100%";
-
-        setMousePos({
-          x: 0,
-          y: 0,
-        });
-
-        const dragQBlockIdx = findQuestionIdx(questionID);
-        const targetIdx =
-          ((lastUnderBlockIdx.current + 1) * 10) % 10 === 9
-            ? lastUnderBlockIdx.current + 0.1
-            : lastUnderBlockIdx.current - 0.1;
-
-        dispatch(editQuestionBlockOrder({ fromIdx: dragQBlockIdx, toIdx: targetIdx }));
-
-        const allQuestionBlocks = document.querySelectorAll("[data-question-id]");
-        allQuestionBlocks.forEach((block) => {
-          (block as HTMLElement).style.top = "0px";
-          (block as HTMLElement).style.position = "";
-        });
-      },
-      { once: true }
-    );
-  };
-
   return (
-    <div
-      style={{ transform: `translateX(${mousePos.x}px) translateY(${mousePos.y}px)` }}
-      className={`hover:shadow-lg`}
-      ref={divRef}
-      data-question-id={questionID}
-    >
+    <div style={WrapperStyle} className={`hover:shadow-lg`} ref={divRef} data-question-id={questionID}>
       <Block className="w-full group" {...props}>
-        <div className="flex justify-center w-full py-2 cursor-move group" onMouseDown={onMouseDown}>
+        <div className="flex justify-center w-full py-2 cursor-move group" onMouseDown={handleDrag}>
           <RiDraggable className="invisible rotate-90 group-hover:visible" />
         </div>
         <div className="flex flex-col gap-4 pb-8">
