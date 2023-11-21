@@ -68,7 +68,7 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
         <div className="flex items-center justify-between gap-4 group">
           <Input
             placeholder="질문"
-            className="group-focus-within:hover:bg-gray-200 group-focus-within:bg-gray-100 group-focus-within:p-4 w-[440px]"
+            className="w-full group-focus-within:hover:bg-gray-200 group-focus-within:bg-gray-100 group-focus-within:p-4"
             onChange={changeQuestionContent}
             value={questionContent}
           />
