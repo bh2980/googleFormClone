@@ -3,6 +3,7 @@
  * answer 상태에서 answerIDLIst를 순회하면서 answer을 뽑아 알맞게 렌더링한다
  */
 
+import { useRef } from "react";
 import { EDITOR_QUESTION_TYPE } from "../constants";
 import { useAppDispatch, useAppSelector } from "../hook/storeHook";
 import { AnswerInterface, addAnswer, editAnswer, removeAnswer } from "../store/answerSlice";
@@ -21,6 +22,8 @@ const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
   const { type, answerIDList } = useAppSelector((store) => store.question[questionID]);
   const answerMap = useAppSelector((store) => store.answer);
 
+  const chooseAnswerRef = useRef<(null | HTMLInputElement)[]>([]);
+
   const changeAnswer = (e: React.ChangeEvent<HTMLInputElement>, { answerID, questionID }: AnswerInterface) => {
     dispatch(editAnswer({ answerID, content: e.target.value, questionID }));
   };
@@ -31,8 +34,20 @@ const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
     dispatch(addAnswer({ answerID: NEW_ANSWER_ID, content: "", questionID }));
   };
 
-  const removeAnswerItem = (aID: string) => {
-    //remove시 마지막 answer에 focus가 위차하도록 수정
+  const removeAnswerItem = (aID: string, idx: number) => {
+    // 삭제 시 focus 처리
+    if (chooseAnswerRef && chooseAnswerRef.current) {
+      if (idx >= 1 && chooseAnswerRef.current[idx - 1] instanceof HTMLInputElement) {
+        chooseAnswerRef.current[idx - 1]!.focus();
+      } else {
+        chooseAnswerRef.current[idx + 1]!.focus();
+      }
+    }
+
+    if (chooseAnswerRef && chooseAnswerRef.current) {
+      chooseAnswerRef.current = chooseAnswerRef.current.filter((_, i) => i !== idx);
+    }
+
     dispatch(removeAnswer(answerMap[aID]));
   };
 
@@ -55,7 +70,8 @@ const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
                 placeholder={`옵션 ${idx + 1}`}
                 onChange={(e) => changeAnswer(e, answerInfo)}
                 deletable={answerIDList.length > 1}
-                onDeleteButton={() => removeAnswerItem(aID)}
+                onDeleteButton={() => removeAnswerItem(aID, idx)}
+                innerRef={(el) => (chooseAnswerRef.current[idx] = el)}
               />
             );
           })}

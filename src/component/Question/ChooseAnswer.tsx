@@ -4,15 +4,24 @@ import IconButton from "../common/IconButton";
 import { EDITOR_QUESTION_TYPE, ICON_CLASS } from "../../constants";
 
 interface RadioAnswerProps extends React.ComponentPropsWithRef<"input"> {
+  inputType: EDITOR_QUESTION_TYPE.radio | EDITOR_QUESTION_TYPE.checkbox | EDITOR_QUESTION_TYPE.dropdown;
   idx?: number;
   deletable?: boolean;
   isForm?: boolean; //에디터인지 설문폼인지 확인
   onDeleteButton?: (...params: unknown[]) => unknown;
-  inputType: EDITOR_QUESTION_TYPE.radio | EDITOR_QUESTION_TYPE.checkbox | EDITOR_QUESTION_TYPE.dropdown;
+  innerRef?: React.ComponentPropsWithRef<"input">["ref"];
 }
 
 //드래그는 나중에
-const ChooseAnswer = ({ idx, deletable = true, inputType, isForm, onDeleteButton, ...props }: RadioAnswerProps) => {
+const ChooseAnswer = ({
+  inputType,
+  idx,
+  deletable = true,
+  isForm,
+  onDeleteButton,
+  innerRef,
+  ...props
+}: RadioAnswerProps) => {
   return (
     <div className="flex items-center justify-between group">
       <div className="relative flex items-center w-full gap-4">
@@ -36,9 +45,9 @@ const ChooseAnswer = ({ idx, deletable = true, inputType, isForm, onDeleteButton
           )}
         </div>
         {isForm ? (
-          <Input className="w-full" disabled={isForm} />
+          <Input className="w-full" disabled={isForm} innerRef={innerRef} />
         ) : (
-          <Input className="w-full" disabled={isForm} {...props} />
+          <Input className="w-full" disabled={isForm} {...props} innerRef={innerRef} />
         )}
       </div>
       {deletable && !isForm && (

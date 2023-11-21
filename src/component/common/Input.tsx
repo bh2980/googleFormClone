@@ -1,10 +1,13 @@
 import classMerge from "../../utils/classMerge";
 
-interface InputProps extends React.ComponentPropsWithRef<"input"> {}
+interface InputProps extends React.ComponentPropsWithRef<"input"> {
+  innerRef?: React.ComponentPropsWithRef<"input">["ref"];
+}
 
-const Input = ({ className, ...props }: InputProps) => {
+const Input = ({ className, innerRef, ...props }: InputProps) => {
   return (
     <input
+      ref={innerRef}
       className={classMerge([
         "py-2",
         "border-b-[2px]",
