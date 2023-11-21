@@ -11,6 +11,8 @@ import { useEffect } from "react";
 import { removeQuestion, type QuestionKindType, editQuestion, copyQuestion } from "../store/questionSlice";
 import { useAppDispatch, useAppSelector } from "../hook/storeHook";
 import AnswerManager from "./AnswerItemManager";
+import { addAnswer, removeAnswer } from "../store/answerSlice";
+import { v4 } from "uuid";
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
   questionID: string;
@@ -23,7 +25,7 @@ interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
 const QuestionBlock = ({ questionID, type = "short", ...props }: QuestionBlockProps) => {
   const dispatch = useAppDispatch();
   const questionInfo = useAppSelector((store) => store.question[questionID]);
-  const { questionContent, required } = questionInfo;
+  const { questionContent, required, answerIDList } = questionInfo;
   const answerMap = useAppSelector((store) => store.answer);
 
   const removeQuestionBlock = () => {
@@ -40,10 +42,12 @@ const QuestionBlock = ({ questionID, type = "short", ...props }: QuestionBlockPr
   };
 
   const changeQuestionType = (idx: number) => {
-    //questionType이 변경되면 question의 answerList 초기화
-    //answerMap에서 answerList 항목 제거 delete
-    //answerList를 빈 배열로 변경
-    dispatch(editQuestion({ ...questionInfo, type: EDITOR_DROPDOWN_LIST[idx].type }));
+    answerIDList.map((aID) => {
+      dispatch(removeAnswer(answerMap[aID]));
+    });
+
+    dispatch(editQuestion({ ...questionInfo, type: EDITOR_DROPDOWN_LIST[idx].type, answerIDList: [] }));
+    dispatch(addAnswer({ answerID: v4(), content: "", questionID }));
   };
 
   const changeQuestionContent = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,7 +76,7 @@ const QuestionBlock = ({ questionID, type = "short", ...props }: QuestionBlockPr
         <div className="flex items-center justify-between gap-4 group">
           <Input
             placeholder="질문"
-            className="group-focus-within:border-gray-300 group-focus-within:border-b-2 group-focus-within:hover:bg-gray-200 group-focus-within:bg-gray-100 group-focus-within:p-4 w-[440px]"
+            className="group-focus-within:hover:bg-gray-200 group-focus-within:bg-gray-100 group-focus-within:p-4 w-[440px]"
             onChange={changeQuestionContent}
             value={questionContent}
           />
