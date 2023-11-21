@@ -68,7 +68,7 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
   const findQuestionIdx = (findQID: string) => questionIDList.findIndex((qID) => qID === findQID);
 
   const divRef = useRef<HTMLDivElement>(null);
-  const lastUnderBlockIdx = useRef<null | number>(null);
+  const lastUnderBlockIdx = useRef<number>(findQuestionIdx(questionID));
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
@@ -91,12 +91,30 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
 
       const itemUnderCursor = document.elementFromPoint(moveEvent.clientX, moveEvent.clientY) as HTMLElement;
 
-      const questionBlock = itemUnderCursor.closest("[data-question-id]");
+      const questionBlock = itemUnderCursor.closest("[data-question-id]") as HTMLElement;
 
       if (questionBlock) {
-        const underQBlockIdx = findQuestionIdx((questionBlock as HTMLElement).dataset.questionId!);
+        const underQBlockIdx = findQuestionIdx(questionBlock.dataset.questionId!);
 
-        if (lastUnderBlockIdx.current === underQBlockIdx) return;
+        // 같을 때 처리
+        if (lastUnderBlockIdx.current === underQBlockIdx || !divRef.current) return;
+
+        const draggedElementHeight = divRef.current.offsetHeight;
+
+        // 모듈화 시 받을 것
+        const gap = 16;
+
+        if (lastUnderBlockIdx.current > underQBlockIdx) {
+          console.log("hello");
+          questionBlock.style.transform = `translateY(${
+            draggedElementHeight + (findQuestionIdx(questionID) - underQBlockIdx) * gap
+          }px)`;
+        } else {
+          console.log("below");
+          questionBlock.style.transform = `translateY(-${
+            draggedElementHeight - (findQuestionIdx(questionID) - underQBlockIdx) * gap
+          }px)`;
+        }
 
         lastUnderBlockIdx.current = underQBlockIdx;
         console.log("Update", lastUnderBlockIdx.current);
@@ -120,13 +138,15 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
           y: 0,
         });
 
-        // questionID가 있는 node가 itemUnderCursor에 들어가지 않음
         if (lastUnderBlockIdx.current === null) return;
 
         const dragQBlockIdx = findQuestionIdx(questionID);
-
-        // //컴포넌트 배열 순서를 바꿔서 저장
         dispatch(editQuestionBlockOrder({ fromIdx: dragQBlockIdx, toIdx: lastUnderBlockIdx.current }));
+
+        const allQuestionBlocks = document.querySelectorAll("[data-question-id]");
+        allQuestionBlocks.forEach((block) => {
+          (block as HTMLElement).style.transform = "";
+        });
       },
       { once: true }
     );
