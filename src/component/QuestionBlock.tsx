@@ -121,7 +121,7 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
         });
 
         // questionID가 있는 node가 itemUnderCursor에 들어가지 않음
-        if (!lastUnderBlockIdx.current) return;
+        if (!lastUnderBlockIdx.current === null) return;
 
         const dragQBlockIdx = findQuestionIdx(questionID);
 
