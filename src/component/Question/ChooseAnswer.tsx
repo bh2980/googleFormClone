@@ -1,14 +1,14 @@
 import { RiCloseFill, RiDraggable } from "react-icons/ri";
 import Input from "../common/Input";
 import IconButton from "../common/IconButton";
-import { ICON_CLASS } from "../../constants";
+import { EDITOR_QUESTION_TYPE, ICON_CLASS } from "../../constants";
 
 interface RadioAnswerProps extends React.ComponentPropsWithRef<"input"> {
   idx?: number;
   deletable?: boolean;
   isForm?: boolean; //에디터인지 설문폼인지 확인
   onDeleteButton?: (...params: unknown[]) => unknown;
-  inputType: "radio" | "checkbox" | "dropdown";
+  inputType: EDITOR_QUESTION_TYPE.radio | EDITOR_QUESTION_TYPE.checkbox | EDITOR_QUESTION_TYPE.dropdown;
 }
 
 //드래그는 나중에
@@ -23,12 +23,16 @@ const ChooseAnswer = ({ idx, deletable = true, inputType, isForm, onDeleteButton
           />
         )}
         <div className="flex justify-center w-[16px]">
-          {inputType === "dropdown" ? (
+          {inputType === EDITOR_QUESTION_TYPE.dropdown ? (
             idx
           ) : isForm ? (
-            <input type={inputType} disabled={!isForm} {...props} />
+            <input
+              type={inputType === EDITOR_QUESTION_TYPE.radio ? "radio" : "checkbox"}
+              disabled={!isForm}
+              {...props}
+            />
           ) : (
-            <input type={inputType} disabled={!isForm} />
+            <input type={inputType === EDITOR_QUESTION_TYPE.radio ? "radio" : "checkbox"} disabled={!isForm} />
           )}
         </div>
         {isForm ? (

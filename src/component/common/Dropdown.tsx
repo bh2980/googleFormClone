@@ -1,5 +1,5 @@
 import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
-import { ICON_CLASS } from "../../constants";
+import { EDITOR_QUESTION_TYPE, ICON_CLASS } from "../../constants";
 import { useEffect, useRef, useState } from "react";
 import classMerge from "../../utils/classMerge";
 
@@ -12,11 +12,12 @@ interface DropdownProps {
   className?: string;
   itemList: DropdownItem[];
   onChange?: (idx: number) => void;
+  initialIdx?: EDITOR_QUESTION_TYPE;
 }
 
-const Dropdown = ({ className, itemList = [], onChange }: DropdownProps) => {
+const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUESTION_TYPE.short }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectIdx, setSelectIdx] = useState(0);
+  const [selectIdx, setSelectIdx] = useState(initialIdx);
   const dropdownListRef = useRef<HTMLDivElement>(null);
 
   const selectItem = (idx: number) => {

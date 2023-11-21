@@ -1,12 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { addAnswer, removeAnswer } from "./answerSlice";
-
-export type QuestionKindType = "short" | "long" | "radio" | "checkbox" | "dropdown";
+import { EDITOR_QUESTION_TYPE } from "../constants";
 
 export interface QuestionInterface {
   questionID: string;
-  type: QuestionKindType;
+  type: EDITOR_QUESTION_TYPE;
   required: boolean;
   questionContent: string;
   answerIDList: string[];

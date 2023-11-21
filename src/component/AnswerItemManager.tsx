@@ -3,6 +3,7 @@
  * answer 상태에서 answerIDLIst를 순회하면서 answer을 뽑아 알맞게 렌더링한다
  */
 
+import { EDITOR_QUESTION_TYPE } from "../constants";
 import { useAppDispatch, useAppSelector } from "../hook/storeHook";
 import { AnswerInterface, addAnswer, editAnswer, removeAnswer } from "../store/answerSlice";
 import ChooseAnswer from "./Question/ChooseAnswer";
@@ -37,11 +38,11 @@ const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
 
   return (
     <>
-      {type === "short" ? (
+      {type === EDITOR_QUESTION_TYPE.short ? (
         <ShortAnswer isForm={isForm} />
-      ) : type === "long" ? (
+      ) : type === EDITOR_QUESTION_TYPE.long ? (
         <LongAnswer isForm={isForm} />
-      ) : type === "radio" || type === "checkbox" || type === "dropdown" ? (
+      ) : (
         <>
           {answerIDList.map((aID, idx) => {
             const answerInfo = answerMap[aID];
@@ -61,7 +62,9 @@ const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
           <div className="flex items-center gap-4">
             <div className="flex items-center w-[104px] gap-4">
               <div className="flex justify-center w-[16px]">
-                {type !== "dropdown" && <input type={type} disabled />}
+                {type !== EDITOR_QUESTION_TYPE.dropdown && (
+                  <input type={EDITOR_QUESTION_TYPE.radio ? "radio" : "checkbox"} disabled />
+                )}
               </div>
               <span
                 className="w-full text-gray-500 cursor-text hover:underline decoration-gray-400"
@@ -77,7 +80,7 @@ const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
             </button> */}
           </div>
         </>
-      ) : null}
+      )}
     </>
   );
 };

@@ -6,9 +6,8 @@ import { EDITOR_DROPDOWN_LIST, ICON_CLASS } from "../constants";
 import IconButton from "./common/IconButton";
 import Switch from "./common/Switch";
 import Dropdown from "./common/Dropdown";
-import { useEffect } from "react";
 
-import { removeQuestion, type QuestionKindType, editQuestion, copyQuestion } from "../store/questionSlice";
+import { removeQuestion, editQuestion, copyQuestion } from "../store/questionSlice";
 import { useAppDispatch, useAppSelector } from "../hook/storeHook";
 import AnswerManager from "./AnswerItemManager";
 import { addAnswer, removeAnswer } from "../store/answerSlice";
@@ -16,16 +15,15 @@ import { v4 } from "uuid";
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
   questionID: string;
-  type?: QuestionKindType;
   isForm?: boolean;
 }
 /**
  * QuestionBlock은 BlockID를 받아서 QuestionManager에게 전달
  */
-const QuestionBlock = ({ questionID, type = "short", ...props }: QuestionBlockProps) => {
+const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
   const dispatch = useAppDispatch();
   const questionInfo = useAppSelector((store) => store.question[questionID]);
-  const { questionContent, required, answerIDList } = questionInfo;
+  const { questionContent, required, answerIDList, type } = questionInfo;
   const answerMap = useAppSelector((store) => store.answer);
 
   const removeQuestionBlock = () => {
@@ -61,14 +59,9 @@ const QuestionBlock = ({ questionID, type = "short", ...props }: QuestionBlockPr
     dispatch(editQuestion({ ...questionInfo, required: !required }));
   };
 
-  // 나중에
-  const dragBlock = () => {
-    console.log(type);
-  };
-
   return (
     <Block className="w-full group" {...props}>
-      <div className="flex justify-center w-full py-2 cursor-move group" onClick={dragBlock}>
+      <div className="flex justify-center w-full py-2 cursor-move group">
         <RiDraggable className="invisible rotate-90 group-hover:visible" />
       </div>
       <div className="flex flex-col gap-6 px-6 pb-6">
@@ -83,6 +76,7 @@ const QuestionBlock = ({ questionID, type = "short", ...props }: QuestionBlockPr
             className="hidden group-focus-within:flex"
             itemList={EDITOR_DROPDOWN_LIST}
             onChange={changeQuestionType}
+            initialIdx={type}
           />
         </div>
         <AnswerManager questionID={questionID} isForm={false} />
