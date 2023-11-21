@@ -64,8 +64,8 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
       <div className="flex justify-center w-full py-2 cursor-move group">
         <RiDraggable className="invisible rotate-90 group-hover:visible" />
       </div>
-      <div className="flex flex-col gap-4 px-6 pb-8">
-        <div className="flex items-center justify-between gap-4 group">
+      <div className="flex flex-col gap-4 pb-8">
+        <div className="flex items-center justify-between gap-4 group  mx-[32px]">
           <Input
             placeholder="질문"
             className="w-full group-focus-within:hover:bg-gray-200 group-focus-within:bg-gray-100 group-focus-within:p-4"
@@ -80,9 +80,9 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
           />
         </div>
         <AnswerManager questionID={questionID} isForm={false} />
-        <div className="flex-col hidden group-focus-within:flex group-focus-within:flex-col group-focus-within:gap-4">
+        <div className="flex-col mx-[32px] hidden group-focus-within:flex group-focus-within:flex-col group-focus-within:gap-4">
           <Divider />
-          <div className="flex items-center justify-end gap-2 pt-4 h-[48px]">
+          <div className="flex items-center justify-end gap-2 pt-4 h-[32px]">
             <IconButton onClick={copyQuestionBlock}>
               <RiFileCopyLine className={ICON_CLASS} />
             </IconButton>

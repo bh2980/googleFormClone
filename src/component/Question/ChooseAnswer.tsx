@@ -23,38 +23,40 @@ const ChooseAnswer = ({
   ...props
 }: RadioAnswerProps) => {
   return (
-    <div className="flex items-center justify-between group">
+    <div className="flex items-center justify-between group/item">
       <div className="relative flex items-center w-full gap-4">
         {!isForm && (
           <RiDraggable
             tabIndex={0}
-            className={`absolute outline-none cursor-move hidden group-focus-within:flex ${ICON_CLASS} left-[-22px]`}
+            className={`absolute outline-none cursor-move hidden group-focus-within:group-hover/item:flex ${ICON_CLASS}`}
           />
         )}
-        <div className="flex justify-center w-[16px]">
-          {inputType === EDITOR_QUESTION_TYPE.dropdown ? (
-            idx
-          ) : isForm ? (
-            <input
-              type={inputType === EDITOR_QUESTION_TYPE.radio ? "radio" : "checkbox"}
-              disabled={!isForm}
-              {...props}
-            />
+        <div className="flex gap-4 px-[32px] w-full">
+          <div className="flex justify-center w-[16px] items-center">
+            {inputType === EDITOR_QUESTION_TYPE.dropdown ? (
+              idx
+            ) : isForm ? (
+              <input
+                type={inputType === EDITOR_QUESTION_TYPE.radio ? "radio" : "checkbox"}
+                disabled={!isForm}
+                {...props}
+              />
+            ) : (
+              <input type={inputType === EDITOR_QUESTION_TYPE.radio ? "radio" : "checkbox"} disabled={!isForm} />
+            )}
+          </div>
+          {isForm ? (
+            <Input className="w-full" disabled={isForm} innerRef={innerRef} />
           ) : (
-            <input type={inputType === EDITOR_QUESTION_TYPE.radio ? "radio" : "checkbox"} disabled={!isForm} />
+            <Input className="w-full" disabled={isForm} {...props} innerRef={innerRef} />
+          )}
+          {deletable && !isForm && (
+            <IconButton onClick={onDeleteButton} className="hidden group-focus-within:flex">
+              <RiCloseFill className={ICON_CLASS} />
+            </IconButton>
           )}
         </div>
-        {isForm ? (
-          <Input className="w-full" disabled={isForm} innerRef={innerRef} />
-        ) : (
-          <Input className="w-full" disabled={isForm} {...props} innerRef={innerRef} />
-        )}
       </div>
-      {deletable && !isForm && (
-        <IconButton onClick={onDeleteButton} className="hidden group-focus-within:flex">
-          <RiCloseFill className={ICON_CLASS} />
-        </IconButton>
-      )}
     </div>
   );
 };

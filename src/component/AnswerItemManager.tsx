@@ -11,6 +11,7 @@ import ChooseAnswer from "./Question/ChooseAnswer";
 import LongAnswer from "./Question/LongAnswer";
 import ShortAnswer from "./Question/ShortAnswer";
 import { v4 as uuidv4 } from "uuid";
+import classMerge from "../utils/classMerge";
 
 interface AnswerManagerProps {
   isForm: boolean;
@@ -29,13 +30,11 @@ const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
   };
 
   const addAnswerItem = () => {
-    //옵션 추가 시 새 answer에 focus가 위치하도록 수정
     const NEW_ANSWER_ID = uuidv4();
     dispatch(addAnswer({ answerID: NEW_ANSWER_ID, content: "", questionID }));
   };
 
   const removeAnswerItem = (aID: string, idx: number) => {
-    // 삭제 시 focus 처리
     if (chooseAnswerRef && chooseAnswerRef.current) {
       if (idx >= 1 && chooseAnswerRef.current[idx - 1] instanceof HTMLInputElement) {
         chooseAnswerRef.current[idx - 1]!.focus();
@@ -52,7 +51,12 @@ const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
   };
 
   return (
-    <>
+    <fieldset
+      className={classMerge([
+        "flex flex-col gap-4",
+        (type === EDITOR_QUESTION_TYPE.short || type === EDITOR_QUESTION_TYPE.long) && "mx-[32px]",
+      ])}
+    >
       {type === EDITOR_QUESTION_TYPE.short ? (
         <ShortAnswer isForm={isForm} />
       ) : type === EDITOR_QUESTION_TYPE.long ? (
@@ -75,11 +79,11 @@ const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
               />
             );
           })}
-          <div className="items-center hidden gap-4 group-focus-within:flex">
-            <div className="flex items-center w-[104px] gap-4">
+          <div className="items-center hidden gap-4 mx-[32px] group-focus-within:flex">
+            <div className="flex items-center w-full gap-4">
               <div className="flex justify-center w-[16px]">
                 {type !== EDITOR_QUESTION_TYPE.dropdown && (
-                  <input type={EDITOR_QUESTION_TYPE.radio ? "radio" : "checkbox"} disabled />
+                  <input type={type === EDITOR_QUESTION_TYPE.radio ? "radio" : "checkbox"} disabled />
                 )}
               </div>
               <span
@@ -97,7 +101,7 @@ const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
           </div>
         </>
       )}
-    </>
+    </fieldset>
   );
 };
 
