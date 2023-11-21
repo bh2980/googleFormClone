@@ -12,7 +12,8 @@ import { useAppDispatch, useAppSelector } from "../hook/storeHook";
 import AnswerManager from "./AnswerItemManager";
 import { addAnswer, removeAnswer } from "../store/answerSlice";
 import { v4 } from "uuid";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { editQuestionBlockOrder } from "../store/docsSlice";
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
   questionID: string;
@@ -67,6 +68,8 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
   const findQuestionIdx = (findQID: string) => questionIDList.findIndex((qID) => qID === findQID);
 
   const divRef = useRef<HTMLDivElement>(null);
+  const lastUnderBlockIdx = useRef<null | number>(null);
+
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   const onMouseDown = (clickEvent: React.MouseEvent<Element, MouseEvent>) => {
@@ -76,13 +79,12 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
 
     divRef.current.style.pointerEvents = "none";
     divRef.current.style.zIndex = "50";
+    divRef.current.style.opacity = "80%";
 
     const mouseMoveHandler = (moveEvent: MouseEvent) => {
-      // const deltaX = moveEvent.clientX - clickEvent.clientX;
       const deltaY = moveEvent.clientY - clickEvent.clientY;
 
       setMousePos({
-        // x: mousePos.x + deltaX,
         x: mousePos.x,
         y: mousePos.y + deltaY,
       });
@@ -92,12 +94,12 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
       const questionBlock = itemUnderCursor.closest("[data-question-id]");
 
       if (questionBlock) {
-        // questionID가 있는 node가 itemUnderCursor에 들어가지 않음
-        const underQBlockID = (questionBlock as HTMLElement).dataset.questionId;
-        console.log("Mouse is over:", findQuestionIdx(underQBlockID!), underQBlockID);
-        console.log(questionBlock);
+        const underQBlockIdx = findQuestionIdx((questionBlock as HTMLElement).dataset.questionId!);
 
-        //
+        if (lastUnderBlockIdx.current === underQBlockIdx) return;
+
+        lastUnderBlockIdx.current = underQBlockIdx;
+        console.log("Update", lastUnderBlockIdx.current);
       }
     };
 
@@ -111,19 +113,23 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
 
         divRef.current.style.pointerEvents = "";
         divRef.current.style.zIndex = "0";
-
-        // const deltaX = upEvent.clientX - clickEvent.clientX;
-        const deltaY = upEvent.clientY - clickEvent.clientY;
+        divRef.current.style.opacity = "100%";
 
         setMousePos({
-          x: mousePos.x,
-          y: mousePos.y + deltaY,
+          x: 0,
+          y: 0,
         });
+
+        // questionID가 있는 node가 itemUnderCursor에 들어가지 않음
+        if (!lastUnderBlockIdx.current) return;
+
+        const dragQBlockIdx = findQuestionIdx(questionID);
+
+        // //컴포넌트 배열 순서를 바꿔서 저장
+        dispatch(editQuestionBlockOrder({ fromIdx: dragQBlockIdx, toIdx: lastUnderBlockIdx.current }));
       },
       { once: true }
     );
-
-    return;
   };
 
   return (

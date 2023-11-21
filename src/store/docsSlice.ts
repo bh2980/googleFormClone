@@ -8,6 +8,11 @@ interface DocsInterface {
   questionIDList: string[];
 }
 
+interface DnDAction {
+  fromIdx: number;
+  toIdx: number;
+}
+
 const initialState: DocsInterface = {
   title: "",
   content: "",
@@ -23,6 +28,13 @@ const docsSlice = createSlice({
     },
     editContent(state, action: PayloadAction<string>) {
       state.content = action.payload;
+    },
+    editQuestionBlockOrder(state, action: PayloadAction<DnDAction>) {
+      console.log("before", state.questionIDList);
+      const moveQuestionID = state.questionIDList[action.payload.fromIdx];
+      state.questionIDList.splice(action.payload.fromIdx, 1);
+      state.questionIDList.splice(action.payload.toIdx, 0, moveQuestionID);
+      console.log("after", state.questionIDList);
     },
   },
   extraReducers: (builder) => {
@@ -42,7 +54,7 @@ const docsSlice = createSlice({
   },
 });
 
-export const { editTitle, editContent } = docsSlice.actions;
+export const { editTitle, editContent, editQuestionBlockOrder } = docsSlice.actions;
 
 const docsReducer = docsSlice.reducer;
 export default docsReducer;
