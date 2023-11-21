@@ -1,62 +1,62 @@
-import {
-  RiGalleryFill,
-  RiFileCopyLine,
-  RiDeleteBin6Line,
-  RiMore2Fill,
-  RiBold,
-  RiUnderline,
-  RiItalic,
-  RiAttachment2,
-  RiFormatClear,
-  RiCloseFill,
-  RiAddCircleLine,
-  RiDraggable,
-  RiDropdownList,
-} from "react-icons/ri";
+import { RiAddCircleLine, RiEyeLine } from "react-icons/ri";
 import TitleBlock from "./component/TitleBlock";
 import QuestionBlock from "./component/QuestionBlock";
-import { ICON_CLASS } from "./constants";
+import { EDITOR_QUESTION_TYPE, ICON_CLASS } from "./constants";
 import IconButton from "./component/common/IconButton";
 import { v4 as uuidv4 } from "uuid";
 import { useAppDispatch, useAppSelector } from "./hook/storeHook";
 import { addQuestion } from "./store/questionSlice";
+import { addAnswer } from "./store/answerSlice";
 
 function App() {
   const dispatch = useAppDispatch();
   const questionIDList = useAppSelector((store) => store.docs.questionIDList);
 
   const addQuestionBlock = () => {
-    //questionID 발급
     const QUESTION_ID = uuidv4();
+    const ANSWER_ID = uuidv4();
+
     dispatch(
       addQuestion({
         questionID: QUESTION_ID,
-        type: "short",
+        type: EDITOR_QUESTION_TYPE.short,
         required: false,
         answerIDList: [],
         questionContent: "",
         parentQuestionID: null,
       })
     );
-    //questionID 기본 상태 설정
-    //questionMap에 question 상태 설정
-    //docsSlice에 questionID를 추가 -> extraReducer
+
+    dispatch(
+      addAnswer({
+        answerID: ANSWER_ID,
+        content: "",
+        questionID: QUESTION_ID,
+      })
+    );
   };
 
   return (
-    <div className="flex w-full min-h-screen py-16 bg-violet-100">
-      <div className="flex-1"></div>
-      <div className="flex flex-[3] gap-4 flex-col">
-        <TitleBlock />
-        {questionIDList.map((qID) => (
-          <QuestionBlock key={qID} questionID={qID} />
-        ))}
+    <div className="flex flex-col">
+      <div className="w-full h-[72px] flex shadow-2xl border-b-gray-200 border-b-[1px] justify-center items-center bg-gray-50">
+        <IconButton>
+          <RiEyeLine className="w-[32px] h-[32px] text-gray-600" />
+        </IconButton>
       </div>
-      <div className="flex-1 pl-4">
-        <div className="flex justify-center bg-white rounded-xl shadow-md w-[48px] h-[48px]">
-          <IconButton onClick={addQuestionBlock}>
-            <RiAddCircleLine className={ICON_CLASS} />
-          </IconButton>
+      <div className="flex w-full min-h-screen py-4 bg-violet-100">
+        <div className="flex-1"></div>
+        <div className="flex flex-[3] gap-4 flex-col">
+          <TitleBlock />
+          {questionIDList.map((qID) => (
+            <QuestionBlock key={qID} questionID={qID} />
+          ))}
+        </div>
+        <div className="flex-1 pl-4">
+          <div className="flex justify-center bg-white rounded-xl shadow-md w-[48px] h-[48px]">
+            <IconButton onClick={addQuestionBlock}>
+              <RiAddCircleLine className={ICON_CLASS} />
+            </IconButton>
+          </div>
         </div>
       </div>
     </div>

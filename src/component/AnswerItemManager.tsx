@@ -59,7 +59,7 @@ const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
               />
             );
           })}
-          <div className="flex items-center gap-4">
+          <div className="items-center hidden gap-4 group-focus-within:flex">
             <div className="flex items-center w-[104px] gap-4">
               <div className="flex justify-center w-[16px]">
                 {type !== EDITOR_QUESTION_TYPE.dropdown && (

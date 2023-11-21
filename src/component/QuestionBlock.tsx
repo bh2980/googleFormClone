@@ -64,7 +64,7 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
       <div className="flex justify-center w-full py-2 cursor-move group">
         <RiDraggable className="invisible rotate-90 group-hover:visible" />
       </div>
-      <div className="flex flex-col gap-6 px-6 pb-6">
+      <div className="flex flex-col gap-4 px-6 pb-8">
         <div className="flex items-center justify-between gap-4 group">
           <Input
             placeholder="질문"

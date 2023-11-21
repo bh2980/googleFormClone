@@ -16,7 +16,7 @@ const TitleBlock = () => {
   };
 
   return (
-    <Block className="flex flex-col w-full gap-6 p-6" isTitleBlock>
+    <Block className="flex flex-col w-full gap-2 p-6" isTitleBlock>
       <Input className="text-3xl" onChange={changeTitle} value={title} placeholder="제목을 입력하세요" />
       <Input value={content} onChange={changeContent} placeholder="설명을 입력하세요" />
     </Block>
