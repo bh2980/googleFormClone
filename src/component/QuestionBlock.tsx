@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from "../hook/storeHook";
 import AnswerManager from "./AnswerItemManager";
 import { addAnswer, removeAnswer } from "../store/answerSlice";
 import { v4 } from "uuid";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { editQuestionBlockOrder } from "../store/docsSlice";
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
@@ -78,7 +78,6 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
     if (!divRef?.current) return;
 
     divRef.current.style.pointerEvents = "none";
-    divRef.current.style.zIndex = "50";
     divRef.current.style.opacity = "80%";
 
     const mouseMoveHandler = (moveEvent: MouseEvent) => {
@@ -104,16 +103,20 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
         // 모듈화 시 받을 것
         const gap = 16;
 
-        if (lastUnderBlockIdx.current > underQBlockIdx) {
-          console.log("hello");
-          questionBlock.style.transform = `translateY(${draggedElementHeight + gap}px)`;
-        } else {
-          console.log("below");
-          questionBlock.style.transform = `translateY(-${draggedElementHeight + gap}px)`;
-        }
+        questionBlock.style.position = "relative";
 
-        lastUnderBlockIdx.current = underQBlockIdx;
-        console.log("Update", lastUnderBlockIdx.current);
+        const top = parseInt((questionBlock.style.top ? questionBlock.style.top : "0px").replace("px", ""));
+
+        if (lastUnderBlockIdx.current > underQBlockIdx) {
+          //위로
+          // questionBlock.style.transform = `translateY(${draggedElementHeight + gap}px)`;
+          questionBlock.style.top = `${top + draggedElementHeight + gap}px`;
+          lastUnderBlockIdx.current = underQBlockIdx - 0.1;
+        } else {
+          // 아래로 가는 경우
+          questionBlock.style.top = `${top - draggedElementHeight - gap}px`;
+          lastUnderBlockIdx.current = underQBlockIdx + 0.1;
+        }
       }
     };
 
@@ -126,7 +129,6 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
         if (!divRef?.current) return;
 
         divRef.current.style.pointerEvents = "";
-        divRef.current.style.zIndex = "0";
         divRef.current.style.opacity = "100%";
 
         setMousePos({
@@ -134,14 +136,18 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
           y: 0,
         });
 
-        if (lastUnderBlockIdx.current === null) return;
-
         const dragQBlockIdx = findQuestionIdx(questionID);
-        dispatch(editQuestionBlockOrder({ fromIdx: dragQBlockIdx, toIdx: lastUnderBlockIdx.current }));
+        const targetIdx =
+          ((lastUnderBlockIdx.current + 1) * 10) % 10 === 9
+            ? lastUnderBlockIdx.current + 0.1
+            : lastUnderBlockIdx.current - 0.1;
+
+        dispatch(editQuestionBlockOrder({ fromIdx: dragQBlockIdx, toIdx: targetIdx }));
 
         const allQuestionBlocks = document.querySelectorAll("[data-question-id]");
         allQuestionBlocks.forEach((block) => {
-          (block as HTMLElement).style.transform = "";
+          (block as HTMLElement).style.top = "0px";
+          (block as HTMLElement).style.position = "";
         });
       },
       { once: true }
