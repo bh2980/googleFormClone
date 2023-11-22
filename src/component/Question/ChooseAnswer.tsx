@@ -8,6 +8,7 @@ interface RadioAnswerProps extends React.ComponentPropsWithRef<"input"> {
   idx?: number;
   deletable?: boolean;
   isForm?: boolean; //에디터인지 설문폼인지 확인
+  isEditing?: boolean;
   onDeleteButton?: (...params: unknown[]) => unknown;
   innerRef?: React.ComponentPropsWithRef<"input">["ref"];
   handleDrag: (e: React.MouseEvent) => void;
@@ -20,14 +21,14 @@ const ChooseAnswer = ({
   isForm,
   onDeleteButton,
   handleDrag,
-  draggable,
+  isEditing,
   innerRef,
   ...props
 }: RadioAnswerProps) => {
   return (
     <div className="flex items-center justify-between group/item">
       <div className="relative flex items-center w-full gap-4">
-        {!isForm && draggable && (
+        {!isForm && isEditing && (
           <RiDraggable
             onMouseDown={handleDrag}
             tabIndex={0}
@@ -53,7 +54,7 @@ const ChooseAnswer = ({
           ) : (
             <Input className="w-full" disabled={isForm} {...props} innerRef={innerRef} />
           )}
-          {deletable && !isForm && (
+          {deletable && !isForm && isEditing && (
             <IconButton onClick={onDeleteButton} className="flex">
               <RiCloseFill className={ICON_CLASS} />
             </IconButton>

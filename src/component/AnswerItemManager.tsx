@@ -86,7 +86,7 @@ const AnswerManager = ({ isForm, questionID, isEditing }: AnswerManagerProps) =>
                   deletable={answerIDList.length > 1}
                   onDeleteButton={() => removeAnswerItem(aID, idx)}
                   handleDrag={(e) => handleDrag(e, idx)}
-                  draggable={isEditing}
+                  isEditing={isEditing}
                   innerRef={(el) => (chooseAnswerRef.current[idx] = el)}
                 />
               );
