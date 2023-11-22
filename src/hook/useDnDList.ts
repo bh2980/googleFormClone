@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 interface useDnDProps {
   itemIDList: string[];
@@ -9,58 +9,73 @@ interface useDnDProps {
 }
 
 const useDnDList = ({ itemIDList, itemID, gap, dataAttrName, orderItem }: useDnDProps) => {
-  const findItemIdx = (findQID: string) => itemIDList.findIndex((qID) => qID === findQID);
+  const findItemIdx = (findID: string) => itemIDList.findIndex((itemID) => itemID === findID);
 
   const divRef = useRef<HTMLDivElement>(null);
-  const lastUnderBlockIdx = useRef<number>(findItemIdx(itemID));
-
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const indexRef = useRef<number>(findItemIdx(itemID));
 
   const handleDrag = (clickEvent: React.MouseEvent<Element, MouseEvent>) => {
     clickEvent.preventDefault();
 
     if (!divRef?.current) return;
 
+    const { width, height, top, left } = divRef.current.getBoundingClientRect();
+
+    divRef.current.style.position = "fixed";
+    divRef.current.style.width = `${width}px`;
+    divRef.current.style.height = `${height}px`;
+    divRef.current.style.top = `${top}px`;
+    divRef.current.style.left = `${left}px`;
     divRef.current.style.pointerEvents = "none";
-    divRef.current.style.opacity = "80%";
-    divRef.current.style.zIndex = "999";
+    divRef.current.style.zIndex = "9999";
+
+    const MOVE_DISTANCE = height + gap;
+
+    let flag = false;
+    const allItemBlocks: NodeListOf<HTMLElement> = document.querySelectorAll(`[${dataAttrName}]`);
+
+    //클릭 아이템 하단 아이템들 translateY
+    allItemBlocks.forEach((item) => {
+      if (item === divRef.current) {
+        flag = true;
+        return;
+      }
+
+      if (flag) {
+        item.style.transform = `translateY(${MOVE_DISTANCE}px)`;
+      }
+    });
 
     const mouseMoveHandler = (moveEvent: MouseEvent) => {
       const deltaY = moveEvent.clientY - clickEvent.clientY;
 
-      setMousePos({
-        x: mousePos.x,
-        y: mousePos.y + deltaY,
-      });
+      if (!divRef.current) return;
 
-      const itemUnderCursor = document.elementFromPoint(moveEvent.clientX, moveEvent.clientY) as HTMLElement;
+      divRef.current.style.transform = `translateY(${deltaY}px)`;
 
-      const itemBlock = itemUnderCursor.closest(`[${dataAttrName}]`) as HTMLElement;
+      const { height: dragHeight, top: dragTop } = divRef.current.getBoundingClientRect();
 
-      if (itemBlock) {
-        const underQBlockIdx = findItemIdx(itemBlock.getAttribute(dataAttrName)!);
+      const allItemBlocks: NodeListOf<HTMLElement> = document.querySelectorAll(`[${dataAttrName}]`);
 
-        // 같을 때 처리
-        if (lastUnderBlockIdx.current === underQBlockIdx || !divRef.current) return;
+      allItemBlocks.forEach((item) => {
+        if (item === divRef.current) return;
 
-        const draggedElementHeight = divRef.current.offsetHeight;
+        const { height: itemHeight, top: itemTop } = item.getBoundingClientRect();
 
-        itemBlock.style.position = "relative";
+        if (!divRef.current) return;
 
-        const top = parseInt((itemBlock.style.top ? itemBlock.style.top : "0px").replace("px", ""));
+        const isBelowOverlapping = dragTop < itemTop + itemHeight / 2 && itemTop < dragTop + dragHeight / 2;
 
-        if (lastUnderBlockIdx.current > underQBlockIdx) {
-          //위로
-          itemBlock.style.top = `${top + draggedElementHeight + gap}px`;
-          lastUnderBlockIdx.current = underQBlockIdx - 0.1;
-          console.log("위로", lastUnderBlockIdx.current);
-        } else {
-          // 아래로 가는 경우
-          itemBlock.style.top = `${top - draggedElementHeight - gap}px`;
-          lastUnderBlockIdx.current = underQBlockIdx + 0.1;
-          console.log("아래로", lastUnderBlockIdx.current);
+        if (isBelowOverlapping) {
+          if (item.getAttribute("style")) {
+            item.style.transform = "";
+            indexRef.current++;
+          } else {
+            item.style.transform = `translateY(${MOVE_DISTANCE}px)`;
+            indexRef.current--;
+          }
         }
-      }
+      });
     };
 
     document.addEventListener("mousemove", mouseMoveHandler);
@@ -72,35 +87,22 @@ const useDnDList = ({ itemIDList, itemID, gap, dataAttrName, orderItem }: useDnD
         if (!divRef?.current) return;
 
         divRef.current.style.pointerEvents = "";
-        divRef.current.style.opacity = "100%";
+        divRef.current.style.opacity = "";
+        divRef.current.style.zIndex = "";
+        divRef.current.style.top = "";
+        divRef.current.style.left = "";
+        divRef.current.style.width = "";
+        divRef.current.style.height = "";
         divRef.current.style.position = "";
-        divRef.current.style.zIndex = "auto";
 
-        setMousePos({
-          x: 0,
-          y: 0,
+        const allItemBlocks = document.querySelectorAll(`[${dataAttrName}]`);
+        allItemBlocks.forEach((block) => {
+          (block as HTMLElement).style.transform = "";
         });
 
         const dragQBlockIdx = findItemIdx(itemID);
 
-        const allItemBlocks = document.querySelectorAll(`[${dataAttrName}]`);
-        allItemBlocks.forEach((block) => {
-          (block as HTMLElement).style.top = "0px";
-          (block as HTMLElement).style.position = "";
-        });
-
-        if (lastUnderBlockIdx.current === dragQBlockIdx) return;
-
-        const targetIdx =
-          lastUnderBlockIdx.current < 0
-            ? 0
-            : lastUnderBlockIdx.current > itemIDList.length - 1
-            ? itemIDList.length - 1
-            : ((lastUnderBlockIdx.current + 1) * 10) % 10 === 9
-            ? lastUnderBlockIdx.current + 0.1
-            : lastUnderBlockIdx.current - 0.1;
-
-        orderItem(dragQBlockIdx, targetIdx);
+        orderItem(dragQBlockIdx, indexRef.current);
       },
       { once: true }
     );
@@ -109,7 +111,6 @@ const useDnDList = ({ itemIDList, itemID, gap, dataAttrName, orderItem }: useDnD
   return {
     handleDrag,
     divRef,
-    WrapperStyle: { transform: `translateX(${mousePos.x}px) translateY(${mousePos.y}px)` },
   };
 };
 
