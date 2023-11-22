@@ -6,10 +6,10 @@ import { EDITOR_DROPDOWN_LIST, ICON_CLASS } from "../constants";
 import IconButton from "./common/IconButton";
 import Switch from "./common/Switch";
 
-import { removeQuestion, editQuestion, copyQuestion } from "../store/questionSlice";
+import { removeQuestion, editQuestion, copyQuestion } from "../store/reducer/questionSlice";
 import { useAppDispatch, useAppSelector } from "../hook/storeHook";
 import AnswerManager from "./AnswerItemManager";
-import { addAnswer, removeAnswer } from "../store/answerSlice";
+import { addAnswer, removeAnswer } from "../store/reducer/answerSlice";
 import { v4 } from "uuid";
 import Dropdown from "./common/Dropdown";
 import useChangeEditBlockID from "../hook/useChangeEditBlockID";

@@ -1,4 +1,4 @@
-import { changeEditBlockID } from "../store/editBlockIDSlice";
+import { changeEditBlockID } from "../store/reducer/editBlockIDSlice";
 import { useAppDispatch } from "./storeHook";
 
 const useChangeEditBlockID = () => {

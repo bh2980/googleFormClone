@@ -6,14 +6,14 @@
 import { useRef } from "react";
 import { EDITOR_QUESTION_TYPE } from "../constants";
 import { useAppDispatch, useAppSelector } from "../hook/storeHook";
-import { AnswerInterface, addAnswer, editAnswer, removeAnswer } from "../store/answerSlice";
+import { AnswerInterface, addAnswer, editAnswer, removeAnswer } from "../store/reducer/answerSlice";
 import ChooseAnswer from "./question/ChooseAnswer";
 import LongAnswer from "./question/LongAnswer";
 import ShortAnswer from "./question/ShortAnswer";
 import { v4 as uuidv4 } from "uuid";
 import classMerge from "../utils/classMerge";
 import useDnDList from "../hook/useDnDList";
-import { editAnswerOrder } from "../store/questionSlice";
+import { editAnswerOrder } from "../store/reducer/questionSlice";
 
 interface AnswerManagerProps {
   isForm: boolean;

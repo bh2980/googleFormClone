@@ -5,10 +5,10 @@ import { EDITOR_QUESTION_TYPE, ICON_CLASS } from "./constants";
 import IconButton from "./component/common/IconButton";
 import { v4 as uuidv4 } from "uuid";
 import { useAppDispatch, useAppSelector } from "./hook/storeHook";
-import { addQuestion } from "./store/questionSlice";
-import { addAnswer } from "./store/answerSlice";
+import { addQuestion } from "./store/reducer/questionSlice";
+import { addAnswer } from "./store/reducer/answerSlice";
 import useDnDList from "./hook/useDnDList";
-import { editQuestionBlockOrder } from "./store/docsSlice";
+import { editQuestionBlockOrder } from "./store/reducer/docsSlice";
 
 function App() {
   const dispatch = useAppDispatch();

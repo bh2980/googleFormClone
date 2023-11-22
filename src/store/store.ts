@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import docsReducer from "./docsSlice";
-import answerReducer from "./answerSlice";
-import questionReducer from "./questionSlice";
-import editBlockIDReducer from "./editBlockIDSlice";
+import docsReducer from "./reducer/docsSlice";
+import answerReducer from "./reducer/answerSlice";
+import questionReducer from "./reducer/questionSlice";
+import editBlockIDReducer from "./reducer/editBlockIDSlice";
 
 export const store = configureStore({
   reducer: {
