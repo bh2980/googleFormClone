@@ -13,7 +13,6 @@ interface RadioAnswerProps extends React.ComponentPropsWithRef<"input"> {
   handleDrag: (e: React.MouseEvent) => void;
 }
 
-//드래그는 나중에
 const ChooseAnswer = ({
   inputType,
   idx,
@@ -21,13 +20,14 @@ const ChooseAnswer = ({
   isForm,
   onDeleteButton,
   handleDrag,
+  draggable,
   innerRef,
   ...props
 }: RadioAnswerProps) => {
   return (
     <div className="flex items-center justify-between group/item">
       <div className="relative flex items-center w-full gap-4">
-        {!isForm && (
+        {!isForm && draggable && (
           <RiDraggable
             onMouseDown={handleDrag}
             tabIndex={0}

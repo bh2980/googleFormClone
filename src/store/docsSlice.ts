@@ -1,16 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { addQuestion, copyQuestion, removeQuestion } from "./questionSlice";
+import { DnDAction } from "../hook/useDnDList";
 
 interface DocsInterface {
   title: string;
   content: string;
   questionIDList: string[];
-}
-
-interface DnDAction {
-  fromIdx: number;
-  toIdx: number;
 }
 
 const initialState: DocsInterface = {

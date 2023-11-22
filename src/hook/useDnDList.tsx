@@ -4,6 +4,11 @@ interface useDnDProps {
   handleItem: (fromIdx: number, toIdx: number) => void;
 }
 
+export interface DnDAction {
+  fromIdx: number;
+  toIdx: number;
+}
+
 //DND는 container를 가져오기
 const useDnDList = ({ handleItem }: useDnDProps) => {
   const indexRef = useRef(-1);

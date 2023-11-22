@@ -13,6 +13,7 @@ import ShortAnswer from "./question/ShortAnswer";
 import { v4 as uuidv4 } from "uuid";
 import classMerge from "../utils/classMerge";
 import useDnDList from "../hook/useDnDList";
+import { editAnswerOrder } from "../store/questionSlice";
 
 interface AnswerManagerProps {
   isForm: boolean;
@@ -24,7 +25,12 @@ const AnswerManager = ({ isForm, questionID, isEditing }: AnswerManagerProps) =>
   const dispatch = useAppDispatch();
   const { type, answerIDList } = useAppSelector((store) => store.question[questionID]);
   const answerMap = useAppSelector((store) => store.answer);
-  const { DnDList, handleDrag } = useDnDList({ handleItem: console.log });
+
+  const handleItem = (fromIdx: number, toIdx: number) => {
+    dispatch(editAnswerOrder({ questionID, fromIdx, toIdx }));
+  };
+
+  const { DnDList, handleDrag } = useDnDList({ handleItem });
 
   const chooseAnswerRef = useRef<(null | HTMLInputElement)[]>([]);
 
@@ -65,27 +71,29 @@ const AnswerManager = ({ isForm, questionID, isEditing }: AnswerManagerProps) =>
       ) : type === EDITOR_QUESTION_TYPE.long ? (
         <LongAnswer isForm={isForm} />
       ) : (
-        <DnDList>
-          {answerIDList.map((aID, idx) => {
-            const answerInfo = answerMap[aID];
-            return (
-              <ChooseAnswer
-                key={aID}
-                idx={idx + 1}
-                inputType={type}
-                value={answerInfo.content}
-                placeholder={`옵션 ${idx + 1}`}
-                onChange={(e) => changeAnswer(e, answerInfo)}
-                deletable={answerIDList.length > 1}
-                onDeleteButton={() => removeAnswerItem(aID, idx)}
-                innerRef={(el) => (chooseAnswerRef.current[idx] = el)}
-                handleDrag={(e) => handleDrag(e, idx)}
-              />
-            );
-          })}
-
+        <>
+          <DnDList>
+            {answerIDList.map((aID, idx) => {
+              const answerInfo = answerMap[aID];
+              return (
+                <ChooseAnswer
+                  key={aID}
+                  idx={idx + 1}
+                  inputType={type}
+                  value={answerInfo.content}
+                  placeholder={`옵션 ${idx + 1}`}
+                  onChange={(e) => changeAnswer(e, answerInfo)}
+                  deletable={answerIDList.length > 1}
+                  onDeleteButton={() => removeAnswerItem(aID, idx)}
+                  handleDrag={(e) => handleDrag(e, idx)}
+                  draggable={isEditing}
+                  innerRef={(el) => (chooseAnswerRef.current[idx] = el)}
+                />
+              );
+            })}
+          </DnDList>
           {isEditing && (
-            <div className="items-center flex gap-4 mx-[32px] mt-2">
+            <div className="items-center flex gap-4 mx-[32px]">
               <div className="flex items-center w-full gap-4">
                 <div className="flex justify-center w-[16px]">
                   {type !== EDITOR_QUESTION_TYPE.dropdown && (
@@ -106,7 +114,7 @@ const AnswerManager = ({ isForm, questionID, isEditing }: AnswerManagerProps) =>
             </button> */}
             </div>
           )}
-        </DnDList>
+        </>
       )}
     </fieldset>
   );

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { addAnswer, removeAnswer } from "./answerSlice";
 import { EDITOR_QUESTION_TYPE } from "../constants";
+import { DnDAction } from "../hook/useDnDList";
 
 export interface QuestionInterface {
   questionID: string;
@@ -10,6 +11,10 @@ export interface QuestionInterface {
   questionContent: string;
   answerIDList: string[];
   parentQuestionID: string | null;
+}
+
+export interface AnswerDnDAction extends DnDAction {
+  questionID: string;
 }
 
 export type QuestionMap = {
@@ -34,6 +39,12 @@ const questionSlice = createSlice({
     removeQuestion(state, action: PayloadAction<QuestionInterface>) {
       delete state[action.payload.questionID];
     },
+    editAnswerOrder(state, action: PayloadAction<AnswerDnDAction>) {
+      console.log(action);
+      const moveAnswerID = state[action.payload.questionID].answerIDList[action.payload.fromIdx];
+      state[action.payload.questionID].answerIDList.splice(action.payload.fromIdx, 1);
+      state[action.payload.questionID].answerIDList.splice(action.payload.toIdx, 0, moveAnswerID);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -51,7 +62,7 @@ const questionSlice = createSlice({
   },
 });
 
-export const { addQuestion, editQuestion, copyQuestion, removeQuestion } = questionSlice.actions;
+export const { addQuestion, editQuestion, copyQuestion, removeQuestion, editAnswerOrder } = questionSlice.actions;
 
 const questionReducer = questionSlice.reducer;
 export default questionReducer;
