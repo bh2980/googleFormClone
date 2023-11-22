@@ -5,7 +5,6 @@ import Divider from "./common/Divider";
 import { EDITOR_DROPDOWN_LIST, ICON_CLASS } from "../constants";
 import IconButton from "./common/IconButton";
 import Switch from "./common/Switch";
-import Dropdown from "./common/Dropdown";
 
 import { removeQuestion, editQuestion, copyQuestion } from "../store/questionSlice";
 import { useAppDispatch, useAppSelector } from "../hook/storeHook";
@@ -14,6 +13,7 @@ import { addAnswer, removeAnswer } from "../store/answerSlice";
 import { v4 } from "uuid";
 import useDnDList from "../hook/useDnDList";
 import { editQuestionBlockOrder } from "../store/docsSlice";
+import Dropdown from "./common/Dropdown";
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
   questionID: string;
@@ -37,7 +37,7 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
     dispatch(editQuestionBlockOrder({ fromIdx, toIdx }));
   };
 
-  const { handleDrag, divRef, WrapperStyle } = useDnDList({
+  const { handleDrag, divRef } = useDnDList({
     itemIDList: questionIDList,
     itemID: questionID,
     gap: GAP,
@@ -79,7 +79,7 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
   };
 
   return (
-    <div style={WrapperStyle} className={`hover:shadow-lg`} ref={divRef} data-question-id={questionID}>
+    <div className={`hover:shadow-lg`} ref={divRef} data-question-id={questionID}>
       <Block className="w-full group" {...props}>
         <div className="flex justify-center w-full py-2 cursor-move group" onMouseDown={handleDrag}>
           <RiDraggable className="invisible rotate-90 group-hover:visible" />
