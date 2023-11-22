@@ -2,6 +2,8 @@ import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 import { EDITOR_QUESTION_TYPE, ICON_CLASS } from "../../constants";
 import { useEffect, useRef, useState } from "react";
 import classMerge from "../../utils/classMerge";
+import { createPortal } from "react-dom";
+import { current } from "@reduxjs/toolkit";
 
 // 외부에서 Dropdown이 설정한 값을 참조할 수 있도록 만들어야함
 interface DropdownItem {
@@ -18,12 +20,15 @@ interface DropdownProps {
 const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUESTION_TYPE.short }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectIdx, setSelectIdx] = useState(initialIdx);
+  const dropdownSelectorRef = useRef<HTMLDivElement>(null);
   const dropdownListRef = useRef<HTMLDivElement>(null);
 
-  const selectItem = (idx: number) => {
+  const selectItem = (e: React.MouseEvent, idx: number) => {
     setSelectIdx(idx);
     setIsOpen(false);
     if (onChange) onChange(idx); // 외부 함수에 idx 전달
+    console.log(dropdownSelectorRef.current);
+    if (dropdownSelectorRef.current) dropdownSelectorRef.current.focus();
   };
 
   const changeOpen = () => {
@@ -34,8 +39,8 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
     const handleClickOutside = (event: MouseEvent) => {
       if (
         event.target instanceof Element &&
-        dropdownListRef.current &&
-        !dropdownListRef.current.contains(event.target)
+        dropdownSelectorRef.current &&
+        !dropdownSelectorRef.current.contains(event.target)
       ) {
         setIsOpen(false);
       }
@@ -48,10 +53,21 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
     };
   }, []);
 
+  useEffect(() => {
+    if (isOpen) {
+      if (!dropdownSelectorRef?.current || !dropdownListRef?.current) return;
+
+      const { height, top, left } = dropdownSelectorRef.current.getBoundingClientRect();
+      dropdownListRef.current.style.top = `${top + height}px`;
+      dropdownListRef.current.style.left = `${left}px`;
+    }
+
+    console.log(document.activeElement);
+  }, [isOpen]);
+
   return (
-    <div className="z-50 group" tabIndex={0}>
+    <div className="group" tabIndex={0} ref={dropdownSelectorRef}>
       <div
-        ref={dropdownListRef}
         className={classMerge([
           "w-[200px] border-2 h-[56px] bg-white flex items-center px-4 rounded-lg justify-between hover:bg-gray-100 active:bg-gray-200 cursor-pointer",
           className,
@@ -61,22 +77,28 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
         <span>{itemList[selectIdx]?.content}</span>
         {isOpen ? <RiArrowDropUpFill className={ICON_CLASS} /> : <RiArrowDropDownFill className={ICON_CLASS} />}
       </div>
-      {isOpen ? (
-        <div className="absolute w-[200px] border-2 bg-white hidden flex-col rounded-lg shadow-2xl group-focus-within:flex">
-          {itemList.map((item, idx) => (
+      {isOpen
+        ? createPortal(
             <div
-              key={item.content}
-              className={classMerge([
-                "flex items-center gap-4 p-4 cursor-pointer hover:bg-gray-100 active:bg-gray-200",
-                idx === selectIdx && "bg-sky-50",
-              ])}
-              onClick={() => selectItem(idx)}
+              ref={dropdownListRef}
+              className="z-50 absolute top-0 left-0 w-[200px] border-2 bg-white flex-col rounded-lg shadow-2xl"
             >
-              <span>{item.content}</span>
-            </div>
-          ))}
-        </div>
-      ) : null}
+              {itemList.map((item, idx) => (
+                <div
+                  key={item.content}
+                  className={classMerge([
+                    "flex items-center gap-4 p-4 cursor-pointer hover:bg-gray-100 active:bg-gray-200",
+                    idx === selectIdx && "bg-sky-50",
+                  ])}
+                  onClick={(e) => selectItem(e, idx)}
+                >
+                  <span>{item.content}</span>
+                </div>
+              ))}
+            </div>,
+            document.body
+          )
+        : null}
     </div>
   );
 };
