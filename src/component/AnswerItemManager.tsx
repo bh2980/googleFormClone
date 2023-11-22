@@ -12,6 +12,7 @@ import LongAnswer from "./question/LongAnswer";
 import ShortAnswer from "./question/ShortAnswer";
 import { v4 as uuidv4 } from "uuid";
 import classMerge from "../utils/classMerge";
+import useDnDList from "../hook/useDnDList";
 
 interface AnswerManagerProps {
   isForm: boolean;
@@ -23,6 +24,7 @@ const AnswerManager = ({ isForm, questionID, isEditing }: AnswerManagerProps) =>
   const dispatch = useAppDispatch();
   const { type, answerIDList } = useAppSelector((store) => store.question[questionID]);
   const answerMap = useAppSelector((store) => store.answer);
+  const { DnDList, handleDrag } = useDnDList({ handleItem: console.log });
 
   const chooseAnswerRef = useRef<(null | HTMLInputElement)[]>([]);
 
@@ -63,7 +65,7 @@ const AnswerManager = ({ isForm, questionID, isEditing }: AnswerManagerProps) =>
       ) : type === EDITOR_QUESTION_TYPE.long ? (
         <LongAnswer isForm={isForm} />
       ) : (
-        <>
+        <DnDList>
           {answerIDList.map((aID, idx) => {
             const answerInfo = answerMap[aID];
             return (
@@ -77,13 +79,13 @@ const AnswerManager = ({ isForm, questionID, isEditing }: AnswerManagerProps) =>
                 deletable={answerIDList.length > 1}
                 onDeleteButton={() => removeAnswerItem(aID, idx)}
                 innerRef={(el) => (chooseAnswerRef.current[idx] = el)}
-                answerID={aID}
-                questionID={questionID}
+                handleDrag={(e) => handleDrag(e, idx)}
               />
             );
           })}
+
           {isEditing && (
-            <div className="items-center flex gap-4 mx-[32px]">
+            <div className="items-center flex gap-4 mx-[32px] mt-2">
               <div className="flex items-center w-full gap-4">
                 <div className="flex justify-center w-[16px]">
                   {type !== EDITOR_QUESTION_TYPE.dropdown && (
@@ -104,7 +106,7 @@ const AnswerManager = ({ isForm, questionID, isEditing }: AnswerManagerProps) =>
             </button> */}
             </div>
           )}
-        </>
+        </DnDList>
       )}
     </fieldset>
   );

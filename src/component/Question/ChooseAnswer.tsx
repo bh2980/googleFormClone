@@ -2,18 +2,15 @@ import { RiCloseFill, RiDraggable } from "react-icons/ri";
 import Input from "../common/Input";
 import IconButton from "../common/IconButton";
 import { EDITOR_QUESTION_TYPE, ICON_CLASS } from "../../constants";
-import { useAppSelector } from "../../hook/storeHook";
-import useDnDList from "../../hook/useDnDList";
 
 interface RadioAnswerProps extends React.ComponentPropsWithRef<"input"> {
   inputType: EDITOR_QUESTION_TYPE.radio | EDITOR_QUESTION_TYPE.checkbox | EDITOR_QUESTION_TYPE.dropdown;
   idx?: number;
-  questionID: string;
-  answerID: string;
   deletable?: boolean;
   isForm?: boolean; //에디터인지 설문폼인지 확인
   onDeleteButton?: (...params: unknown[]) => unknown;
   innerRef?: React.ComponentPropsWithRef<"input">["ref"];
+  handleDrag: (e: React.MouseEvent) => void;
 }
 
 //드래그는 나중에
@@ -22,33 +19,17 @@ const ChooseAnswer = ({
   idx,
   deletable = true,
   isForm,
-  questionID,
-  answerID,
   onDeleteButton,
+  handleDrag,
   innerRef,
   ...props
 }: RadioAnswerProps) => {
-  const answerIDList = useAppSelector((store) => store.question[questionID].answerIDList);
-  const GAP = 8;
-
-  const changeDnDOrder = (from: number, to: number) => {
-    console.log(from, to);
-  };
-
-  const { handleDrag, divRef } = useDnDList({
-    itemIDList: answerIDList,
-    itemID: answerID,
-    gap: GAP,
-    dataAttrName: "data-answer-id",
-    orderItem: changeDnDOrder,
-  });
-
   return (
-    <div className="flex items-center justify-between group/item" ref={divRef}>
+    <div className="flex items-center justify-between group/item">
       <div className="relative flex items-center w-full gap-4">
         {!isForm && (
           <RiDraggable
-            onClick={handleDrag}
+            onMouseDown={handleDrag}
             tabIndex={0}
             className={`absolute outline-none cursor-move hidden group-hover/item:flex ${ICON_CLASS}`}
           />

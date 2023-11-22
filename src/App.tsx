@@ -7,11 +7,19 @@ import { v4 as uuidv4 } from "uuid";
 import { useAppDispatch, useAppSelector } from "./hook/storeHook";
 import { addQuestion } from "./store/questionSlice";
 import { addAnswer } from "./store/answerSlice";
+import useDnDList from "./hook/useDnDList";
+import { editQuestionBlockOrder } from "./store/docsSlice";
 
 function App() {
   const dispatch = useAppDispatch();
   const editBlockID = useAppSelector((store) => store.editBlockID.editBlockID);
   const questionIDList = useAppSelector((store) => store.docs.questionIDList);
+
+  const handleItem = (fromIdx: number, toIdx: number) => {
+    dispatch(editQuestionBlockOrder({ fromIdx, toIdx }));
+  };
+
+  const { handleDrag, DnDList } = useDnDList({ handleItem });
 
   const addQuestionBlock = () => {
     const QUESTION_ID = uuidv4();
@@ -48,9 +56,16 @@ function App() {
         <div className="flex-1"></div>
         <form className="flex flex-[3] gap-4 flex-col">
           <TitleBlock isEditing={editBlockID === "title"} />
-          {questionIDList.map((qID) => (
-            <QuestionBlock key={qID} questionID={qID} isEditing={editBlockID === qID} />
-          ))}
+          <DnDList className="flex flex-col gap-4">
+            {questionIDList.map((qID, idx) => (
+              <QuestionBlock
+                key={qID}
+                questionID={qID}
+                isEditing={editBlockID === qID}
+                handleDrag={(e) => handleDrag(e, idx)}
+              />
+            ))}
+          </DnDList>
         </form>
         <div className="flex-1 pl-4">
           <div className="flex justify-center bg-white rounded-xl shadow-md w-[48px] h-[48px]">
