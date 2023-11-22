@@ -10,6 +10,7 @@ export interface DnDAction {
 }
 
 //DND는 container를 가져오기
+//https://www.youtube.com/watch?v=PyGqKt86gU0&t=1589s
 const useDnDList = ({ handleItem }: useDnDProps) => {
   const indexRef = useRef(-1);
   const constainerRef = useRef<HTMLDivElement>(null);
