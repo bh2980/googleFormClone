@@ -16,8 +16,6 @@ interface DropdownProps {
   initialIdx?: EDITOR_QUESTION_TYPE;
 }
 
-//Portal을 통한 dropdown list 렌더링
-//focus 때문에 망했음 바꾸기
 const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUESTION_TYPE.short }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectIdx, setSelectIdx] = useState(initialIdx);
@@ -58,8 +56,10 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
     if (isOpen) {
       if (!dropdownSelectorRef?.current || !dropdownListRef?.current) return;
 
-      const { height, top, left } = dropdownSelectorRef.current.getBoundingClientRect();
-      dropdownListRef.current.style.top = `${top + height}px`;
+      const { height, left } = dropdownSelectorRef.current.getBoundingClientRect();
+      //top + height가 아니라 offsetTop + height
+      //top을 하면 뷰포트 기준으로 하므로 스크롤 발생 시 하단 요소에서 정확한 top을 얻을 수 없음.
+      dropdownListRef.current.style.top = `${dropdownSelectorRef.current.offsetTop + height}px`;
       dropdownListRef.current.style.left = `${left}px`;
     }
 
