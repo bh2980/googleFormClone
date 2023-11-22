@@ -47,14 +47,14 @@ function App() {
 
   return (
     <div className="flex flex-col">
-      <div className="w-full h-[72px] flex shadow-2xl border-b-gray-200 border-b-[1px] justify-center items-center bg-gray-50">
+      <div className="w-full h-[72px] flex justify-end shadow-2xl border-b-gray-200 border-b-[1px] p-2 items-center bg-gray-50">
         <IconButton>
           <RiEyeLine className="w-[32px] h-[32px] text-gray-600" />
         </IconButton>
       </div>
       <div className="flex w-full min-h-screen py-4 bg-violet-100">
         <div className="flex-1"></div>
-        <form className="flex flex-[3] gap-4 flex-col">
+        <form className="flex flex-[2] gap-4 flex-col">
           <TitleBlock isEditing={editBlockID === "title"} />
           <DnDList className="flex flex-col gap-4">
             {questionIDList.map((qID, idx) => (
