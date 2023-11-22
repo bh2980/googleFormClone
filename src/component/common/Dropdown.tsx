@@ -3,7 +3,6 @@ import { EDITOR_QUESTION_TYPE, ICON_CLASS } from "../../constants";
 import { useEffect, useRef, useState } from "react";
 import classMerge from "../../utils/classMerge";
 import { createPortal } from "react-dom";
-import { current } from "@reduxjs/toolkit";
 
 // 외부에서 Dropdown이 설정한 값을 참조할 수 있도록 만들어야함
 interface DropdownItem {
@@ -17,6 +16,8 @@ interface DropdownProps {
   initialIdx?: EDITOR_QUESTION_TYPE;
 }
 
+//Portal을 통한 dropdown list 렌더링
+//focus 때문에 망했음 바꾸기
 const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUESTION_TYPE.short }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectIdx, setSelectIdx] = useState(initialIdx);

@@ -8,6 +8,7 @@ const TextArea = ({ className, ...props }: TextAreaProps) => {
     const target = e.target as HTMLTextAreaElement;
 
     target.style.height = "inherit";
+    //스크롤의 길이만큼 실시간으로 높이를 늘려서 스크롤을 없앰
     target.style.height = `${target.scrollHeight}px`;
   };
 

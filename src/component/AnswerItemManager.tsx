@@ -7,18 +7,19 @@ import { useRef } from "react";
 import { EDITOR_QUESTION_TYPE } from "../constants";
 import { useAppDispatch, useAppSelector } from "../hook/storeHook";
 import { AnswerInterface, addAnswer, editAnswer, removeAnswer } from "../store/answerSlice";
-import ChooseAnswer from "./Question/ChooseAnswer";
-import LongAnswer from "./Question/LongAnswer";
-import ShortAnswer from "./Question/ShortAnswer";
+import ChooseAnswer from "./question/ChooseAnswer";
+import LongAnswer from "./question/LongAnswer";
+import ShortAnswer from "./question/ShortAnswer";
 import { v4 as uuidv4 } from "uuid";
 import classMerge from "../utils/classMerge";
 
 interface AnswerManagerProps {
   isForm: boolean;
   questionID: string;
+  isEditing?: boolean;
 }
 
-const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
+const AnswerManager = ({ isForm, questionID, isEditing }: AnswerManagerProps) => {
   const dispatch = useAppDispatch();
   const { type, answerIDList } = useAppSelector((store) => store.question[questionID]);
   const answerMap = useAppSelector((store) => store.answer);
@@ -76,29 +77,33 @@ const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
                 deletable={answerIDList.length > 1}
                 onDeleteButton={() => removeAnswerItem(aID, idx)}
                 innerRef={(el) => (chooseAnswerRef.current[idx] = el)}
+                answerID={aID}
+                questionID={questionID}
               />
             );
           })}
-          <div className="items-center hidden gap-4 mx-[32px] group-focus-within:flex">
-            <div className="flex items-center w-full gap-4">
-              <div className="flex justify-center w-[16px]">
-                {type !== EDITOR_QUESTION_TYPE.dropdown && (
-                  <input type={type === EDITOR_QUESTION_TYPE.radio ? "radio" : "checkbox"} disabled />
-                )}
+          {isEditing && (
+            <div className="items-center flex gap-4 mx-[32px]">
+              <div className="flex items-center w-full gap-4">
+                <div className="flex justify-center w-[16px]">
+                  {type !== EDITOR_QUESTION_TYPE.dropdown && (
+                    <input type={type === EDITOR_QUESTION_TYPE.radio ? "radio" : "checkbox"} disabled />
+                  )}
+                </div>
+                <span
+                  className="w-full text-gray-500 cursor-text hover:underline decoration-gray-400"
+                  onClick={addAnswerItem}
+                  tabIndex={0}
+                >
+                  옵션 추가
+                </span>
               </div>
-              <span
-                className="w-full text-gray-500 cursor-text hover:underline decoration-gray-400"
-                onClick={addAnswerItem}
-                tabIndex={0}
-              >
-                옵션 추가
-              </span>
-            </div>
-            {/* <span>또는</span>
+              {/* <span>또는</span>
             <button type="button" className="text-blue-500">
               '기타' 추가
             </button> */}
-          </div>
+            </div>
+          )}
         </>
       )}
     </fieldset>

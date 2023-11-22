@@ -10,6 +10,7 @@ import { addAnswer } from "./store/answerSlice";
 
 function App() {
   const dispatch = useAppDispatch();
+  const editBlockID = useAppSelector((store) => store.editBlockID.editBlockID);
   const questionIDList = useAppSelector((store) => store.docs.questionIDList);
 
   const addQuestionBlock = () => {
@@ -46,9 +47,9 @@ function App() {
       <div className="flex w-full min-h-screen py-4 bg-violet-100">
         <div className="flex-1"></div>
         <form className="flex flex-[3] gap-4 flex-col">
-          <TitleBlock />
+          <TitleBlock isEditing={editBlockID === "title"} />
           {questionIDList.map((qID) => (
-            <QuestionBlock key={qID} questionID={qID} />
+            <QuestionBlock key={qID} questionID={qID} isEditing={editBlockID === qID} />
           ))}
         </form>
         <div className="flex-1 pl-4">

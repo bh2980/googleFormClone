@@ -8,6 +8,7 @@ interface useDnDProps {
   orderItem: (fromIdx: number, toIdx: number) => void;
 }
 
+//DND는 List를 ref로 가져오거나 div 배열로 가져오자... id로 하지말고...
 const useDnDList = ({ itemIDList, itemID, gap, dataAttrName, orderItem }: useDnDProps) => {
   const findItemIdx = (findID: string) => itemIDList.findIndex((itemID) => itemID === findID);
 

@@ -12,6 +12,7 @@ const Input = ({ className, innerRef, ...props }: InputProps) => {
         "py-2",
         "border-b-[2px]",
         "border-white",
+        "outline-none",
         "focus:border-b-[2px] focus:border-violet-500",
         className,
       ])}
