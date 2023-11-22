@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 
 interface useDnDProps {
   handleItem: (fromIdx: number, toIdx: number) => void;
@@ -14,13 +14,17 @@ const useDnDList = ({ handleItem }: useDnDProps) => {
   const indexRef = useRef(-1);
   const constainerRef = useRef<HTMLDivElement>(null);
 
-  const DnDList = ({ children, ...props }: React.PropsWithChildren & React.ComponentPropsWithoutRef<"div">) => {
-    return (
-      <div ref={constainerRef} {...props}>
-        {children}
-      </div>
-    );
-  };
+  //한번 생성하면 동일한 div를 return하도록 저장
+  const DnDList = useCallback(
+    ({ children, ...props }: React.PropsWithChildren & React.ComponentPropsWithoutRef<"div">) => {
+      return (
+        <div ref={constainerRef} {...props}>
+          {children}
+        </div>
+      );
+    },
+    []
+  );
 
   const handleDrag = (clickEvent: React.MouseEvent<Element, MouseEvent>, dragIdx: number) => {
     clickEvent.preventDefault();
