@@ -1,4 +1,4 @@
-import { RiAddCircleLine, RiEdit2Line, RiEyeLine } from "react-icons/ri";
+import { RiAddCircleLine, RiEyeLine } from "react-icons/ri";
 import TitleBlock from "./component/TitleBlock";
 import QuestionBlock from "./component/QuestionBlock";
 import { EDITOR_QUESTION_TYPE, ICON_CLASS } from "./constants";
@@ -9,12 +9,10 @@ import { addQuestion } from "./store/reducer/questionSlice";
 import { addAnswer } from "./store/reducer/answerSlice";
 import useDnDList from "./hook/useDnDList";
 import { editQuestionBlockOrder } from "./store/reducer/docsSlice";
-import { FORM_STATE, changeFormState } from "./store/reducer/formStateSlice";
 
 function App() {
   const dispatch = useAppDispatch();
   const questionIDList = useAppSelector((store) => store.docs.questionIDList);
-  const formState = useAppSelector((store) => store.formState.value);
 
   const handleItem = (fromIdx: number, toIdx: number) => {
     dispatch(editQuestionBlockOrder({ fromIdx, toIdx }));
@@ -46,23 +44,14 @@ function App() {
     );
   };
 
-  const changeForm = () => {
-    const newState = formState === FORM_STATE.edit ? FORM_STATE.viewer : FORM_STATE.edit;
-    dispatch(changeFormState(newState));
-  };
-
   return (
-    <div className="flex flex-col">
-      <div className="w-full h-[72px] flex justify-end shadow-2xl border-b-gray-200 border-b-[1px] p-2 items-center bg-gray-50">
-        <IconButton onClick={changeForm}>
-          {formState === FORM_STATE.edit ? (
-            <RiEyeLine className="w-[32px] h-[32px] text-gray-600" />
-          ) : (
-            <RiEdit2Line className="w-[32px] h-[32px] text-gray-600" />
-          )}
+    <div className="flex flex-col min-h-screen bg-violet-100">
+      <div className="w-full h-[72px] flex justify-end shadow-sm border-b-gray-200 border-b-[1px] p-2 items-center bg-gray-50">
+        <IconButton>
+          <RiEyeLine className="w-[32px] h-[32px] text-gray-600" />
         </IconButton>
       </div>
-      <div className="flex w-full min-h-screen py-4 bg-violet-100">
+      <div className="flex w-full pt-8">
         <div className="flex-1"></div>
         <form className="flex flex-[2] gap-4 flex-col">
           <TitleBlock />
@@ -73,13 +62,11 @@ function App() {
           </DnDList>
         </form>
         <div className="flex-1 pl-4">
-          {formState === FORM_STATE.edit && (
-            <div className="flex justify-center bg-white rounded-xl shadow-md w-[48px] h-[48px]">
-              <IconButton onClick={addQuestionBlock}>
-                <RiAddCircleLine className={ICON_CLASS} />
-              </IconButton>
-            </div>
-          )}
+          <div className="flex justify-center bg-white rounded-xl shadow-md w-[48px] h-[48px]">
+            <IconButton onClick={addQuestionBlock}>
+              <RiAddCircleLine className={ICON_CLASS} />
+            </IconButton>
+          </div>
         </div>
       </div>
     </div>

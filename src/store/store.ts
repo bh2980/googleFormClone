@@ -3,7 +3,6 @@ import docsReducer from "./reducer/docsSlice";
 import answerReducer from "./reducer/answerSlice";
 import questionReducer from "./reducer/questionSlice";
 import editBlockIDReducer from "./reducer/editBlockIDSlice";
-import formStateReducer from "./reducer/formStateSlice";
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +10,6 @@ export const store = configureStore({
     question: questionReducer,
     answer: answerReducer,
     editBlockID: editBlockIDReducer,
-    formState: formStateReducer,
   },
 });
 

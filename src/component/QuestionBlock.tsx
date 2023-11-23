@@ -14,7 +14,6 @@ import { v4 } from "uuid";
 import Dropdown from "./common/Dropdown";
 import useChangeEditBlockID from "../hook/useChangeEditBlockID";
 import { useRef } from "react";
-import useCheckViewer from "../hook/useCheckViewer";
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
   questionID: string;
@@ -25,7 +24,6 @@ interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
  */
 const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps) => {
   const dispatch = useAppDispatch();
-  const isForm = useCheckViewer();
   const { changeEditingBlockID, isEditing } = useChangeEditBlockID(questionID);
 
   const questionInfo = useAppSelector((store) => store.question[questionID]);
@@ -98,7 +96,7 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
             />
           )}
         </div>
-        <AnswerManager questionID={questionID} isForm={isForm} />
+        <AnswerManager questionID={questionID} />
         {isEditing && (
           <div className="flex-col mx-[32px] flex gap-4">
             <Divider />

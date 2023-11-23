@@ -2,12 +2,10 @@
 
 import Input from "../common/Input";
 
-interface ShortAnswerProps extends React.ComponentPropsWithRef<"input"> {
-  isForm?: boolean;
-}
+interface ShortAnswerProps extends React.ComponentPropsWithRef<"input"> {}
 
-const ShortAnswer = ({ isForm, ...props }: ShortAnswerProps) => {
-  return <Input className="bg-white" placeholder="단답형 메시지" {...props} disabled={!isForm} />;
+const ShortAnswer = ({ ...props }: ShortAnswerProps) => {
+  return <Input className="bg-white" placeholder="단답형 메시지" {...props} />;
 };
 
 export default ShortAnswer;

@@ -15,13 +15,14 @@ import classMerge from "../utils/classMerge";
 import useDnDList from "../hook/useDnDList";
 import { editAnswerOrder } from "../store/reducer/questionSlice";
 import useChangeEditBlockID from "../hook/useChangeEditBlockID";
+import Checkbox from "./common/Checkbox";
+import Radio from "./common/Radio";
 
 interface AnswerManagerProps {
-  isForm: boolean;
   questionID: string;
 }
 
-const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
+const AnswerManager = ({ questionID }: AnswerManagerProps) => {
   const dispatch = useAppDispatch();
   const { type, answerIDList } = useAppSelector((store) => store.question[questionID]);
   const answerMap = useAppSelector((store) => store.answer);
@@ -47,10 +48,10 @@ const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
 
   const removeAnswerItem = (aID: string, idx: number) => {
     if (chooseAnswerRef && chooseAnswerRef.current) {
-      if (idx >= 1 && chooseAnswerRef.current[idx - 1] instanceof HTMLInputElement) {
-        chooseAnswerRef.current[idx - 1]!.focus();
-      } else {
+      if (idx < chooseAnswerRef.current.length && chooseAnswerRef.current[idx + 1] instanceof HTMLInputElement) {
         chooseAnswerRef.current[idx + 1]!.focus();
+      } else {
+        chooseAnswerRef.current[idx - 1]!.focus();
       }
     }
 
@@ -69,9 +70,9 @@ const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
       ])}
     >
       {type === EDITOR_QUESTION_TYPE.short ? (
-        <ShortAnswer isForm={isForm} />
+        <ShortAnswer disabled />
       ) : type === EDITOR_QUESTION_TYPE.long ? (
-        <LongAnswer isForm={isForm} />
+        <LongAnswer disabled />
       ) : (
         <>
           <DnDList>
@@ -95,12 +96,8 @@ const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
           </DnDList>
           {isEditing && (
             <div className="items-center flex gap-4 mx-[32px]">
-              <div className="flex items-center w-full gap-4">
-                <div className="flex justify-center w-[16px]">
-                  {type !== EDITOR_QUESTION_TYPE.dropdown && (
-                    <input type={type === EDITOR_QUESTION_TYPE.radio ? "radio" : "checkbox"} disabled />
-                  )}
-                </div>
+              <div className="flex items-center gap-4">
+                {type === EDITOR_QUESTION_TYPE.radio ? <Radio disabled /> : <Checkbox disabled />}
                 <span
                   className="w-full text-gray-500 cursor-text hover:underline decoration-gray-400"
                   onClick={addAnswerItem}
@@ -109,10 +106,10 @@ const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
                   옵션 추가
                 </span>
               </div>
-              {/* <span>또는</span>
-            <button type="button" className="text-blue-500">
-              '기타' 추가
-            </button> */}
+              <span>또는</span>
+              <button type="button" className="text-blue-500">
+                '기타' 추가
+              </button>
             </div>
           )}
         </>
