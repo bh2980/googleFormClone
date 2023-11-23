@@ -14,10 +14,10 @@ import { v4 } from "uuid";
 import Dropdown from "./common/Dropdown";
 import useChangeEditBlockID from "../hook/useChangeEditBlockID";
 import { useRef } from "react";
+import useCheckViewer from "../hook/useCheckViewer";
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
   questionID: string;
-  isForm?: boolean;
   isEditing?: boolean;
   handleDrag?: (e: React.MouseEvent) => void;
 }
@@ -26,6 +26,7 @@ interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
  */
 const QuestionBlock = ({ questionID, isEditing, handleDrag, ...props }: QuestionBlockProps) => {
   const dispatch = useAppDispatch();
+  const isForm = useCheckViewer();
 
   const questionInfo = useAppSelector((store) => store.question[questionID]);
   const answerMap = useAppSelector((store) => store.answer);
@@ -103,7 +104,7 @@ const QuestionBlock = ({ questionID, isEditing, handleDrag, ...props }: Question
             />
           )}
         </div>
-        <AnswerManager questionID={questionID} isForm={false} isEditing={isEditing} />
+        <AnswerManager questionID={questionID} isForm={isForm} isEditing={isEditing} />
         {isEditing && (
           <div className="flex-col mx-[32px] flex gap-4">
             <Divider />
