@@ -1,12 +1,14 @@
-import { changeEditBlockID } from "../store/reducer/editBlockIDSlice";
-import { useAppDispatch } from "./storeHook";
+import { changeEditBlockID as changeEditBlockIDAction } from "../store/reducer/editBlockIDSlice";
+import { useAppDispatch, useAppSelector } from "./storeHook";
 
-const useChangeEditBlockID = () => {
+const useChangeEditBlockID = (blockID: string) => {
   const dispatch = useAppDispatch();
+  const edtingBlockID = useAppSelector((store) => store.editBlockID.editBlockID);
+  const isEditing = edtingBlockID === blockID;
 
-  const editBlockID = (id: string) => dispatch(changeEditBlockID(id));
+  const changeEditingBlockID = () => dispatch(changeEditBlockIDAction(blockID));
 
-  return { changeEditBlockID: editBlockID };
+  return { edtingBlockID, changeEditingBlockID, isEditing };
 };
 
 export default useChangeEditBlockID;

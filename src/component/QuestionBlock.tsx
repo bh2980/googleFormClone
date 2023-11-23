@@ -18,15 +18,15 @@ import useCheckViewer from "../hook/useCheckViewer";
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
   questionID: string;
-  isEditing?: boolean;
   handleDrag?: (e: React.MouseEvent) => void;
 }
 /**
  * QuestionBlock은 BlockID를 받아서 QuestionManager에게 전달
  */
-const QuestionBlock = ({ questionID, isEditing, handleDrag, ...props }: QuestionBlockProps) => {
+const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps) => {
   const dispatch = useAppDispatch();
   const isForm = useCheckViewer();
+  const { changeEditingBlockID, isEditing } = useChangeEditBlockID(questionID);
 
   const questionInfo = useAppSelector((store) => store.question[questionID]);
   const answerMap = useAppSelector((store) => store.answer);
@@ -68,14 +68,8 @@ const QuestionBlock = ({ questionID, isEditing, handleDrag, ...props }: Question
     dispatch(editQuestion({ ...questionInfo, required: !required }));
   };
 
-  const { changeEditBlockID } = useChangeEditBlockID();
-
-  const handleClick = () => {
-    changeEditBlockID(questionID);
-  };
-
   return (
-    <Block className="w-full group" isEditing={isEditing} onClick={handleClick} {...props}>
+    <Block className="w-full group" isEditing={isEditing} onClick={changeEditingBlockID} {...props}>
       <div className="flex justify-center w-full py-2 cursor-move group" onMouseDown={handleDrag}>
         <RiDraggable className="invisible rotate-90 group-hover:visible" />
       </div>
@@ -104,7 +98,7 @@ const QuestionBlock = ({ questionID, isEditing, handleDrag, ...props }: Question
             />
           )}
         </div>
-        <AnswerManager questionID={questionID} isForm={isForm} isEditing={isEditing} />
+        <AnswerManager questionID={questionID} isForm={isForm} />
         {isEditing && (
           <div className="flex-col mx-[32px] flex gap-4">
             <Divider />

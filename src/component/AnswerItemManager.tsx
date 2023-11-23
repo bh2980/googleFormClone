@@ -14,17 +14,19 @@ import { v4 as uuidv4 } from "uuid";
 import classMerge from "../utils/classMerge";
 import useDnDList from "../hook/useDnDList";
 import { editAnswerOrder } from "../store/reducer/questionSlice";
+import useChangeEditBlockID from "../hook/useChangeEditBlockID";
 
 interface AnswerManagerProps {
   isForm: boolean;
   questionID: string;
-  isEditing?: boolean;
 }
 
-const AnswerManager = ({ isForm, questionID, isEditing }: AnswerManagerProps) => {
+const AnswerManager = ({ isForm, questionID }: AnswerManagerProps) => {
   const dispatch = useAppDispatch();
   const { type, answerIDList } = useAppSelector((store) => store.question[questionID]);
   const answerMap = useAppSelector((store) => store.answer);
+
+  const { isEditing } = useChangeEditBlockID(questionID);
 
   const handleItem = (fromIdx: number, toIdx: number) => {
     dispatch(editAnswerOrder({ questionID, fromIdx, toIdx }));
@@ -79,14 +81,13 @@ const AnswerManager = ({ isForm, questionID, isEditing }: AnswerManagerProps) =>
                 <ChooseAnswer
                   key={aID}
                   idx={idx + 1}
-                  inputType={type}
+                  type={type}
                   value={answerInfo.content}
                   placeholder={`옵션 ${idx + 1}`}
                   onChange={(e) => changeAnswer(e, answerInfo)}
                   deletable={answerIDList.length > 1}
                   onDeleteButton={() => removeAnswerItem(aID, idx)}
                   handleDrag={(e) => handleDrag(e, idx)}
-                  isEditing={isEditing}
                   innerRef={(el) => (chooseAnswerRef.current[idx] = el)}
                 />
               );

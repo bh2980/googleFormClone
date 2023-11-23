@@ -6,14 +6,10 @@ import Block from "./common/Block";
 import Input from "./common/Input";
 import TextArea from "./common/TextArea";
 
-interface TitleBlockProps {
-  isEditing?: boolean;
-}
-
-const TitleBlock = ({ isEditing }: TitleBlockProps) => {
+const TitleBlock = () => {
   const dispatch = useAppDispatch();
   const { title, content } = useAppSelector((store) => store.docs);
-  const { changeEditBlockID } = useChangeEditBlockID();
+  const { changeEditingBlockID, isEditing } = useChangeEditBlockID("title");
 
   const isForm = useCheckViewer();
 
@@ -26,12 +22,7 @@ const TitleBlock = ({ isEditing }: TitleBlockProps) => {
   };
 
   return (
-    <Block
-      className="flex flex-col w-full gap-2 p-6"
-      onClick={() => changeEditBlockID("title")}
-      isTitleBlock
-      isEditing={isEditing}
-    >
+    <Block className="flex flex-col w-full gap-2 p-6" onClick={changeEditingBlockID} isTitleBlock isEditing={isEditing}>
       <Input
         className="text-3xl"
         onChange={changeTitle}

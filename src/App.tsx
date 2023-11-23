@@ -13,7 +13,6 @@ import { FORM_STATE, changeFormState } from "./store/reducer/formStateSlice";
 
 function App() {
   const dispatch = useAppDispatch();
-  const editBlockID = useAppSelector((store) => store.editBlockID.editBlockID);
   const questionIDList = useAppSelector((store) => store.docs.questionIDList);
   const formState = useAppSelector((store) => store.formState.value);
 
@@ -66,15 +65,10 @@ function App() {
       <div className="flex w-full min-h-screen py-4 bg-violet-100">
         <div className="flex-1"></div>
         <form className="flex flex-[2] gap-4 flex-col">
-          <TitleBlock isEditing={editBlockID === "title"} />
+          <TitleBlock />
           <DnDList className="flex flex-col gap-4">
             {questionIDList.map((qID, idx) => (
-              <QuestionBlock
-                key={qID}
-                questionID={qID}
-                isEditing={editBlockID === qID}
-                handleDrag={(e) => handleDrag(e, idx)}
-              />
+              <QuestionBlock key={qID} questionID={qID} handleDrag={(e) => handleDrag(e, idx)} />
             ))}
           </DnDList>
         </form>
