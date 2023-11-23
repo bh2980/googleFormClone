@@ -3,19 +3,19 @@ import Input from "../common/Input";
 import IconButton from "../common/IconButton";
 import { EDITOR_QUESTION_TYPE, ICON_CLASS } from "../../constants";
 
-interface RadioAnswerProps extends React.ComponentPropsWithRef<"input"> {
-  inputType: EDITOR_QUESTION_TYPE.radio | EDITOR_QUESTION_TYPE.checkbox | EDITOR_QUESTION_TYPE.dropdown;
+interface RadioAnswerProps extends Omit<React.ComponentPropsWithRef<"input">, "type"> {
+  type: EDITOR_QUESTION_TYPE.radio | EDITOR_QUESTION_TYPE.checkbox | EDITOR_QUESTION_TYPE.dropdown;
   idx?: number;
   deletable?: boolean;
   isForm?: boolean; //에디터인지 설문폼인지 확인
   isEditing?: boolean;
   onDeleteButton?: (...params: unknown[]) => unknown;
   innerRef?: React.ComponentPropsWithRef<"input">["ref"];
-  handleDrag: (e: React.MouseEvent) => void;
+  handleDrag?: (e: React.MouseEvent) => void;
 }
 
 const ChooseAnswer = ({
-  inputType,
+  type,
   idx,
   deletable = true,
   isForm,
@@ -36,19 +36,6 @@ const ChooseAnswer = ({
           />
         )}
         <div className="flex gap-4 px-[32px] w-full">
-          <div className="flex justify-center w-[16px] items-center">
-            {inputType === EDITOR_QUESTION_TYPE.dropdown ? (
-              idx
-            ) : isForm ? (
-              <input
-                type={inputType === EDITOR_QUESTION_TYPE.radio ? "radio" : "checkbox"}
-                disabled={!isForm}
-                {...props}
-              />
-            ) : (
-              <input type={inputType === EDITOR_QUESTION_TYPE.radio ? "radio" : "checkbox"} disabled={!isForm} />
-            )}
-          </div>
           {isForm ? (
             <Input className="w-full" disabled={isForm} innerRef={innerRef} />
           ) : (
