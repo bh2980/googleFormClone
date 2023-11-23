@@ -6,12 +6,14 @@ import { DnDAction } from "../../hook/useDnDList";
 interface DocsInterface {
   title: string;
   content: string;
+  editBlockID: string;
   questionIDList: string[];
 }
 
 const initialState: DocsInterface = {
   title: "",
   content: "",
+  editBlockID: "",
   questionIDList: [],
 };
 
@@ -32,16 +34,23 @@ const docsSlice = createSlice({
       state.questionIDList.splice(action.payload.toIdx, 0, moveQuestionID);
       console.log("after", state.questionIDList);
     },
+    changeEditBlockID(state, action: PayloadAction<string>) {
+      state.editBlockID = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(removeQuestion, (state, action) => {
         console.log("docs에서", action.payload.questionID, "삭제");
+        // focus 이동 로직 동작 X
+        // const findDeleteIdx = state.questionIDList.findIndex((qID) => qID === action.payload.questionID);
+        // state.editBlockID = state.questionIDList[findDeleteIdx - 1];
         state.questionIDList = state.questionIDList.filter((qID) => qID !== action.payload.questionID);
       })
       .addCase(addQuestion, (state, action) => {
         console.log("docs에", action.payload.questionID, "추가");
         state.questionIDList.push(action.payload.questionID);
+        state.editBlockID = action.payload.questionID;
       })
       .addCase(copyQuestion, (state, action) => {
         const parentIdx = state.questionIDList.findIndex((qID) => qID === action.payload.parentQuestionID);
@@ -50,7 +59,7 @@ const docsSlice = createSlice({
   },
 });
 
-export const { editTitle, editContent, editQuestionBlockOrder } = docsSlice.actions;
+export const { editTitle, editContent, editQuestionBlockOrder, changeEditBlockID } = docsSlice.actions;
 
 const docsReducer = docsSlice.reducer;
 export default docsReducer;

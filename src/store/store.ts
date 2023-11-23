@@ -2,14 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import docsReducer from "./reducer/docsSlice";
 import answerReducer from "./reducer/answerSlice";
 import questionReducer from "./reducer/questionSlice";
-import editBlockIDReducer from "./reducer/editBlockIDSlice";
 
+//slice에 순서는 extraReducer 실행 순서
 export const store = configureStore({
   reducer: {
-    docs: docsReducer,
-    question: questionReducer,
     answer: answerReducer,
-    editBlockID: editBlockIDReducer,
+    question: questionReducer,
+    docs: docsReducer,
   },
 });
 

@@ -8,14 +8,7 @@ const Input = ({ className, innerRef, ...props }: InputProps) => {
   return (
     <input
       ref={innerRef}
-      className={classMerge([
-        "py-2",
-        "border-b-[2px]",
-        "border-white",
-        "outline-none",
-        "focus:border-b-[2px] focus:border-violet-500",
-        className,
-      ])}
+      className={classMerge(["py-2", "focus:border-b-2", "outline-none", "focus:border-violet-500", className])}
       {...props}
     />
   );
