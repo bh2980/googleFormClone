@@ -26,7 +26,6 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
     setSelectIdx(idx);
     setIsOpen(false);
     if (onChange) onChange(idx); // 외부 함수에 idx 전달
-    console.log(dropdownSelectorRef.current);
     if (dropdownSelectorRef.current) dropdownSelectorRef.current.focus();
   };
 
@@ -56,18 +55,20 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
     if (isOpen) {
       if (!dropdownSelectorRef?.current || !dropdownListRef?.current) return;
 
-      const { height, left } = dropdownSelectorRef.current.getBoundingClientRect();
-      //top + height가 아니라 offsetTop + height
-      //top을 하면 뷰포트 기준으로 하므로 스크롤 발생 시 하단 요소에서 정확한 top을 얻을 수 없음.
-      dropdownListRef.current.style.top = `${dropdownSelectorRef.current.offsetTop + height}px`;
-      dropdownListRef.current.style.left = `${left}px`;
+      const { height } = dropdownSelectorRef.current.getBoundingClientRect();
+      const { height: listHeight } = dropdownListRef.current.getBoundingClientRect();
+
+      // 브라우저 크기를 넘어가는 드롭다운 리스트를 올려주는 처리
+      if (dropdownSelectorRef.current.offsetTop + height + 284 > document.documentElement.scrollHeight) {
+        dropdownListRef.current.style.top = `${document.documentElement.scrollHeight - listHeight - 24}px`;
+      }
     }
 
     console.log(document.activeElement);
   }, [isOpen]);
 
   return (
-    <div className="group" tabIndex={0} ref={dropdownSelectorRef}>
+    <div className="relative group" tabIndex={0} ref={dropdownSelectorRef}>
       <div
         className={classMerge([
           "w-[200px] border-2 h-[56px] bg-white flex items-center px-4 rounded-lg justify-between hover:bg-gray-100 active:bg-gray-200 cursor-pointer",
@@ -78,28 +79,25 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
         <span>{itemList[selectIdx]?.content}</span>
         {isOpen ? <RiArrowDropUpFill className={ICON_CLASS} /> : <RiArrowDropDownFill className={ICON_CLASS} />}
       </div>
-      {isOpen
-        ? createPortal(
-            <div
-              ref={dropdownListRef}
-              className="z-50 absolute top-0 left-0 w-[200px] border-2 bg-white flex-col rounded-lg shadow-2xl"
-            >
-              {itemList.map((item, idx) => (
-                <div
-                  key={item.content}
-                  className={classMerge([
-                    "flex items-center gap-4 p-4 cursor-pointer hover:bg-gray-100 active:bg-gray-200",
-                    idx === selectIdx && "bg-sky-50",
-                  ])}
-                  onClick={(e) => selectItem(e, idx)}
-                >
-                  <span>{item.content}</span>
-                </div>
-              ))}
-            </div>,
-            document.body
-          )
-        : null}
+      <div
+        ref={dropdownListRef}
+        className={classMerge([
+          [isOpen ? "fixed" : "hidden", "z-50 w-[200px] border-2 bg-white flex-col rounded-lg shadow-2xl"],
+        ])}
+      >
+        {itemList.map((item, idx) => (
+          <div
+            key={item.content}
+            className={classMerge([
+              "flex items-center gap-4 p-4 cursor-pointer hover:bg-gray-100 active:bg-gray-200",
+              idx === selectIdx && "bg-sky-50",
+            ])}
+            onClick={(e) => selectItem(e, idx)}
+          >
+            <span>{item.content}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
