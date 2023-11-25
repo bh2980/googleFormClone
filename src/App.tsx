@@ -46,14 +46,14 @@ function App() {
 
   return (
     <div className="flex flex-col min-h-screen bg-violet-100">
-      <div className="w-full h-[72px] flex justify-end shadow-sm border-b-gray-200 border-b-[1px] p-2 items-center bg-gray-50">
+      <div className="w-full h-[56px] flex justify-end shadow-sm border-b-gray-200 border-b-[1px] p-2 items-center bg-gray-50">
         <IconButton>
-          <RiEyeLine className="w-[32px] h-[32px] text-gray-600" />
+          <RiEyeLine className="w-[20px] h-[20px] text-gray-600" />
         </IconButton>
       </div>
-      <div className="flex w-full pt-8">
+      <div className="flex w-full p-8">
         <div className="flex-1"></div>
-        <form className="flex flex-[2] gap-4 flex-col">
+        <form className="flex flex-[2] gap-4 flex-col ">
           <TitleBlock />
           <DnDList className="flex flex-col gap-4">
             {questionIDList.map((qID, idx) => (
@@ -62,7 +62,7 @@ function App() {
           </DnDList>
         </form>
         <div className="flex-1 pl-4">
-          <div className="flex justify-center bg-white rounded-xl shadow-md w-[48px] h-[48px]">
+          <div className="flex justify-center bg-white shadow-md rounded-xl w-[48px] h-[48px]">
             <IconButton onClick={addQuestionBlock}>
               <RiAddCircleLine className={ICON_CLASS} />
             </IconButton>
