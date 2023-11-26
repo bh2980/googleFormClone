@@ -19,7 +19,7 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
   const [isOpen, setIsOpen] = useState(false);
   const [selectIdx, setSelectIdx] = useState(initialIdx);
   const dropdownSelectorRef = useRef<HTMLDivElement>(null);
-  const dropdownListRef = useRef<HTMLDivElement>(null);
+  const dropdownListRef = useRef<HTMLUListElement>(null);
 
   const selectItem = (e: React.MouseEvent, idx: number) => {
     setSelectIdx(idx);
@@ -78,14 +78,14 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
         <span>{itemList[selectIdx]?.content}</span>
         {isOpen ? <RiArrowDropUpFill className={ICON_CLASS} /> : <RiArrowDropDownFill className={ICON_CLASS} />}
       </div>
-      <div
+      <ul
         ref={dropdownListRef}
         className={classMerge([
           [isOpen ? "fixed" : "hidden", "z-50 w-[200px] border-2 bg-white flex-col rounded-lg shadow-2xl"],
         ])}
       >
         {itemList.map((item, idx) => (
-          <div
+          <li
             key={item.content}
             className={classMerge([
               "flex items-center gap-4 p-4 cursor-pointer hover:bg-gray-100 active:bg-gray-200",
@@ -94,9 +94,9 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
             onClick={(e) => selectItem(e, idx)}
           >
             <span>{item.content}</span>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 };
