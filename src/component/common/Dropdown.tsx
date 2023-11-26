@@ -54,16 +54,16 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
     if (isOpen) {
       if (!dropdownSelectorRef?.current || !dropdownListRef?.current) return;
 
-      const { height } = dropdownSelectorRef.current.getBoundingClientRect();
+      const { height, top } = dropdownSelectorRef.current.getBoundingClientRect();
       const { height: listHeight } = dropdownListRef.current.getBoundingClientRect();
 
       // 브라우저 크기를 넘어가는 드롭다운 리스트를 올려주는 처리
       if (dropdownSelectorRef.current.offsetTop + height + 284 > document.documentElement.scrollHeight) {
-        dropdownListRef.current.style.top = `${document.documentElement.scrollHeight - listHeight - 24}px`;
+        dropdownListRef.current.style.top = `${height + top - listHeight}px`;
+      } else {
+        dropdownListRef.current.style.top = `${height + top}px`;
       }
     }
-
-    console.log(document.activeElement);
   }, [isOpen]);
 
   return (
