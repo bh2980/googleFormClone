@@ -38,13 +38,10 @@ const AnswerManager = ({ questionID, name = v4() }: AnswerManagerProps) => {
           "mx-[32px]",
       ])}
     >
-      {type === EDITOR_QUESTION_TYPE.short ? (
-        <ShortAnswer name={name} />
-      ) : type === EDITOR_QUESTION_TYPE.long ? (
-        <LongAnswer name={name} />
-      ) : type === EDITOR_QUESTION_TYPE.dropdown ? (
-        <Dropdown itemList={itemList} />
-      ) : (
+      {type === EDITOR_QUESTION_TYPE.short && <ShortAnswer name={name} />}
+      {type === EDITOR_QUESTION_TYPE.long && <LongAnswer name={name} />}
+      {type === EDITOR_QUESTION_TYPE.dropdown && <Dropdown itemList={itemList} />}
+      {(type === EDITOR_QUESTION_TYPE.radio || type === EDITOR_QUESTION_TYPE.checkbox) &&
         answerIDList.map((aID, idx) => {
           const answerInfo = answerMap[aID];
           return (
@@ -56,8 +53,7 @@ const AnswerManager = ({ questionID, name = v4() }: AnswerManagerProps) => {
               name={name}
             />
           );
-        })
-      )}
+        })}
     </fieldset>
   );
 };

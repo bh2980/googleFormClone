@@ -70,11 +70,9 @@ const AnswerManager = ({ questionID }: AnswerManagerProps) => {
         (type === EDITOR_QUESTION_TYPE.short || type === EDITOR_QUESTION_TYPE.long) && "mx-[32px]",
       ])}
     >
-      {type === EDITOR_QUESTION_TYPE.short ? (
-        <ShortAnswer disabled />
-      ) : type === EDITOR_QUESTION_TYPE.long ? (
-        <LongAnswer disabled />
-      ) : (
+      {type === EDITOR_QUESTION_TYPE.short && <ShortAnswer disabled />}
+      {type === EDITOR_QUESTION_TYPE.long && <LongAnswer disabled />}
+      {type !== EDITOR_QUESTION_TYPE.short && type !== EDITOR_QUESTION_TYPE.long && (
         <>
           <DnDList>
             {answerIDList.map((aID, idx) => {
