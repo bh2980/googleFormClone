@@ -37,13 +37,9 @@ const ChooseAnswer = ({
         )}
         <div className="flex gap-4 px-[32px] w-full items-center">
           {type === EDITOR_QUESTION_TYPE.radio ? (
-            <>
-              <Radio disabled />
-            </>
+            <Radio disabled />
           ) : type === EDITOR_QUESTION_TYPE.checkbox ? (
-            <>
-              <Checkbox {...props} disabled />
-            </>
+            <Checkbox {...props} disabled />
           ) : (
             <div className="w-[20px] h-[20px] justify-center flex">{idx}</div>
           )}
