@@ -1,9 +1,9 @@
-import { useAppDispatch, useAppSelector } from "../hook/storeHook";
-import useChangeEditBlockID from "../hook/useChangeEditBlockID";
-import { editContent, editTitle } from "../store/reducer/docsSlice";
-import Block from "./common/Block";
-import Input from "./common/Input";
-import TextArea from "./common/TextArea";
+import { useAppDispatch, useAppSelector } from "../../hook/storeHook";
+import useChangeEditBlockID from "../../hook/useChangeEditBlockID";
+import { editContent, editTitle } from "../../store/reducer/docsSlice";
+import Block from "../common/Block";
+import Input from "../common/Input";
+import TextArea from "../common/TextArea";
 
 const TitleBlock = () => {
   const dispatch = useAppDispatch();

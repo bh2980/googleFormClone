@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { RiAddCircleLine } from "react-icons/ri";
-import TitleBlock from "../component/TitleBlock";
-import QuestionBlock from "../component/QuestionBlock";
+import { RiAddCircleLine, RiEyeLine } from "react-icons/ri";
+import TitleBlock from "../component/editor/TitleBlock";
+import QuestionBlock from "../component/editor/QuestionBlock";
 import { ICON_CLASS, EDITOR_QUESTION_TYPE } from "../constants";
 import IconButton from "../component/common/IconButton";
 
@@ -11,6 +11,7 @@ import { addQuestion } from "../store/reducer/questionSlice";
 import { addAnswer } from "../store/reducer/answerSlice";
 import useDnDList from "../hook/useDnDList";
 import { editQuestionBlockOrder } from "../store/reducer/docsSlice";
+import { Link } from "react-router-dom";
 
 const Editor = () => {
   const dispatch = useAppDispatch();
@@ -47,21 +48,30 @@ const Editor = () => {
   };
 
   return (
-    <div className="flex w-full p-8">
-      <div className="flex-1"></div>
-      <form className="flex flex-[2] gap-4 flex-col ">
-        <TitleBlock />
-        <DnDList className="flex flex-col gap-4">
-          {questionIDList.map((qID, idx) => (
-            <QuestionBlock key={qID} questionID={qID} handleDrag={(e) => handleDrag(e, idx)} />
-          ))}
-        </DnDList>
-      </form>
-      <div className="flex-1 pl-4">
-        <div className="flex justify-center bg-white shadow-md rounded-xl w-[48px] h-[48px]">
-          <IconButton onClick={addQuestionBlock}>
-            <RiAddCircleLine className={ICON_CLASS} />
-          </IconButton>
+    <div className="flex flex-col min-h-screen bg-violet-100">
+      <div className="w-full h-[56px] flex justify-end shadow-sm border-b-gray-200 border-b-[1px] p-4 items-center bg-gray-50">
+        <IconButton>
+          <Link to={"/form"}>
+            <RiEyeLine className="w-[20px] h-[20px] text-gray-600" />
+          </Link>
+        </IconButton>
+      </div>
+      <div className="flex w-full p-8">
+        <div className="flex-1"></div>
+        <form className="flex flex-[2] gap-4 flex-col ">
+          <TitleBlock />
+          <DnDList className="flex flex-col gap-4">
+            {questionIDList.map((qID, idx) => (
+              <QuestionBlock key={qID} questionID={qID} handleDrag={(e) => handleDrag(e, idx)} />
+            ))}
+          </DnDList>
+        </form>
+        <div className="flex-1 pl-4">
+          <div className="flex justify-center bg-white shadow-md rounded-xl w-[48px] h-[48px]">
+            <IconButton onClick={addQuestionBlock}>
+              <RiAddCircleLine className={ICON_CLASS} />
+            </IconButton>
+          </div>
         </div>
       </div>
     </div>

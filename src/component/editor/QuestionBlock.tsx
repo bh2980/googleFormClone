@@ -1,18 +1,18 @@
 import { RiDeleteBin6Line, RiDraggable, RiFileCopyLine } from "react-icons/ri";
-import Block from "./common/Block";
-import Input from "./common/Input";
-import Divider from "./common/Divider";
-import { EDITOR_DROPDOWN_LIST, ICON_CLASS } from "../constants";
-import IconButton from "./common/IconButton";
-import Switch from "./common/Switch";
+import Block from "../common/Block";
+import Input from "../common/Input";
+import Divider from "../common/Divider";
+import { EDITOR_DROPDOWN_LIST, ICON_CLASS } from "../../constants";
+import IconButton from "../common/IconButton";
+import Switch from "../common/Switch";
 
-import { removeQuestion, editQuestion, copyQuestion } from "../store/reducer/questionSlice";
-import { useAppDispatch, useAppSelector } from "../hook/storeHook";
+import { removeQuestion, editQuestion, copyQuestion } from "../../store/reducer/questionSlice";
+import { useAppDispatch, useAppSelector } from "../../hook/storeHook";
 import AnswerManager from "./AnswerItemManager";
-import { addAnswer, removeAnswer } from "../store/reducer/answerSlice";
+import { addAnswer, removeAnswer } from "../../store/reducer/answerSlice";
 import { v4 } from "uuid";
-import Dropdown from "./common/Dropdown";
-import useChangeEditBlockID from "../hook/useChangeEditBlockID";
+import Dropdown from "../common/Dropdown";
+import useChangeEditBlockID from "../../hook/useChangeEditBlockID";
 import { useRef } from "react";
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {

@@ -4,19 +4,19 @@
  */
 
 import { useRef } from "react";
-import { EDITOR_QUESTION_TYPE } from "../constants";
-import { useAppDispatch, useAppSelector } from "../hook/storeHook";
-import { AnswerInterface, addAnswer, editAnswer, removeAnswer } from "../store/reducer/answerSlice";
-import ChooseAnswer from "./answer/ChooseAnswer";
-import LongAnswer from "./answer/LongAnswer";
-import ShortAnswer from "./answer/ShortAnswer";
+import { EDITOR_QUESTION_TYPE } from "../../constants";
+import { useAppDispatch, useAppSelector } from "../../hook/storeHook";
+import { AnswerInterface, addAnswer, editAnswer, removeAnswer } from "../../store/reducer/answerSlice";
+import ChooseAnswer from "../answer/ChooseAnswer";
+import LongAnswer from "../answer/LongAnswer";
+import ShortAnswer from "../answer/ShortAnswer";
 import { v4 as uuidv4 } from "uuid";
-import classMerge from "../utils/classMerge";
-import useDnDList from "../hook/useDnDList";
-import { editAnswerOrder } from "../store/reducer/questionSlice";
-import useChangeEditBlockID from "../hook/useChangeEditBlockID";
-import Checkbox from "./common/Checkbox";
-import Radio from "./common/Radio";
+import classMerge from "../../utils/classMerge";
+import useDnDList from "../../hook/useDnDList";
+import { editAnswerOrder } from "../../store/reducer/questionSlice";
+import useChangeEditBlockID from "../../hook/useChangeEditBlockID";
+import Checkbox from "../common/Checkbox";
+import Radio from "../common/Radio";
 
 interface AnswerManagerProps {
   questionID: string;
