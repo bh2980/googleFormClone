@@ -5,6 +5,7 @@ interface RadioProps extends React.ComponentPropsWithoutRef<"input"> {
 }
 
 // 선택 해제 가능한 Radio
+// TODO 동일 fieldset 내 radio 선택 시 원래 체크 해제되지 않는 문제
 const Radio = ({ label, checked = false, ...props }: RadioProps) => {
   const [radioChecked, setRadioChecked] = useState(checked);
 

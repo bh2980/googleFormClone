@@ -13,6 +13,7 @@ import useDnDList from "../hook/useDnDList";
 import { editQuestionBlockOrder } from "../store/reducer/docsSlice";
 import { Link } from "react-router-dom";
 
+// TODO 관련 컴포넌트 EDITOR로 변경
 const Editor = () => {
   const dispatch = useAppDispatch();
   const questionIDList = useAppSelector((store) => store.docs.questionIDList);

@@ -54,6 +54,7 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
       dispatch(removeAnswer(answerMap[aID]));
     });
 
+    // TODO 장문형, 단답형으로 바꿀 때만 초기화
     dispatch(editQuestion({ ...questionInfo, type: EDITOR_DROPDOWN_LIST[idx].type, answerIDList: [] }));
     dispatch(addAnswer({ answerID: v4(), content: "", questionID }));
   };
