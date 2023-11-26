@@ -1,5 +1,5 @@
-import classMerge from "../../utils/classMerge";
-import TextArea from "../common/TextArea";
+import classMerge from "../../../utils/classMerge";
+import TextArea from "../TextArea";
 
 interface LongAnswerProps extends React.ComponentPropsWithRef<"textarea"> {}
 
