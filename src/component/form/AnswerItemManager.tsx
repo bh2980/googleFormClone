@@ -32,9 +32,11 @@ const AnswerManager = ({ questionID, name = v4() }: AnswerManagerProps) => {
     <fieldset
       className={classMerge([
         "flex flex-col gap-4",
-        (type === EDITOR_QUESTION_TYPE.short || type === EDITOR_QUESTION_TYPE.long) && "mx-[32px]",
+        (type === EDITOR_QUESTION_TYPE.short ||
+          type === EDITOR_QUESTION_TYPE.long ||
+          type === EDITOR_QUESTION_TYPE.dropdown) &&
+          "mx-[32px]",
       ])}
-      name={v4()}
     >
       {type === EDITOR_QUESTION_TYPE.short ? (
         <ShortAnswer name={name} />
