@@ -4,8 +4,8 @@
  */
 
 import { EDITOR_QUESTION_TYPE } from "../../constants";
-import LongAnswer from "../answer/LongAnswer";
-import ShortAnswer from "../answer/ShortAnswer";
+import LongAnswer from "../common/answer/LongAnswer";
+import ShortAnswer from "../common/answer/ShortAnswer";
 import classMerge from "../../utils/classMerge";
 import { useAppSelector } from "../../hook/storeHook";
 import ChooseAnswer from "./ChooseAnswer";
@@ -45,20 +45,18 @@ const AnswerManager = ({ questionID, name = v4() }: AnswerManagerProps) => {
       ) : type === EDITOR_QUESTION_TYPE.dropdown ? (
         <Dropdown itemList={itemList} />
       ) : (
-        <>
-          {answerIDList.map((aID, idx) => {
-            const answerInfo = answerMap[aID];
-            return (
-              <ChooseAnswer
-                key={aID}
-                type={type}
-                value={answerInfo.content}
-                placeholder={`옵션 ${idx + 1}`}
-                name={name}
-              />
-            );
-          })}
-        </>
+        answerIDList.map((aID, idx) => {
+          const answerInfo = answerMap[aID];
+          return (
+            <ChooseAnswer
+              key={aID}
+              type={type}
+              value={answerInfo.content}
+              placeholder={`옵션 ${idx + 1}`}
+              name={name}
+            />
+          );
+        })
       )}
     </fieldset>
   );

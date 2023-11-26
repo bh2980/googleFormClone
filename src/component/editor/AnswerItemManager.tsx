@@ -7,9 +7,9 @@ import { useRef } from "react";
 import { EDITOR_QUESTION_TYPE } from "../../constants";
 import { useAppDispatch, useAppSelector } from "../../hook/storeHook";
 import { AnswerInterface, addAnswer, editAnswer, removeAnswer } from "../../store/reducer/answerSlice";
-import ChooseAnswer from "../answer/ChooseAnswer";
-import LongAnswer from "../answer/LongAnswer";
-import ShortAnswer from "../answer/ShortAnswer";
+import ChooseAnswer from "./ChooseAnswer";
+import LongAnswer from "../common/answer/LongAnswer";
+import ShortAnswer from "../common/answer/ShortAnswer";
 import { v4 as uuidv4 } from "uuid";
 import classMerge from "../../utils/classMerge";
 import useDnDList from "../../hook/useDnDList";
@@ -22,6 +22,7 @@ interface AnswerManagerProps {
   questionID: string;
 }
 
+// TODO 기타 추가 구현
 const AnswerManager = ({ questionID }: AnswerManagerProps) => {
   const dispatch = useAppDispatch();
   const { type, answerIDList } = useAppSelector((store) => store.question[questionID]);
