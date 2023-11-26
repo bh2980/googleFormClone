@@ -75,26 +75,26 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
       <div className="flex flex-col gap-4 pb-8">
         <div className="flex items-center justify-between gap-4 group mx-[32px]">
           {isEditing ? (
-            <Input
-              innerRef={inputRef}
-              placeholder="질문"
-              className="w-full p-4 bg-gray-100 hover:bg-gray-200"
-              onChange={changeQuestionContent}
-              value={questionContent}
-            />
+            <>
+              <Input
+                innerRef={inputRef}
+                placeholder="질문"
+                className="w-full p-4 bg-gray-100 hover:bg-gray-200"
+                onChange={changeQuestionContent}
+                value={questionContent}
+              />
+              <Dropdown
+                className="flex"
+                itemList={EDITOR_DROPDOWN_LIST}
+                onChange={changeQuestionType}
+                initialIdx={type}
+              />
+            </>
           ) : (
             <div className="flex items-center cursor-text">
               {questionContent.length === 0 ? "질문" : questionContent}
               {required && <span className="p-1 font-bold text-red-600 class">*</span>}
             </div>
-          )}
-          {isEditing && (
-            <Dropdown
-              className="flex"
-              itemList={EDITOR_DROPDOWN_LIST}
-              onChange={changeQuestionType}
-              initialIdx={type}
-            />
           )}
         </div>
         <AnswerManager questionID={questionID} />
