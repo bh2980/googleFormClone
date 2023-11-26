@@ -13,13 +13,9 @@ const ChooseAnswer = ({ type, value, ...props }: RadioAnswerProps) => {
       <div className="relative flex items-center w-full gap-4">
         <div className="flex gap-4 px-[32px] py-1 w-full items-center">
           {type === EDITOR_QUESTION_TYPE.radio ? (
-            <>
-              <Radio label={value} {...props} />
-            </>
+            <Radio label={value} {...props} />
           ) : (
-            <>
-              <Checkbox label={value} {...props} />
-            </>
+            <Checkbox label={value} {...props} />
           )}
         </div>
       </div>

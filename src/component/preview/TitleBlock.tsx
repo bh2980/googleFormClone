@@ -8,7 +8,7 @@ const TitleBlock = () => {
   return (
     <Block className="flex flex-col w-full gap-2 p-6" isTitleBlock>
       <span className="text-3xl">{title}</span>
-      <TextArea>{content}</TextArea>
+      <TextArea disabled>{content}</TextArea>
     </Block>
   );
 };

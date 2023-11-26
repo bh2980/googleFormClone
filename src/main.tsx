@@ -7,7 +7,7 @@ import { store } from "./store/store.ts";
 
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import Editor from "./pages/Editor.tsx";
-import Form from "./pages/Form.tsx";
+import Form from "./pages/Preview.tsx";
 import Result from "./pages/Result.tsx";
 
 const router = createBrowserRouter([
