@@ -2,7 +2,6 @@ import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 import { EDITOR_QUESTION_TYPE, ICON_CLASS } from "../../constants";
 import { useEffect, useRef, useState } from "react";
 import classMerge from "../../utils/classMerge";
-import { createPortal } from "react-dom";
 
 // 외부에서 Dropdown이 설정한 값을 참조할 수 있도록 만들어야함
 interface DropdownItem {
