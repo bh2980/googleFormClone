@@ -5,7 +5,7 @@ import Block from "../common/Block";
 import Input from "../common/Input";
 import TextArea from "../common/TextArea";
 
-const TitleBlock = () => {
+const TitleBlock = ({ disabled }: { disabled: boolean }) => {
   const dispatch = useAppDispatch();
   const { title, content } = useAppSelector((store) => store.docs);
   const { changeEditingBlockID, isEditing } = useChangeEditBlockID("title");
@@ -20,8 +20,14 @@ const TitleBlock = () => {
 
   return (
     <Block className="flex flex-col w-full gap-2 p-6" onClick={changeEditingBlockID} isTitleBlock isEditing={isEditing}>
-      <Input className="text-3xl" onChange={changeTitle} value={title} placeholder="제목을 입력하세요" />
-      <TextArea value={content} onChange={changeContent} placeholder="설명을 입력하세요" />
+      <Input
+        className="text-3xl"
+        onChange={changeTitle}
+        value={title}
+        placeholder="제목을 입력하세요"
+        disabled={disabled}
+      />
+      <TextArea value={content} onChange={changeContent} placeholder="설명을 입력하세요" disabled={disabled} />
     </Block>
   );
 };
