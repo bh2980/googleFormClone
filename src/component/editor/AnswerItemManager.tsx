@@ -86,6 +86,7 @@ const AnswerManager = ({ questionID }: AnswerManagerProps) => {
                   value={answerInfo.content}
                   placeholder={`옵션 ${idx + 1}`}
                   onChange={(e) => changeAnswer(e, answerInfo)}
+                  isEditing={isEditing}
                   deletable={answerIDList.length > 1}
                   onDeleteButton={() => removeAnswerItem(aID, idx)}
                   handleDrag={(e) => handleDrag(e, idx)}
