@@ -3,8 +3,8 @@ import IconButton from "../component/common/IconButton";
 
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../hook/storeHook";
-import TitleBlock from "../component/editor/TitleBlock";
 import QuestionBlock from "../component/form/QuestionBlock";
+import TitleBlock from "../component/form/TitleBlock";
 
 const Form = () => {
   const questionIDList = useAppSelector((store) => store.docs.questionIDList);
@@ -18,14 +18,19 @@ const Form = () => {
         </IconButton>
       </div>
       <div className="flex w-full p-8">
-        <div className="flex-1"></div>
-        <form className="flex flex-[2] gap-4 flex-col ">
-          <TitleBlock disabled />
+        <div className="flex-1" />
+        <form className="flex flex-[2] gap-4 flex-col items-end">
+          <TitleBlock />
           {questionIDList.map((qID) => (
             <QuestionBlock key={qID} questionID={qID} />
           ))}
+          <Link to={"/result"}>
+            <button className="w-[120px] p-3 text-white text-md bg-violet-800 rounded-xl hover:bg-violet-500 active:bg-violet-900">
+              제출
+            </button>
+          </Link>
         </form>
-        <div className="flex-1"></div>
+        <div className="flex-1" />
       </div>
     </div>
   );
