@@ -2,6 +2,7 @@ interface CheckboxProps extends React.ComponentPropsWithoutRef<"input"> {
   label?: string;
 }
 
+// TODO CheckBoxGroup 만들기
 const Checkbox = ({ label, ...props }: CheckboxProps) => {
   return (
     <label className="flex items-center gap-4 group/checkbox hover:cursor-pointer">
