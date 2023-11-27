@@ -7,10 +7,12 @@ import { EDITOR_QUESTION_TYPE } from "../../constants";
 import LongAnswer from "../common/answer/LongAnswer";
 import ShortAnswer from "../common/answer/ShortAnswer";
 import classMerge from "../../utils/classMerge";
-import { useAppSelector } from "../../hook/storeHook";
+import { useAppDispatch, useAppSelector } from "../../hook/storeHook";
 import ChooseAnswer from "./ChooseAnswer";
 import { v4 } from "uuid";
 import Dropdown from "../common/Dropdown";
+import { editResponse } from "../../store/reducer/responseSlice";
+import { useEffect } from "react";
 
 interface AnswerManagerProps {
   questionID: string;
@@ -18,8 +20,10 @@ interface AnswerManagerProps {
 }
 
 const AnswerManager = ({ questionID, name = v4() }: AnswerManagerProps) => {
+  const dispatch = useAppDispatch();
   const { type, answerIDList } = useAppSelector((store) => store.question[questionID]);
   const answerMap = useAppSelector((store) => store.answer);
+  const response = useAppSelector((store) => store.response[questionID]);
 
   const itemList = answerIDList.reduce((acc: { content: string }[], cur: string) => {
     const { content } = answerMap[cur];
@@ -27,6 +31,34 @@ const AnswerManager = ({ questionID, name = v4() }: AnswerManagerProps) => {
 
     return acc;
   }, []);
+
+  const changeTextResponse = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    dispatch(editResponse({ questionID, content: event.target.value }));
+  };
+
+  const changeClickResponse = (idx: number) => {
+    if (type === EDITOR_QUESTION_TYPE.dropdown || type === EDITOR_QUESTION_TYPE.radio) {
+      console.log("hello");
+      dispatch(editResponse({ questionID, content: idx }));
+    } else {
+      const prevState = response === null ? [] : (response as number[]);
+
+      console.log("checkbox", prevState);
+
+      if (prevState.includes(idx)) {
+        console.log("include");
+        const nextState = prevState.filter((checkedIdx) => checkedIdx !== idx);
+
+        dispatch(editResponse({ questionID, content: nextState }));
+      } else {
+        dispatch(editResponse({ questionID, content: [...prevState, idx] }));
+      }
+    }
+  };
+
+  useEffect(() => {
+    console.log(response);
+  }, [response]);
 
   return (
     <fieldset
@@ -38,9 +70,9 @@ const AnswerManager = ({ questionID, name = v4() }: AnswerManagerProps) => {
           "mx-[32px]",
       ])}
     >
-      {type === EDITOR_QUESTION_TYPE.short && <ShortAnswer name={name} />}
-      {type === EDITOR_QUESTION_TYPE.long && <LongAnswer name={name} />}
-      {type === EDITOR_QUESTION_TYPE.dropdown && <Dropdown itemList={itemList} />}
+      {type === EDITOR_QUESTION_TYPE.short && <ShortAnswer name={name} onChange={changeTextResponse} />}
+      {type === EDITOR_QUESTION_TYPE.long && <LongAnswer name={name} onChange={changeTextResponse} />}
+      {type === EDITOR_QUESTION_TYPE.dropdown && <Dropdown itemList={itemList} onChange={changeClickResponse} />}
       {(type === EDITOR_QUESTION_TYPE.radio || type === EDITOR_QUESTION_TYPE.checkbox) &&
         answerIDList.map((aID, idx) => {
           const answerInfo = answerMap[aID];
@@ -48,9 +80,10 @@ const AnswerManager = ({ questionID, name = v4() }: AnswerManagerProps) => {
             <ChooseAnswer
               key={aID}
               type={type}
-              value={answerInfo.content}
+              label={answerInfo.content}
               placeholder={`옵션 ${idx + 1}`}
               name={name}
+              onClick={() => changeClickResponse(idx)}
             />
           );
         })}
