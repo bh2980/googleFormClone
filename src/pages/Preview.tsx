@@ -38,7 +38,10 @@ const Form = () => {
             <QuestionBlock key={qID} questionID={qID} />
           ))}
           <Link to={"/result"}>
-            <button className="w-[120px] p-3 text-white text-md bg-violet-800 rounded-xl hover:bg-violet-500 active:bg-violet-900">
+            <button
+              type="button"
+              className="w-[120px] p-3 text-white text-md bg-violet-800 rounded-xl hover:bg-violet-500 active:bg-violet-900"
+            >
               제출
             </button>
           </Link>
