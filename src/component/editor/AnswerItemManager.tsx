@@ -30,11 +30,11 @@ const AnswerManager = ({ questionID }: AnswerManagerProps) => {
 
   const { isEditing } = useChangeEditBlockID(questionID);
 
-  const handleItem = (fromIdx: number, toIdx: number) => {
-    dispatch(editAnswerOrder({ questionID, fromIdx, toIdx }));
-  };
-
-  const { DnDList, handleDrag } = useDnDList({ handleItem });
+  const { DnDList, handleDrag } = useDnDList({
+    handleItem: (fromIdx: number, toIdx: number) => {
+      dispatch(editAnswerOrder({ questionID, fromIdx, toIdx }));
+    },
+  });
 
   const chooseAnswerRef = useRef<(null | HTMLInputElement)[]>([]);
 
