@@ -51,11 +51,11 @@ const Editor = () => {
   return (
     <div className="flex flex-col min-h-screen bg-violet-100">
       <div className="w-full h-[56px] flex justify-end shadow-sm border-b-gray-200 border-b-[1px] p-4 items-center bg-gray-50">
-        <a href="/form" target="_blank">
+        <Link to="/form">
           <IconButton>
             <RiEyeLine className="w-[20px] h-[20px] text-gray-600" />
           </IconButton>
-        </a>
+        </Link>
       </div>
       <div className="flex w-full p-8">
         <div className="flex-1"></div>
