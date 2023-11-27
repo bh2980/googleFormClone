@@ -2,14 +2,25 @@ import { RiEdit2Line } from "react-icons/ri";
 import IconButton from "../component/common/IconButton";
 
 import { Link } from "react-router-dom";
-import { useAppSelector } from "../hook/storeHook";
+import { useAppDispatch, useAppSelector } from "../hook/storeHook";
 import QuestionBlock from "../component/preview/QuestionBlock";
 import TitleBlock from "../component/preview/TitleBlock";
+import { editResponse } from "../store/reducer/responseSlice";
+import { useEffect } from "react";
 
 // TODO 질문별 답변 상태 정의 후 저장
 // TODO Preview~로 변경
 const Form = () => {
-  const questionIDList = useAppSelector((store) => store.docs.questionIDList);
+  const dispatch = useAppDispatch();
+  const questionIDList = useAppSelector((store) => {
+    return store.docs.questionIDList;
+  });
+
+  useEffect(() => {
+    // 응답 상태 초기화
+    questionIDList.map((qID) => dispatch(editResponse({ questionID: qID, content: null })));
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen bg-violet-100">
       <div className="w-full h-[56px] flex justify-end shadow-sm border-b-gray-200 border-b-[1px] p-4 items-center bg-gray-50">
