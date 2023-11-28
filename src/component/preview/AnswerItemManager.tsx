@@ -12,6 +12,7 @@ import ChooseAnswer from "./ChooseAnswer";
 import { v4 } from "uuid";
 import Dropdown from "../common/Dropdown";
 import { editResponse } from "../../store/reducer/responseSlice";
+import RadioGroup from "../common/Radio/RadioGroup";
 
 interface AnswerManagerProps {
   questionID: string;
@@ -36,14 +37,15 @@ const AnswerManager = ({ questionID, name = v4() }: AnswerManagerProps) => {
   };
 
   const changeClickResponse = (idx: number) => {
-    if (type === EDITOR_QUESTION_TYPE.dropdown || type === EDITOR_QUESTION_TYPE.radio) {
-      console.log("hello");
+    if (type === EDITOR_QUESTION_TYPE.dropdown) {
       dispatch(editResponse({ questionID, content: idx }));
+    } else if (type === EDITOR_QUESTION_TYPE.radio) {
+      if (response === idx) dispatch(editResponse({ questionID, content: null }));
+      else dispatch(editResponse({ questionID, content: idx }));
     } else {
       const prevState = response === null ? [] : (response as number[]);
 
       if (prevState.includes(idx)) {
-        console.log("include");
         const nextState = prevState.filter((checkedIdx) => checkedIdx !== idx);
 
         dispatch(editResponse({ questionID, content: nextState }));
@@ -66,7 +68,7 @@ const AnswerManager = ({ questionID, name = v4() }: AnswerManagerProps) => {
       {type === EDITOR_QUESTION_TYPE.short && <ShortAnswer name={name} onChange={changeTextResponse} />}
       {type === EDITOR_QUESTION_TYPE.long && <LongAnswer name={name} onChange={changeTextResponse} />}
       {type === EDITOR_QUESTION_TYPE.dropdown && <Dropdown itemList={itemList} onChange={changeClickResponse} />}
-      {(type === EDITOR_QUESTION_TYPE.radio || type === EDITOR_QUESTION_TYPE.checkbox) &&
+      {type === EDITOR_QUESTION_TYPE.checkbox &&
         answerIDList.map((aID, idx) => {
           const answerInfo = answerMap[aID];
           return (
@@ -80,6 +82,23 @@ const AnswerManager = ({ questionID, name = v4() }: AnswerManagerProps) => {
             />
           );
         })}
+      {type === EDITOR_QUESTION_TYPE.radio && (
+        <RadioGroup>
+          {answerIDList.map((aID, idx) => {
+            const answerInfo = answerMap[aID];
+            return (
+              <ChooseAnswer
+                key={aID}
+                type={type}
+                label={answerInfo.content}
+                placeholder={`옵션 ${idx + 1}`}
+                name={name}
+                onClick={() => changeClickResponse(idx)}
+              />
+            );
+          })}
+        </RadioGroup>
+      )}
     </fieldset>
   );
 };
