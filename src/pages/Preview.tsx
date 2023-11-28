@@ -17,7 +17,8 @@ const Preview = () => {
     return store.docs.questionIDList;
   });
 
-  const { question, response } = useAppSelector((store) => store);
+  const question = useAppSelector((store) => store.question);
+  const response = useAppSelector((store) => store.response);
 
   const submitForm = () => {
     let checkRequired = true;

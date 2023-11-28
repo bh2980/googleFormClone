@@ -7,7 +7,10 @@ import { RiEdit2Line, RiEyeLine } from "react-icons/ri";
 
 // TODO 질문과 질문별 답변 상태를 불러와 보여주기
 const Result = () => {
-  const { docs, question, answer, response } = useAppSelector((store) => store);
+  const docs = useAppSelector((store) => store.docs);
+  const question = useAppSelector((store) => store.question);
+  const answer = useAppSelector((store) => store.answer);
+  const response = useAppSelector((store) => store.response);
 
   const makeAnswerView = (qID: string) => {
     if (response[qID] === null || (response[qID] as number[]).length === 0) return "미응답";
