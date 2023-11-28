@@ -1,7 +1,7 @@
 import { RiEdit2Line } from "react-icons/ri";
 import IconButton from "../component/common/IconButton";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hook/storeHook";
 import QuestionBlock from "../component/preview/QuestionBlock";
 import TitleBlock from "../component/preview/TitleBlock";
@@ -10,11 +10,32 @@ import { useEffect } from "react";
 
 // TODO 질문별 답변 상태 정의 후 저장
 // TODO Preview~로 변경
-const Form = () => {
+const Preview = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const questionIDList = useAppSelector((store) => {
     return store.docs.questionIDList;
   });
+
+  const { question, response } = useAppSelector((store) => store);
+
+  const submitForm = () => {
+    let checkRequired = true;
+
+    questionIDList.forEach((qID) => {
+      const { required } = question[qID];
+      const responseContent = response[qID];
+
+      if (required && !responseContent) checkRequired = false;
+    });
+
+    if (!checkRequired) {
+      alert("필수 질문에 응답해주세요");
+      return;
+    }
+
+    navigate("/result");
+  };
 
   useEffect(() => {
     // 응답 상태 초기화
@@ -37,14 +58,13 @@ const Form = () => {
           {questionIDList.map((qID) => (
             <QuestionBlock key={qID} questionID={qID} />
           ))}
-          <Link to={"/result"}>
-            <button
-              type="button"
-              className="w-[120px] p-3 text-white text-md bg-violet-800 rounded-xl hover:bg-violet-500 active:bg-violet-900"
-            >
-              제출
-            </button>
-          </Link>
+          <button
+            type="button"
+            onClick={submitForm}
+            className="w-[120px] p-3 text-white text-md bg-violet-800 rounded-xl hover:bg-violet-500 active:bg-violet-900"
+          >
+            제출
+          </button>
         </form>
         <div className="flex-1" />
       </div>
@@ -52,4 +72,4 @@ const Form = () => {
   );
 };
 
-export default Form;
+export default Preview;
