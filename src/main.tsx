@@ -7,7 +7,7 @@ import { store } from "./store/store.ts";
 
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import Editor from "./pages/Editor.tsx";
-import Form from "./pages/Preview.tsx";
+import Preview from "./pages/Preview.tsx";
 import Result from "./pages/Result.tsx";
 
 const router = createBrowserRouter([
@@ -22,8 +22,8 @@ const router = createBrowserRouter([
     errorElement: <>error page</>,
   },
   {
-    path: "/form",
-    element: <Form />,
+    path: "/preview",
+    element: <Preview />,
     errorElement: <>error page</>,
   },
   {
