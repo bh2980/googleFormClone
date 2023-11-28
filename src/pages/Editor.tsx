@@ -76,8 +76,8 @@ const Editor = () => {
           </DnDList>
         </form>
         <div className="relative flex-1 pl-4">
-          <div className="fixed flex justify-center bg-white shadow-md rounded-xl w-[48px] h-[48px]">
-            <IconButton onClick={addQuestionBlock}>
+          <div className="fixed flex flex-col justify-center items-center bg-white shadow-md rounded-xl w-[48px] py-1 gap-2">
+            <IconButton onClick={addQuestionBlock} className="w-[40px] h-[40px]">
               <RiAddCircleLine className={ICON_CLASS} />
             </IconButton>
           </div>
