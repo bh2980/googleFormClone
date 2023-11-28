@@ -23,7 +23,7 @@ const TextArea = ({ className, ...props }: TextAreaProps) => {
   }, []);
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <textarea
         className={classMerge(["peer", "w-full", "overflow-hidden", "py-2", "outline-none", "resize-none", className])}
         rows={1}
