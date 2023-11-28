@@ -20,8 +20,8 @@ const TitleBlock = () => {
 
   return (
     <Block className="flex flex-col w-full gap-2 p-6" onClick={changeEditingBlockID} isTitleBlock isEditing={isEditing}>
-      <Input className="text-3xl" onChange={changeTitle} value={title} placeholder="제목을 입력하세요" />
-      <TextArea value={content} onChange={changeContent} placeholder="설명을 입력하세요" />
+      <Input className="text-3xl" onChange={changeTitle} defaultValue={title} placeholder="제목을 입력하세요" />
+      <TextArea defaultValue={content} onChange={changeContent} placeholder="설명을 입력하세요" />
     </Block>
   );
 };
