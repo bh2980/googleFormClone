@@ -7,13 +7,13 @@ interface RadioAnswerProps extends Omit<React.ComponentPropsWithRef<"input">, "t
   label?: string;
 }
 
-const ChooseAnswer = ({ type, label, ...props }: RadioAnswerProps) => {
+const ChooseAnswer = ({ type, label, checked, ...props }: RadioAnswerProps) => {
   return (
     <div className="flex items-center justify-between">
       <div className="relative flex items-center w-full gap-4">
         <div className="flex gap-4 px-[32px] py-1 w-full items-center">
           {type === EDITOR_QUESTION_TYPE.radio ? (
-            <Radio label={label} {...props} />
+            <Radio label={label} defaultChecked={checked} {...props} />
           ) : (
             <Checkbox label={label} {...props} />
           )}
