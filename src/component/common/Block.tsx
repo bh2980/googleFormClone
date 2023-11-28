@@ -1,3 +1,5 @@
+import classMerge from "../../utils/classMerge";
+
 interface BlockProps extends React.ComponentPropsWithRef<"div"> {
   isTitleBlock?: boolean;
   isEditing?: boolean;
@@ -6,7 +8,13 @@ interface BlockProps extends React.ComponentPropsWithRef<"div"> {
 
 const Block = ({ isTitleBlock = false, isEditing, innerRef, className, children, ...props }: BlockProps) => {
   return (
-    <section ref={innerRef} className="min-w-[720px] bg-white rounded-xl flex flex-col justify-between overflow-hidden">
+    <section
+      ref={innerRef}
+      className={classMerge([
+        "max-w-[800px] bg-white rounded-xl flex flex-col justify-between overflow-hidden",
+        isEditing && "shadow-lg",
+      ])}
+    >
       {isTitleBlock && <div className="w-full h-[8px] bg-violet-800"></div>}
       <div className="flex group">
         {isEditing && <div className="w-[8px] max-h-full bg-blue-500" />}
