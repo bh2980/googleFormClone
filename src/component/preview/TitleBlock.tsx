@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { useAppSelector } from "../../hook/storeHook";
 import Block from "../common/Block";
 
@@ -9,10 +10,10 @@ const TitleBlock = () => {
       <span className="text-3xl">{title}</span>
       <div>
         {content.split("\n").map((line) => (
-          <>
+          <Fragment key={line}>
             <span>{line}</span>
             <br />
-          </>
+          </Fragment>
         ))}
       </div>
     </Block>
