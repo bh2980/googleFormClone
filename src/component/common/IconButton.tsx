@@ -5,7 +5,16 @@ interface IconButtonProps extends React.ComponentPropsWithRef<"button"> {}
 const IconButton = ({ children, className, type = "button", ...props }: IconButtonProps) => {
   return (
     <button
-      className={classMerge(["p-3", "rounded-full", "hover:bg-gray-100", "active:bg-gray-200", className])}
+      className={classMerge([
+        "flex",
+        "justify-center",
+        "items-center",
+        "p-3",
+        "rounded-full",
+        "hover:bg-gray-100",
+        "active:bg-gray-200",
+        className,
+      ])}
       type={type}
       {...props}
     >
