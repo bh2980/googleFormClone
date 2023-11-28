@@ -4,8 +4,8 @@
  */
 
 import { EDITOR_QUESTION_TYPE } from "../../constants";
-import LongAnswer from "../common/answer/LongAnswer";
-import ShortAnswer from "../common/answer/ShortAnswer";
+import LongAnswer from "./answer/LongAnswer";
+import ShortAnswer from "./answer/ShortAnswer";
 import classMerge from "../../utils/classMerge";
 import { useAppDispatch, useAppSelector } from "../../hook/storeHook";
 import ChooseAnswer from "./ChooseAnswer";
