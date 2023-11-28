@@ -13,7 +13,7 @@ import { addAnswer, removeAnswer } from "../../store/reducer/answerSlice";
 import { v4 } from "uuid";
 import Dropdown from "../common/Dropdown";
 import useChangeEditBlockID from "../../hook/useChangeEditBlockID";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
   questionID: string;
@@ -29,7 +29,8 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
   const questionInfo = useAppSelector((store) => store.question[questionID]);
   const answerMap = useAppSelector((store) => store.answer);
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
+  const questionInputRef = useRef<HTMLInputElement>(null);
 
   const { questionContent, required, answerIDList, type } = questionInfo;
 
@@ -67,8 +68,27 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
     dispatch(editQuestion({ ...questionInfo, required: !required }));
   };
 
+  useEffect(() => {
+    //자동 focus 처리
+    if (!containerRef?.current || !questionInputRef?.current) return;
+
+    if (isEditing) {
+      const focusElement = document.activeElement;
+
+      if (!containerRef.current.contains(focusElement)) {
+        questionInputRef.current.focus();
+      }
+    }
+  }, [isEditing]);
+
   return (
-    <Block className="w-full group" isEditing={isEditing} onClick={changeEditingBlockID} {...props}>
+    <Block
+      className="w-full group"
+      isEditing={isEditing}
+      onClick={changeEditingBlockID}
+      innerRef={containerRef}
+      {...props}
+    >
       <div className="flex justify-center w-full py-2 cursor-move group" onMouseDown={handleDrag}>
         <RiDraggable className="invisible rotate-90 group-hover:visible" />
       </div>
@@ -77,11 +97,11 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
           {isEditing ? (
             <>
               <Input
-                innerRef={inputRef}
                 placeholder="질문"
                 className="w-full p-4 bg-gray-100 hover:bg-gray-200"
                 onChange={changeQuestionContent}
                 value={questionContent}
+                innerRef={questionInputRef}
               />
               <Dropdown
                 className="flex"
