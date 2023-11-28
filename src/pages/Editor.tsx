@@ -12,6 +12,7 @@ import { addAnswer } from "../store/reducer/answerSlice";
 import useDnDList from "../hook/useDnDList";
 import { editQuestionBlockOrder } from "../store/reducer/docsSlice";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 // TODO 관련 컴포넌트 EDITOR로 변경
 const Editor = () => {
@@ -48,6 +49,10 @@ const Editor = () => {
     );
   };
 
+  useEffect(() => {
+    window.scrollTo(0, document.body.scrollHeight);
+  }, [questionIDList]);
+
   return (
     <div className="flex flex-col min-h-screen bg-violet-100">
       <div className="w-full h-[56px] flex justify-end shadow-sm border-b-gray-200 border-b-[1px] p-4 items-center bg-gray-50">
@@ -67,8 +72,8 @@ const Editor = () => {
             ))}
           </DnDList>
         </form>
-        <div className="flex-1 pl-4">
-          <div className="flex justify-center bg-white shadow-md rounded-xl w-[48px] h-[48px]">
+        <div className="relative flex-1 pl-4">
+          <div className="fixed flex justify-center bg-white shadow-md rounded-xl w-[48px] h-[48px]">
             <IconButton onClick={addQuestionBlock}>
               <RiAddCircleLine className={ICON_CLASS} />
             </IconButton>
