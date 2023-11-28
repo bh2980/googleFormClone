@@ -12,7 +12,6 @@ import ChooseAnswer from "./ChooseAnswer";
 import { v4 } from "uuid";
 import Dropdown from "../common/Dropdown";
 import { editResponse } from "../../store/reducer/responseSlice";
-import { useEffect } from "react";
 
 interface AnswerManagerProps {
   questionID: string;
@@ -43,8 +42,6 @@ const AnswerManager = ({ questionID, name = v4() }: AnswerManagerProps) => {
     } else {
       const prevState = response === null ? [] : (response as number[]);
 
-      console.log("checkbox", prevState);
-
       if (prevState.includes(idx)) {
         console.log("include");
         const nextState = prevState.filter((checkedIdx) => checkedIdx !== idx);
@@ -55,10 +52,6 @@ const AnswerManager = ({ questionID, name = v4() }: AnswerManagerProps) => {
       }
     }
   };
-
-  useEffect(() => {
-    console.log(response);
-  }, [response]);
 
   return (
     <fieldset
