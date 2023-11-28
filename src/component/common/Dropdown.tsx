@@ -21,7 +21,7 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
   const dropdownSelectorRef = useRef<HTMLDivElement>(null);
   const dropdownListRef = useRef<HTMLUListElement>(null);
 
-  const selectItem = (e: React.MouseEvent, idx: number) => {
+  const selectItem = (idx: number) => {
     setSelectIdx(idx);
     setIsOpen(false);
     if (onChange) onChange(idx); // 외부 함수에 idx 전달
@@ -91,7 +91,7 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
               "flex items-center gap-4 p-4 cursor-pointer hover:bg-gray-100 active:bg-gray-200",
               idx === selectIdx && "bg-sky-50",
             ])}
-            onClick={(e) => selectItem(e, idx)}
+            onClick={() => selectItem(idx)}
           >
             <span>{item.content}</span>
           </li>
