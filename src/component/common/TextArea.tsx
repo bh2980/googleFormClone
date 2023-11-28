@@ -23,16 +23,30 @@ const TextArea = ({ className, ...props }: TextAreaProps) => {
   }, []);
 
   return (
-    <textarea
-      className={classMerge([
-        "overflow-hidden py-2 outline-none resize-none focus:border-b-2 focus:border-violet-500",
-        className,
-      ])}
-      rows={1}
-      onInput={handleInput}
-      ref={textareaRef}
-      {...props}
-    />
+    <div className="relative">
+      <textarea
+        className={classMerge(["peer", "w-full", "overflow-hidden", "py-2", "outline-none", "resize-none", className])}
+        rows={1}
+        onInput={handleInput}
+        ref={textareaRef}
+        {...props}
+      />
+      <div
+        className={classMerge([
+          "after:absolute",
+          "after:bottom-0",
+          "after:w-[0px]",
+          "after:h-[2px]",
+          "after:left-1/2",
+          "after:bg-violet-500",
+          "after:transition-all",
+          "after:ease-in-out",
+          "after:duration-300",
+          "peer-focus:after:w-full",
+          "peer-focus:after:left-0",
+        ])}
+      />
+    </div>
   );
 };
 
