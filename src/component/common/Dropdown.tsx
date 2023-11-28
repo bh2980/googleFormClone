@@ -54,13 +54,13 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
     if (isOpen) {
       if (!dropdownSelectorRef?.current || !dropdownListRef?.current) return;
 
-      const { height, top } = dropdownSelectorRef.current.getBoundingClientRect();
+      const { height: selectorHeight, top: selectorTop } = dropdownSelectorRef.current.getBoundingClientRect();
       const { height: listHeight } = dropdownListRef.current.getBoundingClientRect();
 
-      if (dropdownSelectorRef.current.offsetTop + height + listHeight >= window.innerHeight) {
+      if (selectorTop + selectorHeight + listHeight >= window.innerHeight) {
         dropdownListRef.current.style.top = `${window.innerHeight - listHeight - 32}px`;
       } else {
-        dropdownListRef.current.style.top = `${height + top}px`;
+        dropdownListRef.current.style.top = `${selectorHeight + selectorTop}px`;
       }
     }
   }, [isOpen]);
