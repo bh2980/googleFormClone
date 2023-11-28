@@ -16,7 +16,7 @@ import useDnDList from "../../hook/useDnDList";
 import { editAnswerOrder } from "../../store/reducer/questionSlice";
 import useChangeEditBlockID from "../../hook/useChangeEditBlockID";
 import Checkbox from "../common/Checkbox";
-import Radio from "../common/Radio";
+import Radio from "../common/Radio/Radio";
 
 interface AnswerManagerProps {
   questionID: string;

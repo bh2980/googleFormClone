@@ -1,6 +1,6 @@
 import { EDITOR_QUESTION_TYPE } from "../../constants";
 import Checkbox from "../common/Checkbox";
-import Radio from "../common/Radio";
+import Radio from "../common/Radio/Radio";
 
 interface RadioAnswerProps extends Omit<React.ComponentPropsWithRef<"input">, "type"> {
   type: EDITOR_QUESTION_TYPE.radio | EDITOR_QUESTION_TYPE.checkbox;

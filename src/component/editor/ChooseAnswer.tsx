@@ -2,7 +2,7 @@ import { RiCloseFill, RiDraggable } from "react-icons/ri";
 import IconButton from "../common/IconButton";
 import { EDITOR_QUESTION_TYPE, ICON_CLASS } from "../../constants";
 import Checkbox from "../common/Checkbox";
-import Radio from "../common/Radio";
+import Radio from "../common/Radio/Radio";
 import Input from "../common/Input";
 
 interface RadioAnswerProps extends Omit<React.ComponentPropsWithRef<"input">, "type"> {
