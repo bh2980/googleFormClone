@@ -5,7 +5,7 @@
 
 구글 폼 클론 코딩 토이 프로젝트입니다.
 
-배포 링크 : https://mygoogleformclone.netlify.app/editor
+배포 링크 : https://mygoogleformclone.netlify.app
 
 ## 에디터 화면
 ![Editor](https://github.com/bh2980/googleFormClone/assets/74360958/726aab02-ce24-49d4-abff-9273d00a1c79)
