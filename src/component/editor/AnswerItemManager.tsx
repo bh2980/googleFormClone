@@ -106,10 +106,10 @@ const AnswerManager = ({ questionID }: AnswerManagerProps) => {
                   옵션 추가
                 </span>
               </div>
-              <span>또는</span>
+              {/* <span>또는</span>
               <button type="button" className="text-blue-500">
                 '기타' 추가
-              </button>
+              </button> */}
             </div>
           )}
         </>
