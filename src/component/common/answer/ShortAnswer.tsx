@@ -5,7 +5,7 @@ import Input from "../Input";
 interface ShortAnswerProps extends React.ComponentPropsWithRef<"input"> {}
 
 const ShortAnswer = ({ ...props }: ShortAnswerProps) => {
-  return <Input className="bg-white" placeholder="단답형 메시지" {...props} />;
+  return <Input placeholder="단답형 메시지" {...props} />;
 };
 
 export default ShortAnswer;
