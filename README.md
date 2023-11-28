@@ -1,10 +1,9 @@
 # Google Form 클론코딩
 <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=white"> <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white"> <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white"> <img src="https://img.shields.io/badge/Redux Tool Kit-764ABC?style=for-the-badge&logo=Redux&logoColor=white"> <img src="https://img.shields.io/badge/Tailwind CSS-06B6D4?style=for-the-badge&logo=TailwindCSS&logoColor=white">
 
-
-
-구글 폼 클론 코딩 토이 프로젝트입니다.
-
+개발 인원 : 1명
+프로젝트 기간 : 2023.11.18
+설명 : 구글 폼 클론 코딩 토이 프로젝트입니다.
 배포 링크 : https://mygoogleformclone.netlify.app
 
 ## 에디터 화면
