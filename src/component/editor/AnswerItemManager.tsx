@@ -8,8 +8,6 @@ import { EDITOR_QUESTION_TYPE } from "../../constants";
 import { useAppDispatch, useAppSelector } from "../../hook/storeHook";
 import { AnswerInterface, addAnswer, editAnswer, removeAnswer } from "../../store/reducer/answerSlice";
 import ChooseAnswer from "./ChooseAnswer";
-import LongAnswer from "../common/answer/LongAnswer";
-import ShortAnswer from "../common/answer/ShortAnswer";
 import { v4 as uuidv4 } from "uuid";
 import classMerge from "../../utils/classMerge";
 import useDnDList from "../../hook/useDnDList";
@@ -70,8 +68,8 @@ const AnswerManager = ({ questionID }: AnswerManagerProps) => {
         (type === EDITOR_QUESTION_TYPE.short || type === EDITOR_QUESTION_TYPE.long) && "mx-[32px]",
       ])}
     >
-      {type === EDITOR_QUESTION_TYPE.short && <ShortAnswer disabled className="pointer-events-none" />}
-      {type === EDITOR_QUESTION_TYPE.long && <LongAnswer disabled className="pointer-events-none" />}
+      {type === EDITOR_QUESTION_TYPE.short && <div className="text-gray-400">단답형 메시지</div>}
+      {type === EDITOR_QUESTION_TYPE.long && <div className="text-gray-400">장문형 메시지</div>}
       {type !== EDITOR_QUESTION_TYPE.short && type !== EDITOR_QUESTION_TYPE.long && (
         <>
           <DnDList>
