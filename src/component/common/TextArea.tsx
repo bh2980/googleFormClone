@@ -3,7 +3,6 @@ import classMerge from "../../utils/classMerge";
 
 interface TextAreaProps extends React.ComponentPropsWithoutRef<"textarea"> {}
 
-//TODO value에 따라 첫 높이 변경
 const TextArea = ({ className, ...props }: TextAreaProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   //ref를 활용하는 방법도 존재

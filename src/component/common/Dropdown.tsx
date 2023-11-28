@@ -57,8 +57,9 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
       const { height, top } = dropdownSelectorRef.current.getBoundingClientRect();
       const { height: listHeight } = dropdownListRef.current.getBoundingClientRect();
 
-      // 브라우저 크기를 넘어가는 드롭다운 리스트를 올려주는 처리
-      if (dropdownSelectorRef.current.offsetTop + height + 284 > document.documentElement.scrollHeight) {
+      // TODO 브라우저 크기를 넘어가는 드롭다운 리스트를 올려주는 처리 -> 스크롤이 아니라 페이지 height로 변경??
+      // 두 번째 질문 블록 dropbox 밖으로 나감
+      if (dropdownSelectorRef.current.offsetTop + height + listHeight > document.documentElement.scrollHeight) {
         dropdownListRef.current.style.top = `${height + top - listHeight}px`;
       } else {
         dropdownListRef.current.style.top = `${height + top}px`;

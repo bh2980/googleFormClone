@@ -8,7 +8,6 @@ import TitleBlock from "../component/preview/TitleBlock";
 import { editResponse } from "../store/reducer/responseSlice";
 import { useEffect } from "react";
 
-// TODO 질문별 답변 상태 정의 후 저장
 // TODO Preview~로 변경
 const Preview = () => {
   const dispatch = useAppDispatch();

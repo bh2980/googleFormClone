@@ -5,7 +5,6 @@ import { EDITOR_QUESTION_TYPE } from "../constants";
 import { useAppSelector } from "../hook/storeHook";
 import { RiEdit2Line, RiEyeLine } from "react-icons/ri";
 
-// TODO 질문과 질문별 답변 상태를 불러와 보여주기
 const Result = () => {
   const docs = useAppSelector((store) => store.docs);
   const question = useAppSelector((store) => store.question);
