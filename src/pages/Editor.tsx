@@ -65,7 +65,7 @@ const Editor = () => {
           </IconButton>
         </Link>
       </div>
-      <div className="flex w-full p-20">
+      <div className="flex w-full py-20">
         <div className="flex-1"></div>
         <form className="flex flex-[2] gap-4 flex-col ">
           <TitleBlock />
