@@ -15,7 +15,7 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
   const { questionContent, required } = questionInfo;
 
   return (
-    <Block className="w-full group" {...props}>
+    <Block className="w-full group min-w-[800px]" {...props}>
       <div className="flex flex-col gap-4 py-8">
         <div className="flex items-center justify-between gap-4 group mx-[32px]">
           <div className="flex items-center cursor-text">
