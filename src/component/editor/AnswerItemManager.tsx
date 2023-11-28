@@ -97,7 +97,9 @@ const AnswerManager = ({ questionID }: AnswerManagerProps) => {
           {isEditing && (
             <div className="items-center flex gap-4 mx-[32px]">
               <div className="flex items-center gap-4">
-                {type === EDITOR_QUESTION_TYPE.radio ? <Radio disabled /> : <Checkbox disabled />}
+                {type === EDITOR_QUESTION_TYPE.radio && <Radio disabled />}
+                {type === EDITOR_QUESTION_TYPE.checkbox && <Checkbox disabled />}
+                {type === EDITOR_QUESTION_TYPE.dropdown && <div className="w-[24px]"></div>}
                 <span
                   className="w-full text-gray-500 cursor-text hover:underline decoration-gray-400"
                   onClick={addAnswerItem}
