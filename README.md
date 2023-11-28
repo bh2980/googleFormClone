@@ -25,9 +25,6 @@
 📦src
  ┣ 📂component
  ┃ ┣ 📂common
- ┃ ┃ ┣ 📂answer
- ┃ ┃ ┃ ┣ 📜LongAnswer.tsx
- ┃ ┃ ┃ ┗ 📜ShortAnswer.tsx
  ┃ ┃ ┣ 📂Radio
  ┃ ┃ ┃ ┣ 📜Radio.tsx
  ┃ ┃ ┃ ┗ 📜RadioGroup.tsx
@@ -39,12 +36,15 @@
  ┃ ┃ ┣ 📜Input.tsx
  ┃ ┃ ┣ 📜Switch.tsx
  ┃ ┃ ┗ 📜TextArea.tsx
- ┃ ┣ 📂editor
+ ┃ ┣ 📂editor       
  ┃ ┃ ┣ 📜AnswerItemManager.tsx
  ┃ ┃ ┣ 📜ChooseAnswer.tsx
  ┃ ┃ ┣ 📜QuestionBlock.tsx
  ┃ ┃ ┗ 📜TitleBlock.tsx
  ┃ ┗ 📂preview
+ ┃ ┃ ┣ 📂answer
+ ┃ ┃ ┃ ┣ 📜LongAnswer.tsx
+ ┃ ┃ ┃ ┗ 📜ShortAnswer.tsx
  ┃ ┃ ┣ 📜AnswerItemManager.tsx
  ┃ ┃ ┣ 📜ChooseAnswer.tsx
  ┃ ┃ ┣ 📜QuestionBlock.tsx
