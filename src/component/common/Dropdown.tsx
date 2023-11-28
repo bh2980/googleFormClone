@@ -58,7 +58,7 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
       const { height: listHeight } = dropdownListRef.current.getBoundingClientRect();
 
       if (dropdownSelectorRef.current.offsetTop + height + listHeight >= window.innerHeight) {
-        dropdownListRef.current.style.top = `${height + top - listHeight / 2}px`;
+        dropdownListRef.current.style.top = `${window.innerHeight - listHeight - 32}px`;
       } else {
         dropdownListRef.current.style.top = `${height + top}px`;
       }
