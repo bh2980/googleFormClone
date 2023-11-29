@@ -13,8 +13,7 @@ import { addAnswer, removeAnswer } from "../../store/reducer/answerSlice";
 import { v4 } from "uuid";
 import Dropdown from "../common/Dropdown";
 import useChangeEditBlockID from "../../hook/useChangeEditBlockID";
-import { useEffect, useRef } from "react";
-import { changeSidebarPosition } from "../../store/reducer/sideBarPosition";
+import useBlockAutoFocus from "../../hook/useBlockAutoFocus";
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
   questionID: string;
@@ -26,12 +25,10 @@ interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
 const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps) => {
   const dispatch = useAppDispatch();
   const { changeEditingBlockID, isEditing } = useChangeEditBlockID(questionID);
+  const { containerRef, questionInputRef } = useBlockAutoFocus(questionID);
 
   const questionInfo = useAppSelector((store) => store.question[questionID]);
   const answerMap = useAppSelector((store) => store.answer);
-
-  const containerRef = useRef<HTMLElement>(null);
-  const questionInputRef = useRef<HTMLInputElement>(null);
 
   const { questionContent, required, answerIDList, type } = questionInfo;
 
@@ -70,35 +67,6 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
   const changeRequired = () => {
     dispatch(editQuestion({ ...questionInfo, required: !required }));
   };
-
-  useEffect(() => {
-    if (!containerRef?.current || !questionInputRef?.current) return;
-
-    //자동 focus 처리
-    if (isEditing) {
-      const focusElement = document.activeElement;
-
-      if (!containerRef.current.contains(focusElement)) {
-        questionInputRef.current.focus();
-      }
-
-      const updateSidebarPosition = () => {
-        if (!containerRef.current) return;
-
-        const { top, left, width } = containerRef.current.getBoundingClientRect();
-
-        dispatch(changeSidebarPosition({ top, left: left + width + 20 }));
-      };
-
-      updateSidebarPosition();
-
-      window.addEventListener("resize", updateSidebarPosition);
-
-      return () => {
-        window.removeEventListener("resize", updateSidebarPosition);
-      };
-    }
-  }, [isEditing]);
 
   return (
     <Block

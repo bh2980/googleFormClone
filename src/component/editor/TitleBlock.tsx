@@ -1,19 +1,18 @@
-import { useEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../hook/storeHook";
 import useChangeEditBlockID from "../../hook/useChangeEditBlockID";
 import { editContent, editTitle } from "../../store/reducer/docsSlice";
 import Block from "../common/Block";
 import Input from "../common/Input";
 import TextArea from "../common/TextArea";
-import { changeSidebarPosition } from "../../store/reducer/sideBarPosition";
+import useBlockAutoFocus from "../../hook/useBlockAutoFocus";
 
 const TitleBlock = () => {
+  const TITLE_BLOCK_ID = "title";
+
   const dispatch = useAppDispatch();
   const { title, content } = useAppSelector((store) => store.docs);
-  const { changeEditingBlockID, isEditing } = useChangeEditBlockID("title");
-
-  const containerRef = useRef<HTMLElement>(null);
-  const questionInputRef = useRef<HTMLInputElement>(null);
+  const { changeEditingBlockID, isEditing } = useChangeEditBlockID(TITLE_BLOCK_ID);
+  const { containerRef, questionInputRef } = useBlockAutoFocus(TITLE_BLOCK_ID);
 
   const changeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(editTitle(e.target.value));
@@ -22,35 +21,6 @@ const TitleBlock = () => {
   const changeContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     dispatch(editContent(e.target.value));
   };
-
-  useEffect(() => {
-    if (!containerRef?.current || !questionInputRef?.current) return;
-
-    //자동 focus 처리
-    if (isEditing) {
-      const focusElement = document.activeElement;
-
-      if (!containerRef.current.contains(focusElement)) {
-        questionInputRef.current.focus();
-      }
-
-      const updateSidebarPosition = () => {
-        if (!containerRef.current) return;
-
-        const { top, left, width } = containerRef.current.getBoundingClientRect();
-
-        dispatch(changeSidebarPosition({ top, left: left + width + 20 }));
-      };
-
-      updateSidebarPosition();
-
-      window.addEventListener("resize", updateSidebarPosition);
-
-      return () => {
-        window.removeEventListener("resize", updateSidebarPosition);
-      };
-    }
-  }, [isEditing]);
 
   return (
     <Block
