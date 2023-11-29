@@ -3,7 +3,7 @@
  * answer 상태에서 answerIDLIst를 순회하면서 answer을 뽑아 알맞게 렌더링한다
  */
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { EDITOR_QUESTION_TYPE } from "../../constants";
 import { useAppDispatch, useAppSelector } from "../../hook/storeHook";
 import { AnswerInterface, addAnswer, editAnswer, removeAnswer } from "../../store/reducer/answerSlice";
@@ -25,6 +25,7 @@ const AnswerManager = ({ questionID }: AnswerManagerProps) => {
   const dispatch = useAppDispatch();
   const { type, answerIDList } = useAppSelector((store) => store.question[questionID]);
   const answerMap = useAppSelector((store) => store.answer);
+  const prevAnswerLength = useRef(answerIDList.length);
 
   const { isEditing } = useChangeEditBlockID(questionID);
 
@@ -60,6 +61,16 @@ const AnswerManager = ({ questionID }: AnswerManagerProps) => {
 
     dispatch(removeAnswer(answerMap[aID]));
   };
+
+  useEffect(() => {
+    if (!prevAnswerLength.current) return;
+
+    if (prevAnswerLength.current < answerIDList.length) {
+      chooseAnswerRef.current[answerIDList.length - 1]!.focus();
+    }
+
+    prevAnswerLength.current = answerIDList.length;
+  }, [answerIDList.length]);
 
   return (
     <fieldset
