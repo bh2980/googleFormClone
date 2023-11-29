@@ -1,3 +1,4 @@
+import { memo } from "react";
 import classMerge from "../../utils/classMerge";
 
 interface BlockProps extends React.ComponentPropsWithRef<"div"> {
@@ -6,7 +7,7 @@ interface BlockProps extends React.ComponentPropsWithRef<"div"> {
   innerRef?: React.LegacyRef<HTMLElement>;
 }
 
-const Block = ({ isTitleBlock = false, isEditing, innerRef, className, children, ...props }: BlockProps) => {
+const Block = memo(({ isTitleBlock = false, isEditing, innerRef, className, children, ...props }: BlockProps) => {
   return (
     <section
       ref={innerRef}
@@ -17,13 +18,16 @@ const Block = ({ isTitleBlock = false, isEditing, innerRef, className, children,
     >
       {isTitleBlock && <div className="w-full h-[8px] bg-violet-800"></div>}
       <div className="flex group">
-        {isEditing && <div className="w-[8px] max-h-full bg-blue-500" />}
+        <div
+          className="max-h-full transition-all bg-blue-500"
+          style={{ width: isEditing ? "8px" : "0", transition: "width 0.2s" }}
+        />
         <div className={className} {...props}>
           {children}
         </div>
       </div>
     </section>
   );
-};
+});
 
 export default Block;
