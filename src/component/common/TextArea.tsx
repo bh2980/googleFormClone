@@ -7,9 +7,9 @@ const TextArea = ({ className, ...props }: TextAreaProps) => {
   const { textareaRef, handleInput } = useFluidTextArea();
 
   return (
-    <div className="relative w-full">
+    <div className={classMerge(["relative", className])}>
       <textarea
-        className={classMerge(["peer", "w-full", "overflow-hidden", "py-2", "outline-none", "resize-none", className])}
+        className={classMerge(["peer", "w-full", "overflow-hidden", "py-4", "px-3", "outline-none", "resize-none"])}
         onInput={handleInput}
         ref={textareaRef}
         {...props}

@@ -117,7 +117,7 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
             <>
               <Input
                 placeholder="질문"
-                className="w-full p-4 bg-gray-100 hover:bg-gray-200"
+                className="w-full bg-gray-100 hover:bg-gray-200"
                 onChange={changeQuestionContent}
                 value={questionContent}
                 innerRef={questionInputRef}

@@ -6,8 +6,12 @@ interface InputProps extends React.ComponentPropsWithRef<"input"> {
 
 const Input = ({ className, innerRef, ...props }: InputProps) => {
   return (
-    <div className="relative w-full">
-      <input ref={innerRef} className={classMerge(["peer", "py-2", "outline-none", className])} {...props} />
+    <div className={classMerge(["relative", className])}>
+      <input
+        ref={innerRef}
+        className={classMerge(["py-4", "px-3", "peer", "outline-none", "w-full", "bg-transparent"])}
+        {...props}
+      />
       <div
         className={classMerge([
           "after:absolute",

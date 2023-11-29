@@ -65,8 +65,12 @@ const AnswerManager = ({ questionID, name = v4() }: AnswerManagerProps) => {
           "mx-[32px]",
       ])}
     >
-      {type === EDITOR_QUESTION_TYPE.short && <ShortAnswer name={name} onChange={changeTextResponse} />}
-      {type === EDITOR_QUESTION_TYPE.long && <LongAnswer name={name} onChange={changeTextResponse} />}
+      {type === EDITOR_QUESTION_TYPE.short && (
+        <ShortAnswer className="w-full" name={name} onChange={changeTextResponse} />
+      )}
+      {type === EDITOR_QUESTION_TYPE.long && (
+        <LongAnswer className="w-full" name={name} onChange={changeTextResponse} />
+      )}
       {type === EDITOR_QUESTION_TYPE.dropdown && <Dropdown itemList={itemList} onChange={changeClickResponse} />}
       {type === EDITOR_QUESTION_TYPE.checkbox &&
         answerIDList.map((aID, idx) => {
