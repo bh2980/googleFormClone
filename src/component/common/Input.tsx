@@ -9,7 +9,7 @@ const Input = ({ className, innerRef, ...props }: InputProps) => {
     <div className={classMerge(["relative", className])}>
       <input
         ref={innerRef}
-        className={classMerge(["py-4", "px-3", "peer", "outline-none", "w-full", "bg-transparent"])}
+        className={classMerge(["py-4", "peer", "outline-none", "w-full", "bg-transparent"])}
         {...props}
       />
       <div

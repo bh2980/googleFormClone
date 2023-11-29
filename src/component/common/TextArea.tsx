@@ -9,7 +9,7 @@ const TextArea = ({ className, ...props }: TextAreaProps) => {
   return (
     <div className={classMerge(["relative", className])}>
       <textarea
-        className={classMerge(["peer", "w-full", "overflow-hidden", "py-2", "px-3", "outline-none", "resize-none"])}
+        className={classMerge(["peer", "w-full", "overflow-hidden", "py-2", "outline-none", "resize-none"])}
         onInput={handleInput}
         ref={textareaRef}
         {...props}
