@@ -9,7 +9,7 @@
 
 배포 링크 : https://mygoogleformclone.netlify.app
 
-- 기능
+기능
   1. 질문 생성, 삭제, 복제
      - 질문 타입
         - 단답형
@@ -24,7 +24,8 @@
      -  ~ 767px : 모바일
      - 767px ~ 991px : 태블릿
      - 992px ~ : 데스크탑
-       
+
+<br/>   
 
 ## 에디터 화면
 ![Editor](https://github.com/bh2980/googleFormClone/assets/74360958/726aab02-ce24-49d4-abff-9273d00a1c79)
@@ -70,10 +71,12 @@
  ┃ ┃ ┣ 📜QuestionBlock.tsx
  ┃ ┃ ┗ 📜TitleBlock.tsx
  ┣ 📂hook
- ┃ ┣ 📜storeHook.ts
+ ┃ ┣ 📂headless
+ ┃ ┃ ┣ 📜useDnDList.tsx
+ ┃ ┃ ┗ 📜useFluidTextArea.ts
+ ┃ ┣ 📜useBlockAutoFocus.ts
  ┃ ┣ 📜useChangeEditBlockID.ts
- ┃ ┣ 📜useDnDList.tsx
- ┃ ┗ 📜useFluidTextArea.ts
+ ┃ ┗ 📜useRedux.ts
  ┣ 📂pages
  ┃ ┣ 📜Editor.tsx
  ┃ ┣ 📜Preview.tsx
