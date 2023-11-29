@@ -13,7 +13,7 @@ const Block = memo(({ isTitleBlock = false, isEditing, innerRef, className, chil
       ref={innerRef}
       className={classMerge([
         "max-w-[800px] bg-white rounded-xl flex flex-col justify-between overflow-hidden",
-        isEditing && "shadow-lg",
+        isEditing ? "shadow-2xl" : "shadow-md",
       ])}
     >
       {isTitleBlock && <div className="w-full h-[8px] bg-violet-800"></div>}
