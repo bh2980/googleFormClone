@@ -12,13 +12,13 @@ import { addAnswer } from "../store/reducer/answerSlice";
 import useDnDList from "../hook/useDnDList";
 import { editQuestionBlockOrder } from "../store/reducer/docsSlice";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
 // TODO 관련 컴포넌트 EDITOR로 변경
 const Editor = () => {
   const dispatch = useAppDispatch();
   const questionIDList = useAppSelector((store) => store.docs.questionIDList);
-  const [prevLength, setPrevLength] = useState(questionIDList.length);
+  const prevLength = useRef(questionIDList.length);
 
   const handleItem = (fromIdx: number, toIdx: number) => {
     dispatch(editQuestionBlockOrder({ fromIdx, toIdx }));
@@ -51,9 +51,9 @@ const Editor = () => {
   };
 
   useEffect(() => {
-    if (prevLength < questionIDList.length) window.scrollTo(0, document.body.scrollHeight);
+    if (prevLength.current < questionIDList.length) window.scrollTo(0, document.body.scrollHeight);
 
-    setPrevLength(questionIDList.length);
+    prevLength.current = questionIDList.length;
   }, [questionIDList.length]);
 
   return (
