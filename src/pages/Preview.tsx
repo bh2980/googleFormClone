@@ -50,7 +50,7 @@ const Preview = () => {
           </IconButton>
         </Link>
       </div>
-      <div className="flex justify-center w-full p-20">
+      <div className="flex justify-center w-full px-4 py-20">
         <form className="flex flex-[2] gap-4 flex-col items-end  max-w-[720px]">
           <TitleBlock />
           {questionIDList.map((qID) => (
