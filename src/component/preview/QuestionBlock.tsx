@@ -6,9 +6,7 @@ interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
   questionID: string;
   handleDrag?: (e: React.MouseEvent) => void;
 }
-/**
- * QuestionBlock은 BlockID를 받아서 QuestionManager에게 전달
- */
+
 const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
   const questionInfo = useAppSelector((store) => store.question[questionID]);
 
