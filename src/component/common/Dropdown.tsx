@@ -80,7 +80,10 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
       <ul
         ref={dropdownListRef}
         className={classMerge([
-          [isOpen ? "fixed" : "hidden", "z-50 w-[200px] border-2 bg-white flex-col rounded-lg shadow-2xl"],
+          [
+            isOpen ? "visible opacity-100 transition-opacity duration-200" : "invisible opacity-0",
+            "fixed z-50 w-[200px] border-2 bg-white flex-col rounded-lg shadow-2xl",
+          ],
         ])}
       >
         {itemList.map((item, idx) => (
