@@ -13,7 +13,7 @@ interface DocsInterface {
 const initialState: DocsInterface = {
   title: "",
   content: "",
-  editBlockID: "",
+  editBlockID: "title",
   questionIDList: [],
 };
 

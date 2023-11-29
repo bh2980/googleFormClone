@@ -18,7 +18,10 @@ import { useEffect, useRef } from "react";
 const Editor = () => {
   const dispatch = useAppDispatch();
   const questionIDList = useAppSelector((store) => store.docs.questionIDList);
+  const sidebarPosition = useAppSelector((store) => store.sidebarPosition);
   const prevLength = useRef(questionIDList.length);
+
+  const floatingSideBarRef = useRef<HTMLDivElement>(null);
 
   const handleItem = (fromIdx: number, toIdx: number) => {
     dispatch(editQuestionBlockOrder({ fromIdx, toIdx }));
@@ -56,6 +59,25 @@ const Editor = () => {
     prevLength.current = questionIDList.length;
   }, [questionIDList.length]);
 
+  useEffect(() => {
+    if (!floatingSideBarRef.current) return;
+
+    if (window.innerWidth <= 991) {
+      const { width } = floatingSideBarRef.current.getBoundingClientRect();
+      floatingSideBarRef.current.style.bottom = `0px`;
+      floatingSideBarRef.current.style.left = `${(window.innerWidth - width) / 2}px`;
+      floatingSideBarRef.current.style.top = ``;
+      return;
+    }
+
+    floatingSideBarRef.current.style.top = `${sidebarPosition.top}px`;
+    floatingSideBarRef.current.style.left = `${sidebarPosition.left}px`;
+    floatingSideBarRef.current.style.bottom = ``;
+    if (!floatingSideBarRef.current.style.transition) {
+      floatingSideBarRef.current.style.transition = "top 0.2s";
+    }
+  }, [sidebarPosition]);
+
   return (
     <div className="flex flex-col min-h-screen bg-violet-100">
       <div className="fixed w-full h-[56px] flex justify-end shadow-sm border-b-gray-200 border-b-[1px] p-4 items-center bg-gray-50 z-50">
@@ -65,9 +87,8 @@ const Editor = () => {
           </IconButton>
         </Link>
       </div>
-      <div className="flex w-full py-20">
-        <div className="flex-1"></div>
-        <form className="flex flex-[2] gap-4 flex-col ">
+      <div className="relative flex justify-center w-full px-4 py-20">
+        <form className="flex flex-col w-full gap-4 max-w-[720px]">
           <TitleBlock />
           <DnDList className="flex flex-col gap-4">
             {questionIDList.map((qID, idx) => (
@@ -75,12 +96,13 @@ const Editor = () => {
             ))}
           </DnDList>
         </form>
-        <div className="relative flex-1 pl-4">
-          <div className="fixed flex flex-col justify-center items-center bg-white shadow-md rounded-xl w-[48px] py-1 gap-2">
-            <IconButton onClick={addQuestionBlock} className="w-[40px] h-[40px]">
-              <RiAddCircleLine className={ICON_CLASS} />
-            </IconButton>
-          </div>
+        <div
+          className="fixed flex flex-col items-center justify-center gap-2 p-1 bg-white shadow-md rounded-xl tablet:flex-row tablet:rounded-b-none tablet:border-t-2 tablet:border-x-2 tablet:border-gray-300"
+          ref={floatingSideBarRef}
+        >
+          <IconButton onClick={addQuestionBlock} className="w-[40px] h-[40px]">
+            <RiAddCircleLine className={ICON_CLASS} />
+          </IconButton>
         </div>
       </div>
     </div>

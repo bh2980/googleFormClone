@@ -14,6 +14,7 @@ import { v4 } from "uuid";
 import Dropdown from "../common/Dropdown";
 import useChangeEditBlockID from "../../hook/useChangeEditBlockID";
 import { useEffect, useRef } from "react";
+import { changeSidebarPosition } from "../../store/reducer/sideBarPosition";
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
   questionID: string;
@@ -70,15 +71,31 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
   };
 
   useEffect(() => {
-    //자동 focus 처리
     if (!containerRef?.current || !questionInputRef?.current) return;
 
+    //자동 focus 처리
     if (isEditing) {
       const focusElement = document.activeElement;
 
       if (!containerRef.current.contains(focusElement)) {
         questionInputRef.current.focus();
       }
+
+      const updateSidebarPosition = () => {
+        if (!containerRef.current) return;
+
+        const { top, left, width } = containerRef.current.getBoundingClientRect();
+
+        dispatch(changeSidebarPosition({ top, left: left + width + 20 }));
+      };
+
+      updateSidebarPosition();
+
+      window.addEventListener("resize", updateSidebarPosition);
+
+      return () => {
+        window.removeEventListener("resize", updateSidebarPosition);
+      };
     }
   }, [isEditing]);
 
