@@ -28,11 +28,9 @@ const docsSlice = createSlice({
       state.content = action.payload;
     },
     editQuestionBlockOrder(state, action: PayloadAction<DnDAction>) {
-      console.log("before", state.questionIDList);
       const moveQuestionID = state.questionIDList[action.payload.fromIdx];
       state.questionIDList.splice(action.payload.fromIdx, 1);
       state.questionIDList.splice(action.payload.toIdx, 0, moveQuestionID);
-      console.log("after", state.questionIDList);
     },
     changeEditBlockID(state, action: PayloadAction<string>) {
       state.editBlockID = action.payload;

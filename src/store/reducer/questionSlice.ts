@@ -49,14 +49,11 @@ const questionSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(removeAnswer, (state, action) => {
-        console.log("question에서 answer 제거", action.payload.answerID);
-
         state[action.payload.questionID].answerIDList = state[action.payload.questionID].answerIDList.filter(
           (answerID) => answerID !== action.payload.answerID
         );
       })
       .addCase(addAnswer, (state, action) => {
-        console.log("question에 answer 추가", action.payload.answerID);
         state[action.payload.questionID].answerIDList.push(action.payload.answerID);
       });
   },
