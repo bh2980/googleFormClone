@@ -54,8 +54,14 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
     if (isOpen) {
       if (!dropdownSelectorRef?.current || !dropdownListRef?.current) return;
 
-      const { height: selectorHeight, top: selectorTop } = dropdownSelectorRef.current.getBoundingClientRect();
+      const {
+        width: selectorWidth,
+        height: selectorHeight,
+        top: selectorTop,
+      } = dropdownSelectorRef.current.getBoundingClientRect();
       const { height: listHeight } = dropdownListRef.current.getBoundingClientRect();
+
+      dropdownListRef.current.style.width = `${selectorWidth}px`;
 
       if (selectorTop + selectorHeight + listHeight >= window.innerHeight) {
         dropdownListRef.current.style.top = `${window.innerHeight - listHeight - 32}px`;
@@ -66,10 +72,10 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
   }, [isOpen]);
 
   return (
-    <div className="relative group" tabIndex={0} ref={dropdownSelectorRef}>
+    <div className="relative w-[320px] mobile:w-full group" tabIndex={0} ref={dropdownSelectorRef}>
       <div
         className={classMerge([
-          "w-[200px] border-2 h-[56px] bg-white flex items-center px-4 rounded-lg justify-between hover:bg-gray-100 active:bg-gray-200 cursor-pointer",
+          "w-full border-2 h-[56px] bg-white flex items-center px-4 rounded-lg justify-between hover:bg-gray-100 active:bg-gray-200 cursor-pointer",
           className,
         ])}
         onClick={changeOpen}
@@ -82,7 +88,7 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
         className={classMerge([
           [
             isOpen ? "visible opacity-100 transition-opacity duration-200" : "invisible opacity-0",
-            "fixed z-50 w-[200px] border-2 bg-white flex-col rounded-lg shadow-2xl",
+            "fixed z-50 border-2 bg-white flex-col rounded-lg shadow-2xl",
           ],
         ])}
       >

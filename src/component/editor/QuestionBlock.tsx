@@ -94,7 +94,7 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
         <RiDraggable className="invisible rotate-90 group-hover:visible" />
       </div>
       <div className="flex flex-col gap-4 pb-8">
-        <div className="flex items-center justify-between gap-4 group mx-[32px]">
+        <div className="flex items-center justify-between gap-4 group mx-[32px] mobile:flex-col mobile:items-start">
           {isEditing ? (
             <>
               <Input
@@ -105,7 +105,7 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
                 innerRef={questionInputRef}
               />
               <Dropdown
-                className="flex"
+                className="flex mobile:w-full"
                 itemList={EDITOR_DROPDOWN_LIST}
                 onChange={changeQuestionType}
                 initialIdx={type}
