@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { addAnswer, removeAnswer } from "./answerSlice";
 import { EDITOR_QUESTION_TYPE } from "../../constants";
-import { DnDAction } from "../../hook/useDnDList";
+import { DnDAction } from "../../hook/headless/useDnDList";
 
 export interface QuestionInterface {
   questionID: string;

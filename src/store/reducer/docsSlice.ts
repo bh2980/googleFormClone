@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { addQuestion, copyQuestion, removeQuestion } from "./questionSlice";
-import { DnDAction } from "../../hook/useDnDList";
+import { DnDAction } from "../../hook/headless/useDnDList";
 
 interface DocsInterface {
   title: string;

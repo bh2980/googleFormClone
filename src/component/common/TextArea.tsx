@@ -1,5 +1,5 @@
 import classMerge from "../../utils/classMerge";
-import useFluidTextArea from "../../hook/useFluidTextArea";
+import useFluidTextArea from "../../hook/headless/useFluidTextArea";
 
 interface TextAreaProps extends React.ComponentPropsWithoutRef<"textarea"> {}
 
