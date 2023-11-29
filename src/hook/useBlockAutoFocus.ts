@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import useChangeEditBlockID from "./useChangeEditBlockID";
-import { useAppDispatch } from "./storeHook";
+import { useAppDispatch } from "./useRedux";
 import { changeSidebarPosition } from "../store/reducer/sideBarPosition";
 
 const useBlockAutoFocus = (questionID: string) => {

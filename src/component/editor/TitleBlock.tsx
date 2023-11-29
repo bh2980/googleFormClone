@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from "../../hook/storeHook";
+import { useAppDispatch, useAppSelector } from "../../hook/useRedux";
 import useChangeEditBlockID from "../../hook/useChangeEditBlockID";
 import { editContent, editTitle } from "../../store/reducer/docsSlice";
 import Block from "../common/Block";

@@ -7,7 +7,7 @@ import { EDITOR_QUESTION_TYPE } from "../../constants";
 import LongAnswer from "./answer/LongAnswer";
 import ShortAnswer from "./answer/ShortAnswer";
 import classMerge from "../../utils/classMerge";
-import { useAppDispatch, useAppSelector } from "../../hook/storeHook";
+import { useAppDispatch, useAppSelector } from "../../hook/useRedux";
 import ChooseAnswer from "./ChooseAnswer";
 import { v4 } from "uuid";
 import Dropdown from "../common/Dropdown";

@@ -6,7 +6,7 @@ import QuestionBlock from "../component/editor/QuestionBlock";
 import { ICON_CLASS, EDITOR_QUESTION_TYPE } from "../constants";
 import IconButton from "../component/common/IconButton";
 
-import { useAppDispatch, useAppSelector } from "../hook/storeHook";
+import { useAppDispatch, useAppSelector } from "../hook/useRedux";
 import { addQuestion } from "../store/reducer/questionSlice";
 import { addAnswer } from "../store/reducer/answerSlice";
 import useDnDList from "../hook/headless/useDnDList";

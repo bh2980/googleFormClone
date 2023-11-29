@@ -2,7 +2,7 @@ import { RiEdit2Line } from "react-icons/ri";
 import IconButton from "../component/common/IconButton";
 
 import { Link, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../hook/storeHook";
+import { useAppDispatch, useAppSelector } from "../hook/useRedux";
 import QuestionBlock from "../component/preview/QuestionBlock";
 import TitleBlock from "../component/preview/TitleBlock";
 import { editResponse } from "../store/reducer/responseSlice";

@@ -1,6 +1,6 @@
 import Block from "../common/Block";
 import AnswerManager from "./AnswerItemManager";
-import { useAppSelector } from "../../hook/storeHook";
+import { useAppSelector } from "../../hook/useRedux";
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
   questionID: string;

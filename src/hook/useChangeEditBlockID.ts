@@ -1,5 +1,5 @@
 import { changeEditBlockID as changeEditBlockIDAction } from "../store/reducer/docsSlice";
-import { useAppDispatch, useAppSelector } from "./storeHook";
+import { useAppDispatch, useAppSelector } from "./useRedux";
 
 const useChangeEditBlockID = (blockID: string) => {
   const dispatch = useAppDispatch();

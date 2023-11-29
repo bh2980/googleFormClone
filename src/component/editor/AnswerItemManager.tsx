@@ -5,7 +5,7 @@
 
 import { useEffect, useRef } from "react";
 import { EDITOR_QUESTION_TYPE } from "../../constants";
-import { useAppDispatch, useAppSelector } from "../../hook/storeHook";
+import { useAppDispatch, useAppSelector } from "../../hook/useRedux";
 import { AnswerInterface, addAnswer, editAnswer, removeAnswer } from "../../store/reducer/answerSlice";
 import ChooseAnswer from "./ChooseAnswer";
 import { v4 as uuidv4 } from "uuid";

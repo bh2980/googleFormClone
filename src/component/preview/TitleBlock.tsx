@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { useAppSelector } from "../../hook/storeHook";
+import { useAppSelector } from "../../hook/useRedux";
 import Block from "../common/Block";
 
 const TitleBlock = () => {

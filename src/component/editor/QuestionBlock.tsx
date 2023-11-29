@@ -7,7 +7,7 @@ import IconButton from "../common/IconButton";
 import Switch from "../common/Switch";
 
 import { removeQuestion, editQuestion, copyQuestion } from "../../store/reducer/questionSlice";
-import { useAppDispatch, useAppSelector } from "../../hook/storeHook";
+import { useAppDispatch, useAppSelector } from "../../hook/useRedux";
 import AnswerManager from "./AnswerItemManager";
 import { addAnswer, removeAnswer } from "../../store/reducer/answerSlice";
 import { v4 } from "uuid";
