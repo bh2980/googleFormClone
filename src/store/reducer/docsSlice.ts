@@ -41,14 +41,11 @@ const docsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(removeQuestion, (state, action) => {
-        console.log("docs에서", action.payload.questionID, "삭제");
-        // focus 이동 로직 동작 X
-        // const findDeleteIdx = state.questionIDList.findIndex((qID) => qID === action.payload.questionID);
-        // state.editBlockID = state.questionIDList[findDeleteIdx - 1];
+        const findDeleteIdx = state.questionIDList.findIndex((qID) => qID === action.payload.questionID);
+        state.editBlockID = findDeleteIdx - 1 >= 0 ? state.questionIDList[findDeleteIdx - 1] : "title";
         state.questionIDList = state.questionIDList.filter((qID) => qID !== action.payload.questionID);
       })
       .addCase(addQuestion, (state, action) => {
-        console.log("docs에", action.payload.questionID, "추가");
         state.questionIDList.push(action.payload.questionID);
         state.editBlockID = action.payload.questionID;
       })

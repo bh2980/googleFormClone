@@ -34,7 +34,8 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
 
   const { questionContent, required, answerIDList, type } = questionInfo;
 
-  const removeQuestionBlock = () => {
+  const removeQuestionBlock = (e: React.MouseEvent) => {
+    e.stopPropagation();
     dispatch(removeQuestion(questionInfo));
   };
 
