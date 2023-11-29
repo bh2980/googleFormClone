@@ -25,7 +25,7 @@ const Preview = () => {
       const { required } = question[qID];
       const responseContent = response[qID];
 
-      if (required && !responseContent) checkRequired = false;
+      if (required && responseContent === null) checkRequired = false;
     });
 
     if (!checkRequired) {
@@ -50,9 +50,8 @@ const Preview = () => {
           </IconButton>
         </Link>
       </div>
-      <div className="flex w-full p-20">
-        <div className="flex-1" />
-        <form className="flex flex-[2] gap-4 flex-col items-end">
+      <div className="flex justify-center w-full p-20">
+        <form className="flex flex-[2] gap-4 flex-col items-end  max-w-[720px]">
           <TitleBlock />
           {questionIDList.map((qID) => (
             <QuestionBlock key={qID} questionID={qID} />
@@ -65,7 +64,6 @@ const Preview = () => {
             제출
           </button>
         </form>
-        <div className="flex-1" />
       </div>
     </div>
   );

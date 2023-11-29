@@ -6,7 +6,7 @@ const TitleBlock = () => {
   const { title, content } = useAppSelector((store) => store.docs);
 
   return (
-    <Block className="flex flex-col w-full gap-2 p-6 min-w-[800px]" isTitleBlock>
+    <Block className="flex flex-col w-full gap-2 p-6" isTitleBlock>
       <span className="text-3xl">{title}</span>
       <div>
         {content.split("\n").map((line) => (
