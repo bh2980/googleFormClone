@@ -9,8 +9,29 @@
 
 배포 링크 : https://mygoogleformclone.netlify.app
 
+- 기능
+  1. 질문 생성, 삭제, 복제
+     - 질문 타입
+        - 단답형
+        - 장문형
+        - 객관식
+        - 체크박스
+        - 드롭박스
+     - 필수 여부
+  3. 제출폼 미리보기
+  4. 답변 확인하기
+  5. 반응형 레이아웃 지원
+     -  ~ 767px : 모바일
+     - 767px ~ 991px : 태블릿
+     - 992px ~ : 데스크탑
+       
+
 ## 에디터 화면
 ![Editor](https://github.com/bh2980/googleFormClone/assets/74360958/726aab02-ce24-49d4-abff-9273d00a1c79)
+
+|태블릿 에디터|모바일 에디터|
+|-----|-----|
+|![image](https://github.com/bh2980/googleFormClone/assets/74360958/d9bd891b-40d0-4440-9ce4-0eb7fa50663a)|![image](https://github.com/bh2980/googleFormClone/assets/74360958/56976879-a70b-4af8-8b4d-3b8648dda3ce)|
 
 ## 미리보기 화면
 ![제출폼](https://github.com/bh2980/googleFormClone/assets/74360958/b056ec43-7f05-4997-a047-7e70b4f1ae19)
@@ -18,8 +39,7 @@
 ## 응답 내역 화면
 ![응답내역](https://github.com/bh2980/googleFormClone/assets/74360958/f1b1d62e-49ec-4c6c-ada5-4826e88e6544)
 
-
-## 파일 구조
+### 파일 구조
 
 ```
 📦src
@@ -36,7 +56,7 @@
  ┃ ┃ ┣ 📜Input.tsx
  ┃ ┃ ┣ 📜Switch.tsx
  ┃ ┃ ┗ 📜TextArea.tsx
- ┃ ┣ 📂editor       
+ ┃ ┣ 📂editor
  ┃ ┃ ┣ 📜AnswerItemManager.tsx
  ┃ ┃ ┣ 📜ChooseAnswer.tsx
  ┃ ┃ ┣ 📜QuestionBlock.tsx
@@ -52,7 +72,8 @@
  ┣ 📂hook
  ┃ ┣ 📜storeHook.ts
  ┃ ┣ 📜useChangeEditBlockID.ts
- ┃ ┗ 📜useDnDList.tsx
+ ┃ ┣ 📜useDnDList.tsx
+ ┃ ┗ 📜useFluidTextArea.ts
  ┣ 📂pages
  ┃ ┣ 📜Editor.tsx
  ┃ ┣ 📜Preview.tsx
@@ -62,7 +83,8 @@
  ┃ ┃ ┣ 📜answerSlice.ts
  ┃ ┃ ┣ 📜docsSlice.ts
  ┃ ┃ ┣ 📜questionSlice.ts
- ┃ ┃ ┗ 📜responseSlice.ts
+ ┃ ┃ ┣ 📜responseSlice.ts
+ ┃ ┃ ┗ 📜sideBarPosition.ts
  ┃ ┗ 📜store.ts
  ┣ 📂utils
  ┃ ┗ 📜classMerge.ts
