@@ -42,7 +42,9 @@ const docsSlice = createSlice({
     builder
       .addCase(removeQuestion, (state, action) => {
         const findDeleteIdx = state.questionIDList.findIndex((qID) => qID === action.payload.questionID);
-        state.editBlockID = findDeleteIdx - 1 >= 0 ? state.questionIDList[findDeleteIdx - 1] : "title";
+        if (findDeleteIdx === state.questionIDList.length - 1)
+          state.editBlockID = findDeleteIdx - 1 >= 0 ? state.questionIDList[findDeleteIdx - 1] : "title";
+        else state.editBlockID = state.questionIDList[findDeleteIdx + 1];
         state.questionIDList = state.questionIDList.filter((qID) => qID !== action.payload.questionID);
       })
       .addCase(addQuestion, (state, action) => {
