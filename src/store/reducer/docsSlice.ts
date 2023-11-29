@@ -54,6 +54,7 @@ const docsSlice = createSlice({
       .addCase(copyQuestion, (state, action) => {
         const parentIdx = state.questionIDList.findIndex((qID) => qID === action.payload.parentQuestionID);
         state.questionIDList.splice(parentIdx + 1, 0, action.payload.questionID);
+        state.editBlockID = action.payload.questionID;
       });
   },
 });

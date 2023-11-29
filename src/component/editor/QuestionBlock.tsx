@@ -40,7 +40,8 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
     dispatch(removeQuestion(questionInfo));
   };
 
-  const copyQuestionBlock = () => {
+  const copyQuestionBlock = (e: React.MouseEvent) => {
+    e.stopPropagation();
     const NEW_QUESTION_ID = v4();
 
     dispatch(
