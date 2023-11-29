@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 
 const useFluidTextArea = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -11,12 +11,12 @@ const useFluidTextArea = () => {
     textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
   };
 
-  useEffect(() => {
-    // 시작 시 높이 지정
+  // 최초 paint 전에 rows와 height 지정
+  useLayoutEffect(() => {
     if (!textareaRef?.current) return;
 
-    textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     textareaRef.current.rows = 1;
+    textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
   }, []);
 
   return { textareaRef, handleInput };
