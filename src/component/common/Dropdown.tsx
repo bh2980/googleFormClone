@@ -1,5 +1,5 @@
 import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
-import { EDITOR_QUESTION_TYPE, ICON_CLASS } from "../../constants";
+import { ICON_CLASS } from "../../constants";
 import { useEffect, useRef, useState } from "react";
 import classMerge from "../../utils/classMerge";
 
@@ -12,10 +12,10 @@ interface DropdownProps {
   className?: string;
   itemList: DropdownItem[];
   onChange?: (idx: number) => void;
-  initialIdx?: EDITOR_QUESTION_TYPE;
+  initialIdx?: number | null;
 }
 
-const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUESTION_TYPE.short }: DropdownProps) => {
+const Dropdown = ({ className, itemList = [], onChange, initialIdx = null }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectIdx, setSelectIdx] = useState(initialIdx);
   const dropdownSelectorRef = useRef<HTMLDivElement>(null);
@@ -80,7 +80,7 @@ const Dropdown = ({ className, itemList = [], onChange, initialIdx = EDITOR_QUES
         ])}
         onClick={changeOpen}
       >
-        <span>{itemList[selectIdx]?.content}</span>
+        <span>{selectIdx === null ? "선택" : itemList[selectIdx]?.content}</span>
         {isOpen ? <RiArrowDropUpFill className={ICON_CLASS} /> : <RiArrowDropDownFill className={ICON_CLASS} />}
       </div>
       <ul
