@@ -21,7 +21,7 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
         </div>
       </div>
       <AnswerManager questionID={questionID} />
-      {required && <div className="pr-8 font-bold text-right text-red-600">* 필수 질문입니다</div>}
+      {required && <div className="font-bold text-right text-red-600">* 필수 질문입니다</div>}
     </Block>
   );
 };
