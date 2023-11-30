@@ -38,7 +38,9 @@ const ChooseAnswer = ({
         <div className="flex gap-4 px-[32px] w-full items-center">
           {type === EDITOR_QUESTION_TYPE.radio && <Radio disabled />}
           {type === EDITOR_QUESTION_TYPE.checkbox && <Checkbox disabled />}
-          {type === EDITOR_QUESTION_TYPE.dropdown && <div className="w-[20px] h-[20px] justify-center flex">{idx}</div>}
+          {type === EDITOR_QUESTION_TYPE.dropdown && (
+            <div className="w-[20px] h-[20px] justify-center flex text-gray-500">{idx}</div>
+          )}
           <Input innerRef={innerRef} className="w-full" {...props} />
           {deletable && isEditing && (
             <IconButton onClick={onDeleteButton} className="flex">
