@@ -48,7 +48,8 @@ const AnswerManager = ({ questionID, name = v4() }: AnswerManagerProps) => {
       if (prevState.includes(idx)) {
         const nextState = prevState.filter((checkedIdx) => checkedIdx !== idx);
 
-        dispatch(editResponse({ questionID, content: nextState }));
+        if (nextState.length === 0) dispatch(editResponse({ questionID, content: null }));
+        else dispatch(editResponse({ questionID, content: nextState }));
       } else {
         dispatch(editResponse({ questionID, content: [...prevState, idx] }));
       }

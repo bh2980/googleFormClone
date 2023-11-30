@@ -12,7 +12,7 @@ const Result = () => {
   const response = useAppSelector((store) => store.response);
 
   const makeAnswerView = (qID: string) => {
-    if (response[qID] === null || (response[qID] as number[]).length === 0) return "미응답";
+    if (response[qID] === null) return "미응답";
 
     if (question[qID].type === EDITOR_QUESTION_TYPE.short || question[qID].type === EDITOR_QUESTION_TYPE.long) {
       return response[qID];
