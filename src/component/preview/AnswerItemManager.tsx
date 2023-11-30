@@ -6,13 +6,13 @@
 import { EDITOR_QUESTION_TYPE } from "../../constants";
 import LongAnswer from "./answer/LongAnswer";
 import ShortAnswer from "./answer/ShortAnswer";
-import classMerge from "../../utils/classMerge";
 import { useAppDispatch, useAppSelector } from "../../hook/useRedux";
-import ChooseAnswer from "./ChooseAnswer";
 import { v4 } from "uuid";
 import Dropdown from "../common/Dropdown";
 import { editResponse } from "../../store/reducer/responseSlice";
 import RadioGroup from "../common/Radio/RadioGroup";
+import Checkbox from "../common/Checkbox";
+import Radio from "../common/Radio/Radio";
 
 interface AnswerManagerProps {
   questionID: string;
@@ -56,15 +56,7 @@ const AnswerManager = ({ questionID, name = v4() }: AnswerManagerProps) => {
   };
 
   return (
-    <fieldset
-      className={classMerge([
-        "flex flex-col gap-4",
-        (type === EDITOR_QUESTION_TYPE.short ||
-          type === EDITOR_QUESTION_TYPE.long ||
-          type === EDITOR_QUESTION_TYPE.dropdown) &&
-          "mx-[32px]",
-      ])}
-    >
+    <fieldset className="flex flex-col gap-4">
       {type === EDITOR_QUESTION_TYPE.short && (
         <ShortAnswer className="w-full" name={name} onChange={changeTextResponse} />
       )}
@@ -75,31 +67,13 @@ const AnswerManager = ({ questionID, name = v4() }: AnswerManagerProps) => {
       {type === EDITOR_QUESTION_TYPE.checkbox &&
         answerIDList.map((aID, idx) => {
           const answerInfo = answerMap[aID];
-          return (
-            <ChooseAnswer
-              key={aID}
-              type={type}
-              label={answerInfo.content}
-              placeholder={`옵션 ${idx + 1}`}
-              name={name}
-              onClick={() => changeClickResponse(idx)}
-            />
-          );
+          return <Checkbox key={aID} label={answerInfo.content} name={name} onClick={() => changeClickResponse(idx)} />;
         })}
       {type === EDITOR_QUESTION_TYPE.radio && (
         <RadioGroup>
           {answerIDList.map((aID, idx) => {
             const answerInfo = answerMap[aID];
-            return (
-              <ChooseAnswer
-                key={aID}
-                type={type}
-                label={answerInfo.content}
-                placeholder={`옵션 ${idx + 1}`}
-                name={name}
-                onClick={() => changeClickResponse(idx)}
-              />
-            );
+            return <Radio key={aID} label={answerInfo.content} name={name} onClick={() => changeClickResponse(idx)} />;
           })}
         </RadioGroup>
       )}
