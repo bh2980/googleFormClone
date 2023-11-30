@@ -92,7 +92,7 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
                 className="flex mobile:w-full"
                 itemList={EDITOR_DROPDOWN_LIST}
                 onChange={changeQuestionType}
-                initialIdx={0}
+                initialIdx={type}
               />
             </>
           ) : (
