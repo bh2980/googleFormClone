@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 interface useDnDProps {
   handleItem: (fromIdx: number, toIdx: number) => void;
