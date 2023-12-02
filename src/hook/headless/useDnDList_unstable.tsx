@@ -19,8 +19,9 @@ const makeTranslate = (x: number, y: number) => `translate(${makePx(x)}, ${makeP
 
 const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleItem }: useDnDProps) => {
   const containerRef = useRef<T>(null);
+  const stackRef = useRef<number[]>([]);
 
-  const getDragIdx = (item: HTMLElement) => item.dataset.dragIdx!;
+  const getDragIdx = (item: HTMLElement) => Number(item.dataset.dragIdx);
 
   const dragStart = (e: React.MouseEvent) => {
     if (!containerRef?.current) return;
@@ -36,13 +37,13 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
       setStyle(dragListItem, { transition: "transform 0.2s" });
     });
 
-    const dragItem = e.target as HTMLElement;
-    const dragItemIdx = getDragIdx(dragItem);
+    const placeholder = e.target as HTMLElement;
+    const dragItemIdx = getDragIdx(placeholder);
 
-    const cloneNode = dragItem.cloneNode(true) as HTMLElement;
-    const { width, height, top, left } = dragItem.getBoundingClientRect();
+    const moveItem = placeholder.cloneNode(true) as HTMLElement;
+    const { width, height, top, left } = placeholder.getBoundingClientRect();
 
-    setStyle(cloneNode, {
+    setStyle(moveItem, {
       position: "fixed",
       pointerEvents: "none",
       zIndex: "9999",
@@ -53,30 +54,30 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
       transition: "",
     });
 
-    setStyle(dragItem, { opacity: "0.5", border: "1px solid blue" });
+    setStyle(placeholder, { opacity: "0.5", border: "1px solid blue" });
 
-    containerRef.current.appendChild(cloneNode);
+    containerRef.current.appendChild(moveItem);
 
     const mouseMove = (e: MouseEvent) => {
       e.preventDefault();
 
       const deltaX = e.clientX - dragStartPoint.clientX;
       const deltaY = e.clientY - dragStartPoint.clientY;
-      setStyle(cloneNode, { transform: makeTranslate(deltaX, deltaY) });
+      setStyle(moveItem, { transform: makeTranslate(deltaX, deltaY) });
 
-      const belowElement = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
-      const dragListItemIdx = getDragIdx(belowElement);
+      const belowElement = document.elementFromPoint(e.clientX, e.clientY)?.closest("[data-drag-idx]") as HTMLElement;
 
-      if (dragListItemIdx && dragListItemIdx !== dragItemIdx) {
+      if (belowElement) {
+        const dragListItemIdx = getDragIdx(belowElement);
         console.log(dragListItemIdx);
       }
     };
 
     const mouseUp = (e: MouseEvent) => {
       document.removeEventListener("mousemove", mouseMove);
-      cloneNode.remove();
+      moveItem.remove();
 
-      dragItem.removeAttribute("style");
+      placeholder.removeAttribute("style");
     };
 
     document.addEventListener("mousemove", mouseMove);
