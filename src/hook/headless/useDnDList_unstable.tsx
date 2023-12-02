@@ -53,17 +53,30 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
       transition: "",
     });
 
+    setStyle(dragItem, { opacity: "0.5", border: "1px solid blue" });
+
     containerRef.current.appendChild(cloneNode);
 
     const mouseMove = (e: MouseEvent) => {
+      e.preventDefault();
+
       const deltaX = e.clientX - dragStartPoint.clientX;
       const deltaY = e.clientY - dragStartPoint.clientY;
       setStyle(cloneNode, { transform: makeTranslate(deltaX, deltaY) });
+
+      const belowElement = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
+      const dragListItemIdx = getDragIdx(belowElement);
+
+      if (dragListItemIdx && dragListItemIdx !== dragItemIdx) {
+        console.log(dragListItemIdx);
+      }
     };
 
     const mouseUp = (e: MouseEvent) => {
       document.removeEventListener("mousemove", mouseMove);
       cloneNode.remove();
+
+      dragItem.removeAttribute("style");
     };
 
     document.addEventListener("mousemove", mouseMove);
