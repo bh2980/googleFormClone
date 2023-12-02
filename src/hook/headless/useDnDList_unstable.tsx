@@ -15,7 +15,8 @@ const setStyle = (target: HTMLElement, style: Partial<CSSStyleDeclaration>) => {
 
 const makePx = (number: number) => `${number}px`;
 
-//https://www.youtube.com/watch?v=PyGqKt86gU0&t=1589s
+const makeTranslate = (x: number, y: number) => `translate(${makePx(x)}, ${makePx(y)})`;
+
 const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>() => {
   const containerRef = useRef<T>(null);
 
@@ -57,7 +58,7 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>() => {
     const mouseMove = (e: MouseEvent) => {
       const deltaX = e.clientX - dragStartPoint.clientX;
       const deltaY = e.clientY - dragStartPoint.clientY;
-      setStyle(cloneNode, { transform: `translate(${makePx(deltaX)}, ${makePx(deltaY)})` });
+      setStyle(cloneNode, { transform: makeTranslate(deltaX, deltaY) });
     };
 
     const mouseUp = (e: MouseEvent) => {
