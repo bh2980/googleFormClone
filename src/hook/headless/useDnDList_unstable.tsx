@@ -17,7 +17,7 @@ const makePx = (number: number) => `${number}px`;
 
 const makeTranslate = (x: number, y: number) => `translate(${makePx(x)}, ${makePx(y)})`;
 
-const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>() => {
+const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleItem }: useDnDProps) => {
   const containerRef = useRef<T>(null);
 
   const getDragIdx = (item: HTMLElement) => item.dataset.dragIdx!;

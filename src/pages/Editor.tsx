@@ -32,7 +32,14 @@ const Editor = () => {
 
   const { handleDrag, constainerRef } = useDnDList({ handleItem });
 
-  const { dragStart, containerRef } = useDnDList_unstable();
+  const handleDrag_unstable = (fromIdx: number, toIdx: number) => {
+    const nextState = [...testArr];
+    const [targetElement] = nextState.splice(fromIdx, 1);
+    nextState.splice(toIdx, 0, targetElement);
+    setTestArr(nextState);
+  };
+
+  const { dragStart, containerRef } = useDnDList_unstable({ handleItem: handleDrag_unstable });
 
   const addQuestionBlock = () => {
     const QUESTION_ID = uuidv4();
