@@ -22,6 +22,7 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
   const stackRef = useRef<number[]>([]);
 
   const getDragIdx = (item: HTMLElement) => Number(item.dataset.dragIdx);
+  const getStackTop = () => stackRef.current[stackRef.current.length - 1];
 
   const dragStart = (e: React.MouseEvent) => {
     if (!containerRef?.current) return;
@@ -39,6 +40,8 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
 
     const placeholder = e.target as HTMLElement;
     const dragItemIdx = getDragIdx(placeholder);
+
+    stackRef.current.push(dragItemIdx);
 
     const moveItem = placeholder.cloneNode(true) as HTMLElement;
     const { width, height, top, left } = placeholder.getBoundingClientRect();
@@ -58,6 +61,14 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
 
     containerRef.current.appendChild(moveItem);
 
+    const GAP =
+      containerRef.current.childNodes.length <= 1
+        ? 0
+        : (containerRef.current.childNodes[1] as HTMLElement).getBoundingClientRect().top -
+          (containerRef.current.childNodes[0] as HTMLElement).getBoundingClientRect().bottom;
+
+    const MOVE_DISTANCE = height + GAP;
+
     const mouseMove = (e: MouseEvent) => {
       e.preventDefault();
 
@@ -68,8 +79,44 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
       const belowElement = document.elementFromPoint(e.clientX, e.clientY)?.closest("[data-drag-idx]") as HTMLElement;
 
       if (belowElement) {
-        const dragListItemIdx = getDragIdx(belowElement);
-        console.log(dragListItemIdx);
+        const belowItemIdx = getDragIdx(belowElement);
+        const stackTop = getStackTop();
+
+        if (belowItemIdx === stackTop || belowItemIdx === dragItemIdx) return; // stack에 이미 들어갔을 경우 처리 X
+
+        console.log(belowItemIdx);
+        // stacktop부터 현재 드래그까지 모든 idx에 대해 처리
+        const diff = belowItemIdx > stackTop ? 1 : -1;
+
+        const processIdxArr = Array.from(
+          { length: (belowItemIdx - stackTop) / diff + 1 },
+          (_, i) => stackTop + i * diff
+        );
+
+        processIdxArr.forEach((processIdx) => {
+          if (processIdx === dragItemIdx || !containerRef.current) return;
+
+          const processItem = containerRef.current.childNodes[processIdx] as HTMLElement;
+
+          if (processItem.classList.contains("moved")) {
+            // setStyle(processItem, { transform: makeTranslate(0, 0) });
+          } else {
+            const ghostMoveDistance = (processIdx - dragItemIdx) * MOVE_DISTANCE;
+
+            const tempStackTop = getStackTop();
+            const belowMoveDistance = (tempStackTop - processIdx) * MOVE_DISTANCE;
+
+            setStyle(placeholder, { transform: makeTranslate(0, ghostMoveDistance) });
+            setStyle(processItem, { transform: makeTranslate(0, belowMoveDistance) });
+
+            stackRef.current.push(processIdx);
+            processItem.classList.add("moved");
+          }
+        });
+
+        // 드래그 idx면 제거
+        // stacktop과 idx가 같으면 빼고 translate 적용 제거
+        // stacktop과 idx과 다르면 stack에 넣고 translate 적용
       }
     };
 
