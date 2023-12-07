@@ -15,6 +15,8 @@ const setStyle = (target: HTMLElement, style: Partial<CSSStyleDeclaration>) => {
 
 const makePx = (number: number) => `${number}px`;
 
+const isMoved = (item: HTMLElement) => item.classList.contains("moved");
+
 const makeTranslate = (x: number, y: number) => `translate(${makePx(x)}, ${makePx(y)})`;
 
 const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleItem }: useDnDProps) => {
@@ -88,31 +90,24 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
         // stacktop부터 현재 드래그까지 모든 idx에 대해 처리
         const diff = belowItemIdx > stackTop ? 1 : -1;
 
-        const processIdxArr = Array.from(
-          { length: (belowItemIdx - stackTop) / diff + 1 },
-          (_, i) => stackTop + i * diff
-        );
+        if (isMoved(belowElement)) {
+        } else {
+          const processIdxArr = Array.from(
+            { length: (belowItemIdx - stackTop) / diff },
+            (_, i) => stackTop + (i + 1) * diff
+          ).forEach((itemIdx) => {
+            const movingElement = containerRef.current?.childNodes[itemIdx] as HTMLElement;
+            const movingDistance = MOVE_DISTANCE * diff * -1;
 
-        processIdxArr.forEach((processIdx) => {
-          if (processIdx === dragItemIdx || !containerRef.current) return;
+            const ghostDistance = MOVE_DISTANCE * (itemIdx - dragItemIdx);
 
-          const processItem = containerRef.current.childNodes[processIdx] as HTMLElement;
+            setStyle(placeholder, { transform: makeTranslate(0, ghostDistance) });
 
-          if (processItem.classList.contains("moved")) {
-            // setStyle(processItem, { transform: makeTranslate(0, 0) });
-          } else {
-            const ghostMoveDistance = (processIdx - dragItemIdx) * MOVE_DISTANCE;
-
-            const tempStackTop = getStackTop();
-            const belowMoveDistance = (tempStackTop - processIdx) * MOVE_DISTANCE;
-
-            setStyle(placeholder, { transform: makeTranslate(0, ghostMoveDistance) });
-            setStyle(processItem, { transform: makeTranslate(0, belowMoveDistance) });
-
-            stackRef.current.push(processIdx);
-            processItem.classList.add("moved");
-          }
-        });
+            setStyle(movingElement, { transform: makeTranslate(0, movingDistance) });
+            movingElement.classList.add("moved");
+          });
+          console.log(processIdxArr);
+        }
 
         // 드래그 idx면 제거
         // stacktop과 idx가 같으면 빼고 translate 적용 제거
