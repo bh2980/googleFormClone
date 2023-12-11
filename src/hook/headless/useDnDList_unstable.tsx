@@ -17,6 +17,10 @@ const makePx = (px: number) => `${px}px`;
 
 const makeTransition = (x: number, y: number) => `translate3d(${makePx(x)}, ${makePx(y)}, 0)`;
 
+const getDragIdx = (item: HTMLElement) => Number(item.dataset.dragIdx);
+
+const isMoved = (item: HTMLElement) => item.classList.contains("moved");
+
 const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleItem }: useDnDProps) => {
   const indexRef = useRef(-1);
   const constainerRef = useRef<T>(null);
@@ -54,15 +58,19 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
       }
     });
 
+    indexRef.current = dragIdx;
+
+    belowItemList.reverse();
+
     const placeholder = itemList[dragIdx];
 
     //cloneItem for drag
 
-    const handleItem = placeholder.cloneNode(true) as HTMLElement;
+    const dragItem = placeholder.cloneNode(true) as HTMLElement;
 
     const { top, left, width, height } = placeholder.getBoundingClientRect();
 
-    setStyle(handleItem, {
+    setStyle(dragItem, {
       position: "fixed",
       top: makePx(top),
       left: makePx(left),
@@ -74,9 +82,15 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
 
     setStyle(placeholder, {
       opacity: "0.5",
+      pointerEvents: "none",
     });
 
-    constainerRef.current.appendChild(handleItem);
+    constainerRef.current.appendChild(dragItem);
+
+    const GAP =
+      itemList.length > 1 ? itemList[1].getBoundingClientRect().top - itemList[0].getBoundingClientRect().bottom : 0;
+
+    const MOVE_DISTANCE = height + GAP;
 
     const mouseMoveHandler = (moveEvent: MouseEvent) => {
       moveEvent.preventDefault();
@@ -86,12 +100,64 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
       const deltaX = clientX - dragStartX;
       const deltaY = clientY - dragStartY;
 
-      setStyle(handleItem, { transform: makeTransition(deltaX, deltaY) });
+      setStyle(dragItem, { transform: makeTransition(deltaX, deltaY) });
+
+      const belowItem = document.elementFromPoint(clientX, clientY)?.closest("[data-drag-idx]") as HTMLElement;
+
+      if (belowItem) {
+        const belowDragIdx = getDragIdx(belowItem);
+
+        const diff = aboveItemSet.has(belowDragIdx) ? 1 : -1;
+
+        const [currentPosList, currentPostSet] = aboveItemSet.has(belowDragIdx)
+          ? [aboveItemList, aboveItemSet]
+          : [belowItemList, belowItemSet];
+        const [nextPosList, nextPosSet] = !aboveItemSet.has(belowDragIdx)
+          ? [aboveItemList, aboveItemSet]
+          : [belowItemList, belowItemSet];
+
+        while (currentPostSet.has(belowDragIdx)) {
+          const popItem = currentPosList.pop() as HTMLElement;
+          const popItemDragIdx = getDragIdx(popItem);
+          currentPostSet.delete(popItemDragIdx);
+
+          nextPosList.push(popItem);
+          nextPosSet.add(popItemDragIdx);
+
+          indexRef.current += -diff;
+
+          const placeholderMove = (indexRef.current - dragIdx) * MOVE_DISTANCE;
+
+          setStyle(placeholder, { transform: makeTransition(0, placeholderMove) });
+
+          if (isMoved(popItem)) {
+            setStyle(popItem, { transform: makeTransition(0, 0) });
+
+            popItem.classList.remove("moved");
+          } else {
+            const popItemMove = MOVE_DISTANCE * diff;
+
+            popItem.classList.add("moved");
+
+            setStyle(popItem, { transform: makeTransition(0, popItemMove) });
+          }
+        }
+      }
     };
 
     const mouseUpHandler = () => {
       document.removeEventListener("mousemove", mouseMoveHandler);
-      handleItem.remove();
+      dragItem.remove();
+
+      setStyle(placeholder, { opacity: "", pointerEvents: "" });
+
+      handleItem(dragIdx, indexRef.current);
+
+      itemList.forEach((item) => {
+        setStyle(item, { transform: "" });
+        item.removeAttribute("data-drag-idx");
+        item.classList.remove("moved");
+      });
     };
 
     document.addEventListener("mousemove", mouseMoveHandler);
