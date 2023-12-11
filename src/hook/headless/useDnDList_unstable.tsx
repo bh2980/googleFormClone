@@ -2,6 +2,7 @@ import { useRef } from "react";
 
 interface useDnDProps {
   handleItem: (fromIdx: number, toIdx: number) => void;
+  ghost?: boolean;
 }
 
 export interface DnDAction {
@@ -21,7 +22,7 @@ const getDragIdx = (item: HTMLElement) => Number(item.dataset.dragIdx);
 
 const isMoved = (item: HTMLElement) => item.classList.contains("moved");
 
-const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleItem }: useDnDProps) => {
+const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost = false }: useDnDProps) => {
   const indexRef = useRef(-1);
   const constainerRef = useRef<T>(null);
 
@@ -48,6 +49,7 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
       }
 
       item.dataset.dragIdx = String(idx);
+      setStyle(item, { transition: "transform 0.2s" });
 
       if (dragIdx < 0) {
         aboveItemList.push(item);
@@ -78,12 +80,19 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
       height: makePx(height),
       pointerEvents: "none",
       zIndex: "9999",
+      transition: "",
     });
 
-    setStyle(placeholder, {
-      opacity: "0.5",
-      pointerEvents: "none",
-    });
+    if (ghost)
+      setStyle(placeholder, {
+        opacity: "0.5",
+        pointerEvents: "none",
+      });
+    else
+      setStyle(placeholder, {
+        visibility: "hidden",
+        pointerEvents: "none",
+      });
 
     constainerRef.current.appendChild(dragItem);
 
@@ -131,7 +140,7 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
           setStyle(placeholder, { transform: makeTransition(0, placeholderMove) });
 
           if (isMoved(popItem)) {
-            setStyle(popItem, { transform: makeTransition(0, 0) });
+            setStyle(popItem, { transform: makeTransition(0, 0), pointerEvents: "none" });
 
             popItem.classList.remove("moved");
           } else {
@@ -139,25 +148,44 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
 
             popItem.classList.add("moved");
 
-            setStyle(popItem, { transform: makeTransition(0, popItemMove) });
+            setStyle(popItem, { transform: makeTransition(0, popItemMove), pointerEvents: "none" });
           }
+
+          popItem.addEventListener(
+            "transitionend",
+            () => {
+              setStyle(popItem, { pointerEvents: "" });
+            },
+            { once: true }
+          );
         }
       }
     };
 
     const mouseUpHandler = () => {
       document.removeEventListener("mousemove", mouseMoveHandler);
-      dragItem.remove();
 
-      setStyle(placeholder, { opacity: "", pointerEvents: "" });
+      const placeholderMove = (indexRef.current - dragIdx) * MOVE_DISTANCE;
 
-      handleItem(dragIdx, indexRef.current);
+      setStyle(dragItem, { transform: makeTransition(0, placeholderMove), transition: "all 0.2s" });
 
-      itemList.forEach((item) => {
-        setStyle(item, { transform: "" });
-        item.removeAttribute("data-drag-idx");
-        item.classList.remove("moved");
-      });
+      dragItem.addEventListener(
+        "transitionend",
+        () => {
+          dragItem.remove();
+
+          setStyle(placeholder, { opacity: "", pointerEvents: "", visibility: "visible" });
+
+          itemList.forEach((item) => {
+            setStyle(item, { transform: "", transition: "" });
+            item.removeAttribute("data-drag-idx");
+            item.classList.remove("moved");
+          });
+
+          handleItem(dragIdx, indexRef.current);
+        },
+        { once: true }
+      );
     };
 
     document.addEventListener("mousemove", mouseMoveHandler);
