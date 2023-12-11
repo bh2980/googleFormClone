@@ -28,21 +28,7 @@ const Editor = () => {
     dispatch(editQuestionBlockOrder({ fromIdx, toIdx }));
   };
 
-  const { handleDrag, constainerRef } = useDnDList({ handleItem });
-
-  const [itemList, setItemList] = useState([1, 2, 3, 4, 5]);
-
-  const handleDrag_unstable = (fromIdx: number, toIdx: number) => {
-    const tempList = [...itemList];
-    const [removedElement] = tempList.splice(fromIdx, 1);
-    tempList.splice(toIdx, 0, removedElement);
-
-    setItemList(tempList);
-  };
-
-  const { handleDrag: handleDrag2, constainerRef: containerRef2 } = useDnDList_unstable({
-    handleItem: handleDrag_unstable,
-  });
+  const { handleDrag, constainerRef } = useDnDList_unstable({ handleItem, ghost: true });
 
   const addQuestionBlock = () => {
     const QUESTION_ID = uuidv4();
@@ -104,19 +90,6 @@ const Editor = () => {
       </div>
       <div className="relative flex justify-center w-full px-4 py-20">
         <form className="flex flex-col w-full gap-4 max-w-[720px]">
-          <div className="flex flex-col w-full gap-4" ref={containerRef2}>
-            {itemList.map((item) => {
-              return (
-                <div
-                  onMouseDown={handleDrag2}
-                  className="w-full h-[72px] rounded-xl bg-blue-400 flex items-center justify-center"
-                  key={item}
-                >
-                  {item}
-                </div>
-              );
-            })}
-          </div>
           <TitleBlock />
           <div ref={constainerRef} className="flex flex-col gap-4">
             {questionIDList.map((qID, idx) => (
