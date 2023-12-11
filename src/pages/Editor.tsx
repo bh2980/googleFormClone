@@ -12,7 +12,8 @@ import { addAnswer } from "../store/reducer/answerSlice";
 import useDnDList from "../hook/headless/useDnDList";
 import { editQuestionBlockOrder } from "../store/reducer/docsSlice";
 import { Link } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import useDnDList_unstable from "../hook/headless/useDnDList_unstable";
 
 // TODO 관련 컴포넌트 EDITOR로 변경
 const Editor = () => {
@@ -28,6 +29,20 @@ const Editor = () => {
   };
 
   const { handleDrag, constainerRef } = useDnDList({ handleItem });
+
+  const [itemList, setItemList] = useState([1, 2, 3, 4, 5]);
+
+  const handleDrag_unstable = (fromIdx: number, toIdx: number) => {
+    const tempList = [...itemList];
+    const [removedElement] = tempList.splice(fromIdx, 1);
+    tempList.splice(toIdx, 0, removedElement);
+
+    setItemList(tempList);
+  };
+
+  const { handleDrag: handleDrag2, constainerRef: containerRef2 } = useDnDList_unstable({
+    handleItem: handleDrag_unstable,
+  });
 
   const addQuestionBlock = () => {
     const QUESTION_ID = uuidv4();
@@ -89,6 +104,19 @@ const Editor = () => {
       </div>
       <div className="relative flex justify-center w-full px-4 py-20">
         <form className="flex flex-col w-full gap-4 max-w-[720px]">
+          <div className="flex flex-col w-full gap-4" ref={containerRef2}>
+            {itemList.map((item) => {
+              return (
+                <div
+                  onMouseDown={handleDrag2}
+                  className="w-full h-[72px] rounded-xl bg-blue-400 flex items-center justify-center"
+                  key={item}
+                >
+                  {item}
+                </div>
+              );
+            })}
+          </div>
           <TitleBlock />
           <div ref={constainerRef} className="flex flex-col gap-4">
             {questionIDList.map((qID, idx) => (
