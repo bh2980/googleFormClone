@@ -104,8 +104,7 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost 
     const GAP =
       itemList.length > 1 ? itemList[1].getBoundingClientRect().top - itemList[0].getBoundingClientRect().bottom : 0;
 
-    //TODO MOVE_DISTANCE가 일정하지 않을 경우 대비
-    const MOVE_DISTANCE = height + GAP;
+    const LIST_ITEM_MOVE = height + GAP;
 
     // calc ghost move distance
     let placeholderMove = 0;
@@ -162,7 +161,7 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost 
             popItem.classList.remove("moved");
           } else {
             // if move yet, set transition and add 'moved' class
-            const popItemMove = MOVE_DISTANCE * diff;
+            const popItemMove = LIST_ITEM_MOVE * diff;
 
             popItem.classList.add("moved");
 
