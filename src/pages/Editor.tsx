@@ -12,8 +12,7 @@ import { addAnswer } from "../store/reducer/answerSlice";
 import useDnDList from "../hook/headless/useDnDList";
 import { editQuestionBlockOrder } from "../store/reducer/docsSlice";
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
-import useDnDList_unstable from "../hook/headless/useDnDList_unstable";
+import { useEffect, useRef } from "react";
 
 // TODO 관련 컴포넌트 EDITOR로 변경
 const Editor = () => {
@@ -28,7 +27,7 @@ const Editor = () => {
     dispatch(editQuestionBlockOrder({ fromIdx, toIdx }));
   };
 
-  const { handleDrag, constainerRef } = useDnDList_unstable({ handleItem, ghost: true });
+  const { handleDrag, constainerRef } = useDnDList({ handleItem, ghost: true });
 
   const addQuestionBlock = () => {
     const QUESTION_ID = uuidv4();
@@ -92,8 +91,8 @@ const Editor = () => {
         <form className="flex flex-col w-full gap-4 max-w-[720px]">
           <TitleBlock />
           <div ref={constainerRef} className="flex flex-col gap-4">
-            {questionIDList.map((qID, idx) => (
-              <QuestionBlock key={qID} questionID={qID} handleDrag={(e) => handleDrag(e, idx)} />
+            {questionIDList.map((qID) => (
+              <QuestionBlock key={qID} questionID={qID} handleDrag={handleDrag} />
             ))}
           </div>
         </form>
