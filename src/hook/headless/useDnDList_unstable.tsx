@@ -39,6 +39,7 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
     const aboveItemSet = new Set();
     const belowItemSet = new Set();
 
+    // drag start idx
     let dragIdx = -1;
 
     // set data-drag-idx attribute to item and transition
@@ -61,17 +62,19 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
       }
     });
 
+    // arrive idx
     let moveToIdx = dragIdx;
     const placeholder = itemList[dragIdx];
 
     // reverse belowItemList to pop and push
     belowItemList.reverse();
 
-    //cloneItem for drag and set style
+    //clone item for drag
     const dragItem = placeholder.cloneNode(true) as HTMLElement;
 
     const { top, left, width, height } = placeholder.getBoundingClientRect();
 
+    // set clone style
     setStyle(dragItem, {
       position: "fixed",
       top: makePx(top),
@@ -83,7 +86,7 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
       transition: "",
     });
 
-    // set ghost style
+    // set ghost(placeholder) style
     if (ghost)
       setStyle(placeholder, {
         opacity: "0.5",
@@ -104,6 +107,7 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
     //TODO MOVE_DISTANCE가 일정하지 않을 경우 대비
     const MOVE_DISTANCE = height + GAP;
 
+    // calc ghost move distance
     let placeholderMove = 0;
 
     const mouseMoveHandler = (moveEvent: MouseEvent) => {
@@ -111,11 +115,10 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
 
       const { clientX, clientY } = moveEvent;
 
-      // move dragItem to follow mouse
-      const deltaX = clientX - dragStartX;
+      // move dragItem to follow mouse only vertical
       const deltaY = clientY - dragStartY;
 
-      setStyle(dragItem, { transform: makeTransition(deltaX, deltaY) });
+      setStyle(dragItem, { transform: makeTransition(0, deltaY) });
 
       // find data-drag-idx element and update
       const belowItem = document.elementFromPoint(clientX, clientY)?.closest("[data-drag-idx]") as HTMLElement;
@@ -201,7 +204,7 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
             item.classList.remove("moved");
           });
 
-          // call callback function
+          // call callback function to tell fromIdx and toIdx
           handleItem(dragIdx, moveToIdx);
         },
         { once: true }
