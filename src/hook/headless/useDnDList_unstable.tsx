@@ -11,7 +11,6 @@ export interface DnDAction {
 }
 
 const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost = false }: useDnDProps) => {
-  const indexRef = useRef(-1);
   const constainerRef = useRef<T>(null);
 
   const setStyle = (target: HTMLElement, style: Partial<CSSStyleDeclaration>) => {
@@ -62,7 +61,7 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
       }
     });
 
-    indexRef.current = dragIdx;
+    let moveToIdx = dragIdx;
     const placeholder = itemList[dragIdx];
 
     // reverse belowItemList to pop and push
@@ -92,7 +91,7 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
       });
     else
       setStyle(placeholder, {
-        opacity: "0",
+        visibility: "hidden",
         pointerEvents: "none",
       });
 
@@ -102,7 +101,10 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
     const GAP =
       itemList.length > 1 ? itemList[1].getBoundingClientRect().top - itemList[0].getBoundingClientRect().bottom : 0;
 
+    //TODO MOVE_DISTANCE가 일정하지 않을 경우 대비
     const MOVE_DISTANCE = height + GAP;
+
+    let placeholderMove = 0;
 
     const mouseMoveHandler = (moveEvent: MouseEvent) => {
       moveEvent.preventDefault();
@@ -142,10 +144,9 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
           nextPosSet.add(popItemDragIdx);
 
           // update current drag position idx
-          indexRef.current += -diff;
+          moveToIdx += -diff;
 
-          //set placeholder transform
-          const placeholderMove = (indexRef.current - dragIdx) * MOVE_DISTANCE;
+          placeholderMove += (popItem.getBoundingClientRect().height + GAP) * -diff;
 
           setStyle(placeholder, { transform: makeTransition(0, placeholderMove) });
 
@@ -181,8 +182,6 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
       // remove mousemove event listener
       document.removeEventListener("mousemove", mouseMoveHandler);
 
-      const placeholderMove = (indexRef.current - dragIdx) * MOVE_DISTANCE;
-
       // move dragItem to current placeholder location
       setStyle(dragItem, { transform: makeTransition(0, placeholderMove), transition: "all 0.2s" });
 
@@ -203,7 +202,7 @@ const useDnDList_unstable = <T extends HTMLElement = HTMLDivElement>({ handleIte
           });
 
           // call callback function
-          handleItem(dragIdx, indexRef.current);
+          handleItem(dragIdx, moveToIdx);
         },
         { once: true }
       );
