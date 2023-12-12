@@ -30,7 +30,7 @@ const Editor = () => {
     dispatch(editQuestionBlockOrder({ fromIdx, toIdx }));
   };
 
-  const { handleDrag, constainerRef } = useDnDList({ handleItem });
+  const { handleDrag, constainerRef } = useDnDList({ handleItem, ghost: true });
 
   const handleDrag_unstable = (fromIdx: number, toIdx: number) => {
     const nextState = [...testArr];
@@ -114,8 +114,8 @@ const Editor = () => {
           </div>
           <TitleBlock />
           <div ref={constainerRef} className="flex flex-col gap-4">
-            {questionIDList.map((qID, idx) => (
-              <QuestionBlock key={qID} questionID={qID} handleDrag={(e) => handleDrag(e, idx)} />
+            {questionIDList.map((qID) => (
+              <QuestionBlock key={qID} questionID={qID} handleDrag={handleDrag} />
             ))}
           </div>
         </form>
