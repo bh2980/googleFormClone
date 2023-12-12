@@ -29,7 +29,7 @@ const AnswerManager = ({ questionID }: AnswerManagerProps) => {
 
   const { isEditing } = useChangeEditBlockID(questionID);
 
-  const { constainerRef, handleDrag } = useDnDList({
+  const { containerRef, handleDrag } = useDnDList({
     handleItem: (fromIdx: number, toIdx: number) => {
       dispatch(editAnswerOrder({ questionID, fromIdx, toIdx }));
     },
@@ -83,7 +83,7 @@ const AnswerManager = ({ questionID }: AnswerManagerProps) => {
       {type === EDITOR_QUESTION_TYPE.long && <div className="text-gray-400">장문형 메시지</div>}
       {type !== EDITOR_QUESTION_TYPE.short && type !== EDITOR_QUESTION_TYPE.long && (
         <>
-          <div ref={constainerRef}>
+          <div ref={containerRef}>
             {answerIDList.map((aID, idx) => {
               const answerInfo = answerMap[aID];
               return (
@@ -97,7 +97,7 @@ const AnswerManager = ({ questionID }: AnswerManagerProps) => {
                   isEditing={isEditing}
                   deletable={answerIDList.length > 1}
                   onDeleteButton={() => removeAnswerItem(aID, idx)}
-                  handleDrag={(e) => handleDrag(e, idx)}
+                  handleDrag={handleDrag}
                   innerRef={(el) => (chooseAnswerRef.current[idx] = el)}
                 />
               );

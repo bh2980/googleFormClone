@@ -12,8 +12,7 @@ import { addAnswer } from "../store/reducer/answerSlice";
 import useDnDList from "../hook/headless/useDnDList";
 import { editQuestionBlockOrder } from "../store/reducer/docsSlice";
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
-import useDnDList_unstable from "../hook/headless/useDnDList_unstable";
+import { useEffect, useRef } from "react";
 
 // TODO 관련 컴포넌트 EDITOR로 변경
 const Editor = () => {
@@ -22,24 +21,13 @@ const Editor = () => {
   const sidebarPosition = useAppSelector((store) => store.sidebarPosition);
   const prevLength = useRef(questionIDList.length);
 
-  const [testArr, setTestArr] = useState([1, 2, 3, 4, 5]);
-
   const floatingSideBarRef = useRef<HTMLDivElement>(null);
 
   const handleItem = (fromIdx: number, toIdx: number) => {
     dispatch(editQuestionBlockOrder({ fromIdx, toIdx }));
   };
 
-  const { handleDrag, constainerRef } = useDnDList({ handleItem, ghost: true });
-
-  const handleDrag_unstable = (fromIdx: number, toIdx: number) => {
-    const nextState = [...testArr];
-    const [targetElement] = nextState.splice(fromIdx, 1);
-    nextState.splice(toIdx, 0, targetElement);
-    setTestArr(nextState);
-  };
-
-  const { dragStart, containerRef } = useDnDList_unstable({ handleItem: handleDrag_unstable });
+  const { handleDrag, containerRef } = useDnDList({ handleItem, ghost: true });
 
   const addQuestionBlock = () => {
     const QUESTION_ID = uuidv4();
@@ -101,19 +89,8 @@ const Editor = () => {
       </div>
       <div className="relative flex justify-center w-full px-4 py-20">
         <form className="flex flex-col w-full gap-4 max-w-[720px]">
-          <div ref={containerRef} className="flex flex-col w-full gap-4">
-            {testArr.map((item) => (
-              <div
-                className="w-full h-[72px] flex justify-center items-center bg-blue-500 text-white rounded-lg"
-                key={item}
-                onMouseDown={dragStart}
-              >
-                {item}
-              </div>
-            ))}
-          </div>
           <TitleBlock />
-          <div ref={constainerRef} className="flex flex-col gap-4">
+          <div ref={containerRef} className="flex flex-col gap-4">
             {questionIDList.map((qID) => (
               <QuestionBlock key={qID} questionID={qID} handleDrag={handleDrag} />
             ))}

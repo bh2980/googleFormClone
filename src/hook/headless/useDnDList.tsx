@@ -11,7 +11,7 @@ export interface DnDAction {
 }
 
 const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost = false }: useDnDProps) => {
-  const constainerRef = useRef<T>(null);
+  const containerRef = useRef<T>(null);
 
   const setStyle = (target: HTMLElement, style: Partial<CSSStyleDeclaration>) => {
     Object.assign(target.style, style);
@@ -28,11 +28,11 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost 
   const mouseDownHandler = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    if (!constainerRef.current) return;
+    if (!containerRef.current) return;
 
     const { clientY: dragStartY } = e;
 
-    const itemList = [...constainerRef.current.childNodes] as HTMLElement[];
+    const itemList = [...containerRef.current.childNodes] as HTMLElement[];
     const aboveItemList: HTMLElement[] = [];
     const belowItemList: HTMLElement[] = [];
 
@@ -98,7 +98,7 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost 
         pointerEvents: "none",
       });
 
-    constainerRef.current.appendChild(dragItem);
+    containerRef.current.appendChild(dragItem);
 
     // calculate gap between item and move distance
     const GAP =
@@ -217,7 +217,7 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost 
 
   return {
     handleDrag: mouseDownHandler,
-    constainerRef,
+    containerRef,
   };
 };
 
