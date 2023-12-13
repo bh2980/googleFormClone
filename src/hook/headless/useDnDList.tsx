@@ -11,7 +11,7 @@ export interface DnDAction {
 }
 
 const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost = false }: useDnDProps) => {
-  const containerRef = useRef<T>(null);
+  const dragListContainerRef = useRef<T>(null);
 
   const setStyle = (target: HTMLElement, style: Partial<CSSStyleDeclaration>) => {
     Object.assign(target.style, style);
@@ -28,11 +28,12 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost 
   const mouseDownHandler = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    if (!containerRef.current) return;
+    if (!dragListContainerRef.current) return;
 
+    // TODO Touch 이벤트 대응
     const { clientY: dragStartY } = e;
 
-    const itemList = [...containerRef.current.childNodes] as HTMLElement[];
+    const itemList = [...dragListContainerRef.current.childNodes] as HTMLElement[];
     const aboveItemList: HTMLElement[] = [];
     const belowItemList: HTMLElement[] = [];
 
@@ -98,7 +99,7 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost 
         pointerEvents: "none",
       });
 
-    containerRef.current.appendChild(dragItem);
+    dragListContainerRef.current.appendChild(dragItem);
 
     // calculate gap between item and move distance
     const GAP =
@@ -112,6 +113,7 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost 
     const mouseMoveHandler = (moveEvent: MouseEvent) => {
       moveEvent.preventDefault();
 
+      // TODO Touch 이벤트 대응
       const { clientX, clientY } = moveEvent;
 
       // move dragItem to follow mouse only vertical
@@ -123,6 +125,14 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost 
       const belowItem = document.elementFromPoint(clientX, clientY)?.closest("[data-drag-idx]") as HTMLElement;
 
       if (belowItem) {
+        const { top: itemTop, height: itemHeight } = belowItem.getBoundingClientRect();
+        const { top: dragTop, height: dragHeight } = dragItem.getBoundingClientRect();
+
+        // check overlapping
+        const isOverlapping = dragTop < itemTop + itemHeight / 2 && itemTop < dragTop + dragHeight / 2;
+
+        if (!isOverlapping) return;
+
         const belowDragIdx = getDragIdx(belowItem);
 
         // calc below item move direction
@@ -216,7 +226,7 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost 
 
   return {
     handleDrag: mouseDownHandler,
-    containerRef,
+    dragListContainerRef,
   };
 };
 

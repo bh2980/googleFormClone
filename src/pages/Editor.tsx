@@ -27,7 +27,7 @@ const Editor = () => {
     dispatch(editQuestionBlockOrder({ fromIdx, toIdx }));
   };
 
-  const { handleDrag, containerRef } = useDnDList({ handleItem, ghost: true });
+  const { handleDrag, dragListContainerRef } = useDnDList({ handleItem, ghost: true });
 
   const addQuestionBlock = () => {
     const QUESTION_ID = uuidv4();
@@ -90,7 +90,7 @@ const Editor = () => {
       <div className="relative flex justify-center w-full px-4 py-20">
         <form className="flex flex-col w-full gap-4 max-w-[720px]">
           <TitleBlock />
-          <div ref={containerRef} className="flex flex-col gap-4">
+          <div ref={dragListContainerRef} className="flex flex-col gap-4">
             {questionIDList.map((qID) => (
               <QuestionBlock key={qID} questionID={qID} handleDrag={handleDrag} />
             ))}
