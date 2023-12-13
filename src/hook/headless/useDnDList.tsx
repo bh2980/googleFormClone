@@ -31,7 +31,7 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost 
     if (!dragListContainerRef.current) return;
 
     // TODO Touch 이벤트 대응
-    const { clientY: dragStartY } = e;
+    const { clientX: dragStartX, clientY: dragStartY } = e;
 
     const itemList = [...dragListContainerRef.current.childNodes] as HTMLElement[];
     const aboveItemList: HTMLElement[] = [];
@@ -118,8 +118,9 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost 
 
       // move dragItem to follow mouse only vertical
       const deltaY = clientY - dragStartY;
+      const deltaX = clientX - dragStartX;
 
-      setStyle(dragItem, { transform: makeTransition(0, deltaY) });
+      setStyle(dragItem, { transform: makeTransition(deltaX, deltaY) });
 
       // find data-drag-idx element and update
       const belowItem = document.elementFromPoint(clientX, clientY)?.closest("[data-drag-idx]") as HTMLElement;
