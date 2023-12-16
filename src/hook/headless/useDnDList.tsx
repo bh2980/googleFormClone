@@ -209,7 +209,7 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost 
 
     const dragEndHandler = () => {
       // remove mousemove event listener
-      document.removeEventListener("mousemove", dragMoveHandler);
+      document.removeEventListener(DRAG_MOVE_EVENT, dragMoveHandler);
 
       // move dragItem to current placeholder location
       setStyle(dragItem, { transform: makeTransition(0, placeholderMove), transition: "all 0.2s" });
