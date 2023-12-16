@@ -10,8 +10,7 @@ export interface DnDAction {
   toIdx: number;
 }
 
-export const isTouchScreen =
-  typeof window !== "undefined" && window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+export const isTouchScreen = "ontouchstart" in document.documentElement;
 
 const setStyle = (target: HTMLElement, style: Partial<CSSStyleDeclaration>) => {
   Object.assign(target.style, style);
