@@ -4,6 +4,8 @@ import { EDITOR_QUESTION_TYPE, ICON_CLASS } from "../../constants";
 import Checkbox from "../common/Checkbox";
 import Radio from "../common/Radio/Radio";
 import Input from "../common/Input";
+import classMerge from "../../utils/classMerge";
+import { isTouchScreen } from "../../hook/headless/useDnDList";
 
 interface RadioAnswerProps extends Omit<React.ComponentPropsWithRef<"input">, "type"> {
   type: EDITOR_QUESTION_TYPE.radio | EDITOR_QUESTION_TYPE.checkbox | EDITOR_QUESTION_TYPE.dropdown;
@@ -31,8 +33,12 @@ const ChooseAnswer = ({
         {isEditing && (
           <RiDraggable
             onMouseDown={handleDrag}
+            onTouchStart={handleDrag}
             tabIndex={0}
-            className={`absolute outline-none cursor-move hidden group-hover/item:flex ${ICON_CLASS}`}
+            className={classMerge([
+              `absolute outline-none cursor-move ${ICON_CLASS}`,
+              !isTouchScreen && "hidden group-hover/item:flex",
+            ])}
           />
         )}
         <div className="flex gap-4 px-[32px] w-full items-center">

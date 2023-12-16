@@ -10,28 +10,45 @@ export interface DnDAction {
   toIdx: number;
 }
 
+export const isTouchScreen =
+  typeof window !== "undefined" && window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+
+const setStyle = (target: HTMLElement, style: Partial<CSSStyleDeclaration>) => {
+  Object.assign(target.style, style);
+};
+
+const makePx = (px: number) => `${px}px`;
+
+const makeTransition = (x: number, y: number) => `translate3d(${makePx(x)}, ${makePx(y)}, 0)`;
+
+const getDragIdx = (item: HTMLElement) => Number(item.dataset.dragIdx);
+
+const isMoved = (item: HTMLElement) => item.classList.contains("moved");
+
+const DRAG_MOVE_EVENT = isTouchScreen ? "touchmove" : "mousemove";
+const DRAG_END_EVENT = isTouchScreen ? "touchend" : "mouseup";
+
+const extractClientPos = (e: TouchEvent | MouseEvent) => {
+  if (isTouchScreen) {
+    const { clientX, clientY } = (e as TouchEvent).touches[0];
+
+    return { clientX, clientY };
+  }
+
+  const { clientX, clientY } = e as MouseEvent;
+
+  return { clientX, clientY };
+};
+
 const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost = false }: useDnDProps) => {
   const dragListContainerRef = useRef<T>(null);
 
-  const setStyle = (target: HTMLElement, style: Partial<CSSStyleDeclaration>) => {
-    Object.assign(target.style, style);
-  };
-
-  const makePx = (px: number) => `${px}px`;
-
-  const makeTransition = (x: number, y: number) => `translate3d(${makePx(x)}, ${makePx(y)}, 0)`;
-
-  const getDragIdx = (item: HTMLElement) => Number(item.dataset.dragIdx);
-
-  const isMoved = (item: HTMLElement) => item.classList.contains("moved");
-
-  const mouseDownHandler = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const dragStartHandler = (dragStartEvent: React.MouseEvent | React.TouchEvent) => {
+    if (!isTouchScreen) dragStartEvent.preventDefault();
 
     if (!dragListContainerRef.current) return;
 
-    // TODO Touch 이벤트 대응
-    const { clientX: dragStartX, clientY: dragStartY } = e;
+    const { clientX: dragStartX, clientY: dragStartY } = extractClientPos(dragStartEvent.nativeEvent);
 
     const itemList = [...dragListContainerRef.current.childNodes] as HTMLElement[];
     const aboveItemList: HTMLElement[] = [];
@@ -49,7 +66,7 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost 
       item.dataset.dragIdx = String(idx);
       setStyle(item, { transition: "transform 0.2s" });
 
-      if (item === (e.target as HTMLElement).closest("[data-drag-idx]")) {
+      if (item === (dragStartEvent.target as HTMLElement).closest("[data-drag-idx]")) {
         dragIdx = idx;
         return;
       }
@@ -110,11 +127,10 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost 
     // calc ghost move distance
     let placeholderMove = 0;
 
-    const mouseMoveHandler = (moveEvent: MouseEvent) => {
+    const dragMoveHandler = (moveEvent: MouseEvent | TouchEvent) => {
       moveEvent.preventDefault();
 
-      // TODO Touch 이벤트 대응
-      const { clientX, clientY } = moveEvent;
+      const { clientX, clientY } = extractClientPos(moveEvent);
 
       // move dragItem to follow mouse only vertical
       const deltaY = clientY - dragStartY;
@@ -191,9 +207,9 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost 
       }
     };
 
-    const mouseUpHandler = () => {
+    const dragEndHandler = () => {
       // remove mousemove event listener
-      document.removeEventListener("mousemove", mouseMoveHandler);
+      document.removeEventListener("mousemove", dragMoveHandler);
 
       // move dragItem to current placeholder location
       setStyle(dragItem, { transform: makeTransition(0, placeholderMove), transition: "all 0.2s" });
@@ -221,12 +237,12 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost 
       );
     };
 
-    document.addEventListener("mousemove", mouseMoveHandler);
-    document.addEventListener("mouseup", mouseUpHandler, { once: true });
+    document.addEventListener(DRAG_MOVE_EVENT, dragMoveHandler, { passive: false });
+    document.addEventListener(DRAG_END_EVENT, dragEndHandler, { once: true });
   };
 
   return {
-    handleDrag: mouseDownHandler,
+    handleDrag: dragStartHandler,
     dragListContainerRef,
   };
 };

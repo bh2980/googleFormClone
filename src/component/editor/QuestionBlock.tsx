@@ -14,10 +14,12 @@ import { v4 } from "uuid";
 import Dropdown from "../common/Dropdown";
 import useChangeEditBlockID from "../../hook/useChangeEditBlockID";
 import useBlockAutoFocus from "../../hook/useBlockAutoFocus";
+import classMerge from "../../utils/classMerge";
+import { isTouchScreen } from "../../hook/headless/useDnDList";
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
   questionID: string;
-  handleDrag?: (e: React.MouseEvent) => void;
+  handleDrag?: (e: React.MouseEvent | React.TouchEvent) => void;
 }
 
 const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps) => {
@@ -74,10 +76,16 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
       innerRef={containerRef}
       {...props}
     >
-      <div className="flex justify-center w-full py-2 cursor-move group" onMouseDown={handleDrag}>
-        <RiDraggable className="invisible rotate-90 group-hover:visible" />
+      <div
+        className="z-50 flex justify-center w-full py-2 cursor-move group/dragHandle"
+        onMouseDown={handleDrag}
+        onTouchStart={handleDrag}
+      >
+        <RiDraggable
+          className={classMerge(["rotate-90", !isTouchScreen && "invisible group-hover/dragHandle:visible"])}
+        />
       </div>
-      <div className="flex flex-col gap-4 pb-8">
+      <div className="flex flex-col gap-4 pb-8 mt-2">
         <div className="flex items-center justify-between gap-4 group mx-[32px] mobile:flex-col mobile:items-start">
           {isEditing ? (
             <>
