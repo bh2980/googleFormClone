@@ -2,7 +2,7 @@ import { RiDeleteBin6Line, RiDraggable, RiFileCopyLine } from "react-icons/ri";
 import Block from "../common/Block";
 import Input from "../common/Input";
 import Divider from "../common/Divider";
-import { EDITOR_DROPDOWN_LIST, ICON_CLASS } from "../../constants";
+import { EDITOR_DROPDOWN_LIST, EDITOR_QUESTION_TYPE, ICON_CLASS } from "../../constants";
 import IconButton from "../common/IconButton";
 import Switch from "../common/Switch";
 
@@ -51,13 +51,18 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
   };
 
   const changeQuestionType = (idx: number) => {
-    answerIDList.map((aID) => {
-      dispatch(removeAnswer(answerMap[aID]));
-    });
+    dispatch(editQuestion({ ...questionInfo, type: EDITOR_DROPDOWN_LIST[idx].type }));
 
-    // TODO 장문형, 단답형으로 바꿀 때만 초기화
-    dispatch(editQuestion({ ...questionInfo, type: EDITOR_DROPDOWN_LIST[idx].type, answerIDList: [] }));
-    dispatch(addAnswer({ answerID: v4(), content: "", questionID }));
+    if (
+      EDITOR_DROPDOWN_LIST[idx].type === EDITOR_QUESTION_TYPE.long ||
+      EDITOR_DROPDOWN_LIST[idx].type === EDITOR_QUESTION_TYPE.short
+    ) {
+      answerIDList.map((aID) => {
+        dispatch(removeAnswer(answerMap[aID]));
+      });
+
+      dispatch(addAnswer({ answerID: v4(), content: "", questionID }));
+    }
   };
 
   const changeQuestionContent = (e: React.ChangeEvent<HTMLInputElement>) => {
