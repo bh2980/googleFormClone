@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 interface useDnDProps {
   handleItem: (fromIdx: number, toIdx: number) => void;
@@ -41,6 +41,18 @@ const extractClientPos = (e: TouchEvent | MouseEvent) => {
 
 const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost = false }: useDnDProps) => {
   const dragListContainerRef = useRef<T>(null);
+
+  // set {passive : false} and run preventDefault for removing scroll behavior
+  // in all touchmove event especially android browser
+  useEffect(() => {
+    const dragMovePrevent = () => {};
+
+    document.addEventListener("touchmove", dragMovePrevent, { passive: false });
+
+    return () => {
+      document.removeEventListener("touchmove", dragMovePrevent);
+    };
+  }, []);
 
   const dragStartHandler = (dragStartEvent: React.MouseEvent | React.TouchEvent) => {
     if (!isTouchScreen) dragStartEvent.preventDefault();
