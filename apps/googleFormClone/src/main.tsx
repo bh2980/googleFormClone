@@ -1,13 +1,46 @@
-import { StrictMode } from 'react';
-import * as ReactDOM from 'react-dom/client';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
 
-import App from './app/app';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
-  <StrictMode>
-    <App />
-  </StrictMode>
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from 'react-router-dom';
+import Editor from './pages/Editor';
+import Preview from './pages/Preview';
+import Result from './pages/Result';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Navigate to={'/editor'} replace />,
+    errorElement: <>error page</>,
+  },
+  {
+    path: '/editor',
+    element: <Editor />,
+    errorElement: <>error page</>,
+  },
+  {
+    path: '/preview',
+    element: <Preview />,
+    errorElement: <>error page</>,
+  },
+  {
+    path: '/result',
+    element: <Result />,
+    errorElement: <>error page</>,
+  },
+]);
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  </React.StrictMode>
 );
