@@ -1,17 +1,19 @@
-import { useState, Children, cloneElement } from "react";
+import { useState, Children, cloneElement } from 'react';
 
 interface RadioGroupProps extends React.PropsWithChildren {
   defaultSelected?: number;
 }
 
-const RadioGroup = ({ children }: RadioGroupProps) => {
+export const RadioGroup = ({ children }: RadioGroupProps) => {
   const [selectedRadio, setSelectedRadio] = useState<number[]>([]);
 
   const getRadio = () => {
     const mappedRadio = Children.map(children, (radioButton, idx) => {
       if (!radioButton) return;
 
-      const { onClick } = (radioButton as React.ReactElement<React.ComponentProps<"input">>).props;
+      const { onClick } = (
+        radioButton as React.ReactElement<React.ComponentProps<'input'>>
+      ).props;
 
       const newProps = {
         onClick: (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
@@ -22,7 +24,10 @@ const RadioGroup = ({ children }: RadioGroupProps) => {
       };
 
       return cloneElement(
-        radioButton as React.ReactElement<HTMLInputElement, string | React.JSXElementConstructor<"input">>,
+        radioButton as React.ReactElement<
+          HTMLInputElement,
+          string | React.JSXElementConstructor<'input'>
+        >,
         newProps
       );
     });
@@ -31,7 +36,10 @@ const RadioGroup = ({ children }: RadioGroupProps) => {
   };
 
   const handleChange = (idx: number) => {
-    if (selectedRadio.includes(idx)) setSelectedRadio((prev) => prev.filter((selectedIdx) => selectedIdx !== idx));
+    if (selectedRadio.includes(idx))
+      setSelectedRadio((prev) =>
+        prev.filter((selectedIdx) => selectedIdx !== idx)
+      );
     else setSelectedRadio([idx]);
   };
 

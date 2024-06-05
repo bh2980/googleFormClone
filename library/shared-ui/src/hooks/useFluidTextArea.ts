@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
 
-const useFluidTextArea = () => {
+export const useFluidTextArea = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleInput = () => {
@@ -21,5 +21,3 @@ const useFluidTextArea = () => {
 
   return { textareaRef, handleInput };
 };
-
-export default useFluidTextArea;

@@ -1,11 +1,11 @@
-import classMerge from '../../utils/classMerge';
+import { classMerge } from '../utils/classMerge';
 
 interface SwitchProps extends React.ComponentPropsWithRef<'input'> {
   description?: string;
   descriptionPos?: 'before' | 'after';
 }
 
-const Switch = ({
+export const Switch = ({
   description,
   descriptionPos = 'after',
   ...props

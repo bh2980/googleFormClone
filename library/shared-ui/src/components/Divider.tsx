@@ -1,11 +1,14 @@
-import classMerge from '../../utils/classMerge';
+import { classMerge } from '../utils/classMerge';
 
 interface DividerProps {
   className?: string;
   direction?: 'horizontal' | 'vertical';
 }
 
-const Divider = ({ className, direction = 'horizontal' }: DividerProps) => {
+export const Divider = ({
+  className,
+  direction = 'horizontal',
+}: DividerProps) => {
   return (
     <div
       className={classMerge([

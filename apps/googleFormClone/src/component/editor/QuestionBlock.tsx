@@ -1,28 +1,42 @@
-import { RiDeleteBin6Line, RiDraggable, RiFileCopyLine } from "react-icons/ri";
-import Block from "../common/Block";
-import Input from "../common/Input";
-import Divider from "../common/Divider";
-import { EDITOR_DROPDOWN_LIST, EDITOR_QUESTION_TYPE, ICON_CLASS } from "../../constants";
-import IconButton from "../common/IconButton";
-import Switch from "../common/Switch";
+import { RiDeleteBin6Line, RiDraggable, RiFileCopyLine } from 'react-icons/ri';
+import {
+  EDITOR_DROPDOWN_LIST,
+  EDITOR_QUESTION_TYPE,
+  ICON_CLASS,
+} from '../../constants';
 
-import { removeQuestion, editQuestion, copyQuestion } from "../../store/reducer/questionSlice";
-import { useAppDispatch, useAppSelector } from "../../hook/useRedux";
-import AnswerManager from "./AnswerItemManager";
-import { addAnswer, removeAnswer } from "../../store/reducer/answerSlice";
-import { v4 } from "uuid";
-import Dropdown from "../common/Dropdown";
-import useChangeEditBlockID from "../../hook/useChangeEditBlockID";
-import useBlockAutoFocus from "../../hook/useBlockAutoFocus";
-import classMerge from "../../utils/classMerge";
-import { isTouchScreen } from "../../hook/headless/useDnDList";
+import {
+  removeQuestion,
+  editQuestion,
+  copyQuestion,
+} from '../../store/reducer/questionSlice';
+import { useAppDispatch, useAppSelector } from '../../hook/useRedux';
+import AnswerManager from './AnswerItemManager';
+import { addAnswer, removeAnswer } from '../../store/reducer/answerSlice';
+import { v4 } from 'uuid';
+import useChangeEditBlockID from '../../hook/useChangeEditBlockID';
+import useBlockAutoFocus from '../../hook/useBlockAutoFocus';
+import { isTouchScreen } from '../../hook/headless/useDnDList';
+import {
+  Block,
+  Divider,
+  Dropdown,
+  IconButton,
+  Input,
+  Switch,
+  classMerge,
+} from '@google-form-clone/shared-ui';
 
-interface QuestionBlockProps extends React.ComponentPropsWithRef<"div"> {
+interface QuestionBlockProps extends React.ComponentPropsWithRef<'div'> {
   questionID: string;
   handleDrag?: (e: React.MouseEvent | React.TouchEvent) => void;
 }
 
-const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps) => {
+const QuestionBlock = ({
+  questionID,
+  handleDrag,
+  ...props
+}: QuestionBlockProps) => {
   const dispatch = useAppDispatch();
   const { changeEditingBlockID, isEditing } = useChangeEditBlockID(questionID);
   const { containerRef, questionInputRef } = useBlockAutoFocus(questionID);
@@ -42,16 +56,29 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
     const NEW_QUESTION_ID = v4();
 
     dispatch(
-      copyQuestion({ ...questionInfo, questionID: NEW_QUESTION_ID, answerIDList: [], parentQuestionID: questionID })
+      copyQuestion({
+        ...questionInfo,
+        questionID: NEW_QUESTION_ID,
+        answerIDList: [],
+        parentQuestionID: questionID,
+      })
     );
 
     answerIDList.map((aID) => {
-      dispatch(addAnswer({ ...answerMap[aID], answerID: v4(), questionID: NEW_QUESTION_ID }));
+      dispatch(
+        addAnswer({
+          ...answerMap[aID],
+          answerID: v4(),
+          questionID: NEW_QUESTION_ID,
+        })
+      );
     });
   };
 
   const changeQuestionType = (idx: number) => {
-    dispatch(editQuestion({ ...questionInfo, type: EDITOR_DROPDOWN_LIST[idx].type }));
+    dispatch(
+      editQuestion({ ...questionInfo, type: EDITOR_DROPDOWN_LIST[idx].type })
+    );
 
     if (
       EDITOR_DROPDOWN_LIST[idx].type === EDITOR_QUESTION_TYPE.long ||
@@ -61,12 +88,14 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
         dispatch(removeAnswer(answerMap[aID]));
       });
 
-      dispatch(addAnswer({ answerID: v4(), content: "", questionID }));
+      dispatch(addAnswer({ answerID: v4(), content: '', questionID }));
     }
   };
 
   const changeQuestionContent = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(editQuestion({ ...questionInfo, questionContent: e.target.value }));
+    dispatch(
+      editQuestion({ ...questionInfo, questionContent: e.target.value })
+    );
   };
 
   const changeRequired = () => {
@@ -87,7 +116,10 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
         onTouchStart={handleDrag}
       >
         <RiDraggable
-          className={classMerge(["rotate-90", !isTouchScreen && "invisible group-hover/dragHandle:visible"])}
+          className={classMerge([
+            'rotate-90',
+            !isTouchScreen && 'invisible group-hover/dragHandle:visible',
+          ])}
         />
       </div>
       <div className="flex flex-col gap-4 pb-8 mt-2">
@@ -110,8 +142,10 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
             </>
           ) : (
             <div className="flex items-center cursor-text">
-              {questionContent.length === 0 ? "질문" : questionContent}
-              {required && <span className="p-1 font-bold text-red-600 class">*</span>}
+              {questionContent.length === 0 ? '질문' : questionContent}
+              {required && (
+                <span className="p-1 font-bold text-red-600 class">*</span>
+              )}
             </div>
           )}
         </div>
@@ -127,7 +161,12 @@ const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps)
                 <RiDeleteBin6Line className={ICON_CLASS} />
               </IconButton>
               <Divider direction="vertical" className="mx-2" />
-              <Switch description="필수" descriptionPos="before" checked={required} onChange={changeRequired} />
+              <Switch
+                description="필수"
+                descriptionPos="before"
+                checked={required}
+                onChange={changeRequired}
+              />
             </div>
           </div>
         )}

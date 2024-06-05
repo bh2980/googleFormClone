@@ -1,8 +1,8 @@
-import classMerge from '../../utils/classMerge';
+import { classMerge } from '../utils/classMerge';
 
 type IconButtonProps = React.ComponentPropsWithRef<'button'>;
 
-const IconButton = ({
+export const IconButton = ({
   children,
   className,
   type = 'button',

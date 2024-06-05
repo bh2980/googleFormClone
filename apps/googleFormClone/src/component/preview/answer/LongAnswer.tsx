@@ -1,5 +1,4 @@
-import classMerge from '../../../utils/classMerge';
-import TextArea from '../../common/TextArea';
+import { TextArea, classMerge } from '@google-form-clone/shared-ui';
 
 type LongAnswerProps = React.ComponentPropsWithRef<'textarea'>;
 

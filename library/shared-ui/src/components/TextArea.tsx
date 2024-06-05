@@ -1,9 +1,9 @@
-import classMerge from '../../utils/classMerge';
-import useFluidTextArea from '../../hook/headless/useFluidTextArea';
+import { classMerge } from '../utils/classMerge';
+import { useFluidTextArea } from '../hooks/useFluidTextArea';
 
 type TextAreaProps = React.ComponentPropsWithoutRef<'textarea'>;
 
-const TextArea = ({ className, ...props }: TextAreaProps) => {
+export const TextArea = ({ className, ...props }: TextAreaProps) => {
   const { textareaRef, handleInput } = useFluidTextArea();
 
   return (

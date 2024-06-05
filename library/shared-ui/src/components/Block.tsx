@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import classMerge from '../../utils/classMerge';
+import { classMerge } from '../utils/classMerge';
 
 interface BlockProps extends React.ComponentPropsWithRef<'div'> {
   isTitleBlock?: boolean;
@@ -7,7 +7,7 @@ interface BlockProps extends React.ComponentPropsWithRef<'div'> {
   innerRef?: React.LegacyRef<HTMLElement>;
 }
 
-const Block = memo(
+export const Block = memo(
   ({
     isTitleBlock = false,
     isEditing,

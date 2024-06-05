@@ -1,17 +1,16 @@
-import { useAppDispatch, useAppSelector } from "../../hook/useRedux";
-import useChangeEditBlockID from "../../hook/useChangeEditBlockID";
-import { editContent, editTitle } from "../../store/reducer/docsSlice";
-import Block from "../common/Block";
-import Input from "../common/Input";
-import TextArea from "../common/TextArea";
-import useBlockAutoFocus from "../../hook/useBlockAutoFocus";
+import { useAppDispatch, useAppSelector } from '../../hook/useRedux';
+import useChangeEditBlockID from '../../hook/useChangeEditBlockID';
+import { editContent, editTitle } from '../../store/reducer/docsSlice';
+import useBlockAutoFocus from '../../hook/useBlockAutoFocus';
+import { Block, Input, TextArea } from '@google-form-clone/shared-ui';
 
 const TitleBlock = () => {
-  const TITLE_BLOCK_ID = "title";
+  const TITLE_BLOCK_ID = 'title';
 
   const dispatch = useAppDispatch();
   const { title, content } = useAppSelector((store) => store.docs);
-  const { changeEditingBlockID, isEditing } = useChangeEditBlockID(TITLE_BLOCK_ID);
+  const { changeEditingBlockID, isEditing } =
+    useChangeEditBlockID(TITLE_BLOCK_ID);
   const { containerRef, questionInputRef } = useBlockAutoFocus(TITLE_BLOCK_ID);
 
   const changeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +36,11 @@ const TitleBlock = () => {
         placeholder="제목을 입력하세요"
         innerRef={questionInputRef}
       />
-      <TextArea defaultValue={content} onChange={changeContent} placeholder="설명을 입력하세요" />
+      <TextArea
+        defaultValue={content}
+        onChange={changeContent}
+        placeholder="설명을 입력하세요"
+      />
     </Block>
   );
 };

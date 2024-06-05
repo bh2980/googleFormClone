@@ -8,11 +8,13 @@ import LongAnswer from './answer/LongAnswer';
 import ShortAnswer from './answer/ShortAnswer';
 import { useAppDispatch, useAppSelector } from '../../hook/useRedux';
 import { v4 } from 'uuid';
-import Dropdown from '../common/Dropdown';
 import { editResponse } from '../../store/reducer/responseSlice';
-import RadioGroup from '../common/Radio/RadioGroup';
-import Checkbox from '../common/Checkbox';
-import Radio from '../common/Radio/Radio';
+import {
+  Checkbox,
+  Dropdown,
+  Radio,
+  RadioGroup,
+} from '@google-form-clone/shared-ui';
 
 interface AnswerManagerProps {
   questionID: string;

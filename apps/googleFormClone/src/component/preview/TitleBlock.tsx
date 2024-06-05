@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { useAppSelector } from '../../hook/useRedux';
-import Block from '../common/Block';
+import { Block } from '@google-form-clone/shared-ui';
 
 const TitleBlock = () => {
   const { title, content } = useAppSelector((store) => store.docs);

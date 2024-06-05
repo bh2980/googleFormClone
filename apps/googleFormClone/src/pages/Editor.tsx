@@ -4,7 +4,6 @@ import { RiAddCircleLine, RiEyeLine } from 'react-icons/ri';
 import TitleBlock from '../component/editor/TitleBlock';
 import QuestionBlock from '../component/editor/QuestionBlock';
 import { ICON_CLASS, EDITOR_QUESTION_TYPE } from '../constants';
-import IconButton from '../component/common/IconButton';
 
 import { useAppDispatch, useAppSelector } from '../hook/useRedux';
 import { addQuestion } from '../store/reducer/questionSlice';
@@ -13,6 +12,7 @@ import useDnDList from '../hook/headless/useDnDList';
 import { editQuestionBlockOrder } from '../store/reducer/docsSlice';
 import { Link } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
+import { IconButton } from '@google-form-clone/shared-ui';
 
 // TODO 관련 컴포넌트 EDITOR로 변경
 const Editor = () => {

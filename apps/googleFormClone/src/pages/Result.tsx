@@ -1,9 +1,8 @@
 import { Link } from 'react-router-dom';
-import Block from '../component/common/Block';
-import IconButton from '../component/common/IconButton';
 import { EDITOR_QUESTION_TYPE } from '../constants';
 import { useAppSelector } from '../hook/useRedux';
 import { RiEdit2Line, RiEyeLine } from 'react-icons/ri';
+import { Block, IconButton } from '@google-form-clone/shared-ui';
 
 const Result = () => {
   const docs = useAppSelector((store) => store.docs);

@@ -2,7 +2,7 @@ interface RadioProps extends React.ComponentPropsWithoutRef<"input"> {
   label?: string;
 }
 
-const Radio = ({ label, ...props }: RadioProps) => {
+export const Radio = ({ label, ...props }: RadioProps) => {
   return (
     <label className="flex items-center gap-4 group/radio hover:cursor-pointer">
       <input type="radio" className="hidden peer" {...props} />

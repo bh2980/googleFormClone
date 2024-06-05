@@ -1,6 +1,6 @@
-import Block from '../common/Block';
 import AnswerManager from './AnswerItemManager';
 import { useAppSelector } from '../../hook/useRedux';
+import { Block } from '@google-form-clone/shared-ui';
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<'div'> {
   questionID: string;
