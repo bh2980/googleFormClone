@@ -1,0 +1,9 @@
+{
+  "name": "googleFormClone-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/googleFormClone-e2e/src",
+  "implicitDependencies": ["googleFormClone"],
+  "// targets": "to see all targets run: nx show project googleFormClone-e2e --web",
+  "targets": {}
+}
