@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {},
+  "engines": {
+    "node": ">=20.8.1"
+  },
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.5",
