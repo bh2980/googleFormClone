@@ -25,7 +25,7 @@ export default defineConfig({
   // },
 
   build: {
-    outDir: '../../dist/apps/googleFormClone',
+    outDir: './dist/apps/googleFormClone',
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
