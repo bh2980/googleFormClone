@@ -18,15 +18,14 @@ jobs:
         with:
           fetch-depth: 0
 
-    - name: Set Node.js Env
-    - uses: actions/setup-node@v3
+      - name: Set Node.js Env
+        uses: actions/setup-node@v3
         with:
           node-version: 20
           cache: 'yarn'
 
-    - name: Install Dependencies
-    - run: yarn install --frozen-lockfile
-    - uses: nrwl/nx-set-shas@v4
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
 
-    - name: Running Semantic-Release
-      run : npx semantic-release
+      - name: Running Semantic-Release
+        run: npx semantic-release
