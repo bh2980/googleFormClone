@@ -49,6 +49,7 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({
   // set {passive : false} and run preventDefault for removing scroll behavior
   // in all touchmove event especially android browser
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     const dragMovePrevent = () => {};
 
     document.addEventListener('touchmove', dragMovePrevent, { passive: false });
