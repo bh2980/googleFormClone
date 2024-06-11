@@ -5,19 +5,14 @@
 
 import { useEffect, useRef } from 'react';
 import { EDITOR_QUESTION_TYPE } from '../../constants';
-import { useAppDispatch, useAppSelector } from '../../hook/useRedux';
-import {
-  AnswerInterface,
-  addAnswer,
-  editAnswer,
-  removeAnswer,
-} from '../../store/reducer/answerSlice';
+import { AnswerInterface, addAnswer, editAnswer, removeAnswer } from '../../store/reducer/answerSlice';
 import ChooseAnswer from './ChooseAnswer';
 import { v4 as uuidv4 } from 'uuid';
-import useDnDList from '../../hook/headless/useDnDList';
 import { editAnswerOrder } from '../../store/reducer/questionSlice';
 import useChangeEditBlockID from '../../hook/useChangeEditBlockID';
 import { Checkbox, Radio, classMerge } from '@google-form-clone/shared-ui';
+import { store } from '../../store/store';
+import { useDnDList, useRedux } from '@google-form-clone/hooks';
 
 interface AnswerManagerProps {
   questionID: string;
@@ -25,11 +20,11 @@ interface AnswerManagerProps {
 
 // TODO 기타 추가 구현
 const AnswerManager = ({ questionID }: AnswerManagerProps) => {
-  const dispatch = useAppDispatch();
-  const { type, answerIDList } = useAppSelector(
-    (store) => store.question[questionID]
-  );
-  const answerMap = useAppSelector((store) => store.answer);
+  const { useDispatch, useSelector } = useRedux<typeof store>();
+
+  const dispatch = useDispatch();
+  const { type, answerIDList } = useSelector((store) => store.question[questionID]);
+  const answerMap = useSelector((store) => store.answer);
   const prevAnswerLength = useRef(answerIDList.length);
 
   const { isEditing } = useChangeEditBlockID(questionID);
@@ -42,10 +37,7 @@ const AnswerManager = ({ questionID }: AnswerManagerProps) => {
 
   const chooseAnswerRef = useRef<(null | HTMLInputElement)[]>([]);
 
-  const changeAnswer = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    { answerID, questionID }: AnswerInterface
-  ) => {
+  const changeAnswer = (e: React.ChangeEvent<HTMLInputElement>, { answerID, questionID }: AnswerInterface) => {
     dispatch(editAnswer({ answerID, content: e.target.value, questionID }));
   };
 
@@ -56,10 +48,7 @@ const AnswerManager = ({ questionID }: AnswerManagerProps) => {
 
   const removeAnswerItem = (aID: string, idx: number) => {
     if (chooseAnswerRef && chooseAnswerRef.current) {
-      if (
-        idx < chooseAnswerRef.current.length &&
-        chooseAnswerRef.current[idx + 1] instanceof HTMLInputElement
-      ) {
+      if (idx < chooseAnswerRef.current.length && chooseAnswerRef.current[idx + 1] instanceof HTMLInputElement) {
         chooseAnswerRef.current[idx + 1]!.focus();
       } else {
         chooseAnswerRef.current[idx - 1]!.focus();
@@ -67,9 +56,7 @@ const AnswerManager = ({ questionID }: AnswerManagerProps) => {
     }
 
     if (chooseAnswerRef && chooseAnswerRef.current) {
-      chooseAnswerRef.current = chooseAnswerRef.current.filter(
-        (_, i) => i !== idx
-      );
+      chooseAnswerRef.current = chooseAnswerRef.current.filter((_, i) => i !== idx);
     }
 
     dispatch(removeAnswer(answerMap[aID]));
@@ -89,66 +76,51 @@ const AnswerManager = ({ questionID }: AnswerManagerProps) => {
     <fieldset
       className={classMerge([
         'flex flex-col gap-4',
-        (type === EDITOR_QUESTION_TYPE.short ||
-          type === EDITOR_QUESTION_TYPE.long) &&
-          'mx-[32px]',
+        (type === EDITOR_QUESTION_TYPE.short || type === EDITOR_QUESTION_TYPE.long) && 'mx-[32px]',
       ])}
     >
-      {type === EDITOR_QUESTION_TYPE.short && (
-        <div className="text-gray-400">단답형 메시지</div>
-      )}
-      {type === EDITOR_QUESTION_TYPE.long && (
-        <div className="text-gray-400">장문형 메시지</div>
-      )}
-      {type !== EDITOR_QUESTION_TYPE.short &&
-        type !== EDITOR_QUESTION_TYPE.long && (
-          <>
-            <div ref={dragListContainerRef}>
-              {answerIDList.map((aID, idx) => {
-                const answerInfo = answerMap[aID];
-                return (
-                  <ChooseAnswer
-                    key={aID}
-                    idx={idx + 1}
-                    type={type}
-                    value={answerInfo.content}
-                    placeholder={`옵션 ${idx + 1}`}
-                    onChange={(e) => changeAnswer(e, answerInfo)}
-                    isEditing={isEditing}
-                    deletable={answerIDList.length > 1}
-                    onDeleteButton={() => removeAnswerItem(aID, idx)}
-                    handleDrag={handleDrag}
-                    innerRef={(el) => (chooseAnswerRef.current[idx] = el)}
-                  />
-                );
-              })}
-            </div>
-            {isEditing && (
-              <div className="items-center flex gap-4 mx-[32px]">
-                <div className="flex items-center gap-4">
-                  {type === EDITOR_QUESTION_TYPE.radio && <Radio disabled />}
-                  {type === EDITOR_QUESTION_TYPE.checkbox && (
-                    <Checkbox disabled />
-                  )}
-                  {type === EDITOR_QUESTION_TYPE.dropdown && (
-                    <div className="w-[24px]"></div>
-                  )}
-                  <span
-                    className="w-full text-gray-500 cursor-text hover:underline decoration-gray-400"
-                    onClick={addAnswerItem}
-                    tabIndex={0}
-                  >
-                    옵션 추가
-                  </span>
-                </div>
-                {/* <span>또는</span>
+      {type === EDITOR_QUESTION_TYPE.short && <div className="text-gray-400">단답형 메시지</div>}
+      {type === EDITOR_QUESTION_TYPE.long && <div className="text-gray-400">장문형 메시지</div>}
+      {type !== EDITOR_QUESTION_TYPE.short && type !== EDITOR_QUESTION_TYPE.long && (
+        <>
+          <div ref={dragListContainerRef}>
+            {answerIDList.map((aID, idx) => {
+              const answerInfo = answerMap[aID];
+              return (
+                <ChooseAnswer
+                  key={aID}
+                  idx={idx + 1}
+                  type={type}
+                  value={answerInfo.content}
+                  placeholder={`옵션 ${idx + 1}`}
+                  onChange={(e) => changeAnswer(e, answerInfo)}
+                  isEditing={isEditing}
+                  deletable={answerIDList.length > 1}
+                  onDeleteButton={() => removeAnswerItem(aID, idx)}
+                  handleDrag={handleDrag}
+                  innerRef={(el) => (chooseAnswerRef.current[idx] = el)}
+                />
+              );
+            })}
+          </div>
+          {isEditing && (
+            <div className="items-center flex gap-4 mx-[32px]">
+              <div className="flex items-center gap-4">
+                {type === EDITOR_QUESTION_TYPE.radio && <Radio disabled />}
+                {type === EDITOR_QUESTION_TYPE.checkbox && <Checkbox disabled />}
+                {type === EDITOR_QUESTION_TYPE.dropdown && <div className="w-[24px]"></div>}
+                <span className="w-full text-gray-500 cursor-text hover:underline decoration-gray-400" onClick={addAnswerItem} tabIndex={0}>
+                  옵션 추가
+                </span>
+              </div>
+              {/* <span>또는</span>
               <button type="button" className="text-blue-500">
                 '기타' 추가
               </button> */}
-              </div>
-            )}
-          </>
-        )}
+            </div>
+          )}
+        </>
+      )}
     </fieldset>
   );
 };

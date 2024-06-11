@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { addQuestion, copyQuestion, removeQuestion } from './questionSlice';
-import { DnDAction } from '../../hook/headless/useDnDList';
+import { DnDAction } from '@google-form-clone/hooks';
 
 interface DocsInterface {
   title: string;
@@ -39,43 +39,25 @@ const docsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(removeQuestion, (state, action) => {
-        const findDeleteIdx = state.questionIDList.findIndex(
-          (qID) => qID === action.payload.questionID
-        );
+        const findDeleteIdx = state.questionIDList.findIndex((qID) => qID === action.payload.questionID);
         if (findDeleteIdx === state.questionIDList.length - 1)
-          state.editBlockID =
-            findDeleteIdx - 1 >= 0
-              ? state.questionIDList[findDeleteIdx - 1]
-              : 'title';
+          state.editBlockID = findDeleteIdx - 1 >= 0 ? state.questionIDList[findDeleteIdx - 1] : 'title';
         else state.editBlockID = state.questionIDList[findDeleteIdx + 1];
-        state.questionIDList = state.questionIDList.filter(
-          (qID) => qID !== action.payload.questionID
-        );
+        state.questionIDList = state.questionIDList.filter((qID) => qID !== action.payload.questionID);
       })
       .addCase(addQuestion, (state, action) => {
         state.questionIDList.push(action.payload.questionID);
         state.editBlockID = action.payload.questionID;
       })
       .addCase(copyQuestion, (state, action) => {
-        const parentIdx = state.questionIDList.findIndex(
-          (qID) => qID === action.payload.parentQuestionID
-        );
-        state.questionIDList.splice(
-          parentIdx + 1,
-          0,
-          action.payload.questionID
-        );
+        const parentIdx = state.questionIDList.findIndex((qID) => qID === action.payload.parentQuestionID);
+        state.questionIDList.splice(parentIdx + 1, 0, action.payload.questionID);
         state.editBlockID = action.payload.questionID;
       });
   },
 });
 
-export const {
-  editTitle,
-  editContent,
-  editQuestionBlockOrder,
-  changeEditBlockID,
-} = docsSlice.actions;
+export const { editTitle, editContent, editQuestionBlockOrder, changeEditBlockID } = docsSlice.actions;
 
 const docsReducer = docsSlice.reducer;
 export default docsReducer;

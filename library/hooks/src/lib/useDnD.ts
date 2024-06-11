@@ -18,8 +18,7 @@ const setStyle = (target: HTMLElement, style: Partial<CSSStyleDeclaration>) => {
 
 const makePx = (px: number) => `${px}px`;
 
-const makeTransition = (x: number, y: number) =>
-  `translate3d(${makePx(x)}, ${makePx(y)}, 0)`;
+const makeTransition = (x: number, y: number) => `translate3d(${makePx(x)}, ${makePx(y)}, 0)`;
 
 const getDragIdx = (item: HTMLElement) => Number(item.dataset.dragIdx);
 
@@ -40,10 +39,7 @@ const extractClientPos = (e: TouchEvent | MouseEvent) => {
   return { clientX, clientY };
 };
 
-const useDnDList = <T extends HTMLElement = HTMLDivElement>({
-  handleItem,
-  ghost = false,
-}: useDnDProps) => {
+export const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost = false }: useDnDProps) => {
   const dragListContainerRef = useRef<T>(null);
 
   // set {passive : false} and run preventDefault for removing scroll behavior
@@ -59,20 +55,14 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({
     };
   }, []);
 
-  const dragStartHandler = (
-    dragStartEvent: React.MouseEvent | React.TouchEvent
-  ) => {
+  const dragStartHandler = (dragStartEvent: React.MouseEvent | React.TouchEvent) => {
     if (!isTouchScreen) dragStartEvent.preventDefault();
 
     if (!dragListContainerRef.current) return;
 
-    const { clientX: dragStartX, clientY: dragStartY } = extractClientPos(
-      dragStartEvent.nativeEvent
-    );
+    const { clientX: dragStartX, clientY: dragStartY } = extractClientPos(dragStartEvent.nativeEvent);
 
-    const itemList = [
-      ...dragListContainerRef.current.childNodes,
-    ] as HTMLElement[];
+    const itemList = [...dragListContainerRef.current.childNodes] as HTMLElement[];
     const aboveItemList: HTMLElement[] = [];
     const belowItemList: HTMLElement[] = [];
 
@@ -88,10 +78,7 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({
       item.dataset.dragIdx = String(idx);
       setStyle(item, { transition: 'transform 0.2s' });
 
-      if (
-        item ===
-        (dragStartEvent.target as HTMLElement).closest('[data-drag-idx]')
-      ) {
+      if (item === (dragStartEvent.target as HTMLElement).closest('[data-drag-idx]')) {
         dragIdx = idx;
         return;
       }
@@ -144,11 +131,7 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({
     dragListContainerRef.current.appendChild(dragItem);
 
     // calculate gap between item and move distance
-    const GAP =
-      itemList.length > 1
-        ? itemList[1].getBoundingClientRect().top -
-          itemList[0].getBoundingClientRect().bottom
-        : 0;
+    const GAP = itemList.length > 1 ? itemList[1].getBoundingClientRect().top - itemList[0].getBoundingClientRect().bottom : 0;
 
     const LIST_ITEM_MOVE = height + GAP;
 
@@ -167,20 +150,14 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({
       setStyle(dragItem, { transform: makeTransition(deltaX, deltaY) });
 
       // find data-drag-idx element and update
-      const belowItem = document
-        .elementFromPoint(clientX, clientY)
-        ?.closest('[data-drag-idx]') as HTMLElement;
+      const belowItem = document.elementFromPoint(clientX, clientY)?.closest('[data-drag-idx]') as HTMLElement;
 
       if (belowItem) {
-        const { top: itemTop, height: itemHeight } =
-          belowItem.getBoundingClientRect();
-        const { top: dragTop, height: dragHeight } =
-          dragItem.getBoundingClientRect();
+        const { top: itemTop, height: itemHeight } = belowItem.getBoundingClientRect();
+        const { top: dragTop, height: dragHeight } = dragItem.getBoundingClientRect();
 
         // check overlapping
-        const isOverlapping =
-          dragTop < itemTop + itemHeight / 2 &&
-          itemTop < dragTop + dragHeight / 2;
+        const isOverlapping = dragTop < itemTop + itemHeight / 2 && itemTop < dragTop + dragHeight / 2;
 
         if (!isOverlapping) return;
 
@@ -192,9 +169,7 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({
         const [currentPosList, currentPosSet] = aboveItemSet.has(belowDragIdx)
           ? [aboveItemList, aboveItemSet]
           : [belowItemList, belowItemSet];
-        const [nextPosList, nextPosSet] = !aboveItemSet.has(belowDragIdx)
-          ? [aboveItemList, aboveItemSet]
-          : [belowItemList, belowItemSet];
+        const [nextPosList, nextPosSet] = !aboveItemSet.has(belowDragIdx) ? [aboveItemList, aboveItemSet] : [belowItemList, belowItemSet];
 
         // move all item from currentPos to nextPos until pop below item
         // ex: above -> below
@@ -209,8 +184,7 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({
           // update current drag position idx
           moveToIdx += -diff;
 
-          placeholderMove +=
-            (popItem.getBoundingClientRect().height + GAP) * -diff;
+          placeholderMove += (popItem.getBoundingClientRect().height + GAP) * -diff;
 
           setStyle(placeholder, {
             transform: makeTransition(0, placeholderMove),
@@ -298,5 +272,3 @@ const useDnDList = <T extends HTMLElement = HTMLDivElement>({
     dragListContainerRef,
   };
 };
-
-export default useDnDList;

@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { addAnswer, removeAnswer } from './answerSlice';
 import { EDITOR_QUESTION_TYPE } from '../../constants';
-import { DnDAction } from '../../hook/headless/useDnDList';
+import { DnDAction } from '@google-form-clone/hooks';
 
 export interface QuestionInterface {
   questionID: string;
@@ -41,43 +41,25 @@ const questionSlice = createSlice({
     },
     editAnswerOrder(state, action: PayloadAction<AnswerDnDAction>) {
       console.log(action);
-      const moveAnswerID =
-        state[action.payload.questionID].answerIDList[action.payload.fromIdx];
-      state[action.payload.questionID].answerIDList.splice(
-        action.payload.fromIdx,
-        1
-      );
-      state[action.payload.questionID].answerIDList.splice(
-        action.payload.toIdx,
-        0,
-        moveAnswerID
-      );
+      const moveAnswerID = state[action.payload.questionID].answerIDList[action.payload.fromIdx];
+      state[action.payload.questionID].answerIDList.splice(action.payload.fromIdx, 1);
+      state[action.payload.questionID].answerIDList.splice(action.payload.toIdx, 0, moveAnswerID);
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(removeAnswer, (state, action) => {
-        state[action.payload.questionID].answerIDList = state[
-          action.payload.questionID
-        ].answerIDList.filter(
+        state[action.payload.questionID].answerIDList = state[action.payload.questionID].answerIDList.filter(
           (answerID) => answerID !== action.payload.answerID
         );
       })
       .addCase(addAnswer, (state, action) => {
-        state[action.payload.questionID].answerIDList.push(
-          action.payload.answerID
-        );
+        state[action.payload.questionID].answerIDList.push(action.payload.answerID);
       });
   },
 });
 
-export const {
-  addQuestion,
-  editQuestion,
-  copyQuestion,
-  removeQuestion,
-  editAnswerOrder,
-} = questionSlice.actions;
+export const { addQuestion, editQuestion, copyQuestion, removeQuestion, editAnswerOrder } = questionSlice.actions;
 
 const questionReducer = questionSlice.reducer;
 export default questionReducer;

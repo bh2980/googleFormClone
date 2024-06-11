@@ -7,9 +7,8 @@ import { addAnswer, removeAnswer } from '../../store/reducer/answerSlice';
 import { v4 } from 'uuid';
 import useChangeEditBlockID from '../../hook/useChangeEditBlockID';
 import useBlockAutoFocus from '../../hook/useBlockAutoFocus';
-import { isTouchScreen } from '../../hook/headless/useDnDList';
 import { Block, Divider, Dropdown, IconButton, Input, Switch, classMerge } from '@google-form-clone/shared-ui';
-import { useRedux } from '@google-form-clone/hooks';
+import { isTouchScreen, useRedux } from '@google-form-clone/hooks';
 import { store } from '../../store/store';
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<'div'> {

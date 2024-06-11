@@ -1,35 +1,29 @@
 import { Link } from 'react-router-dom';
 import { EDITOR_QUESTION_TYPE } from '../constants';
-import { useAppSelector } from '../hook/useRedux';
 import { RiEdit2Line, RiEyeLine } from 'react-icons/ri';
 import { Block, IconButton } from '@google-form-clone/shared-ui';
+import { useRedux } from '@google-form-clone/hooks';
+import { store } from '../store/store';
 
 const Result = () => {
-  const docs = useAppSelector((store) => store.docs);
-  const question = useAppSelector((store) => store.question);
-  const answer = useAppSelector((store) => store.answer);
-  const response = useAppSelector((store) => store.response);
+  const { useSelector } = useRedux<typeof store>();
+
+  const docs = useSelector((store) => store.docs);
+  const question = useSelector((store) => store.question);
+  const answer = useSelector((store) => store.answer);
+  const response = useSelector((store) => store.response);
 
   const makeAnswerView = (qID: string) => {
     if (response[qID] === null) return '미응답';
 
-    if (
-      question[qID].type === EDITOR_QUESTION_TYPE.short ||
-      question[qID].type === EDITOR_QUESTION_TYPE.long
-    ) {
+    if (question[qID].type === EDITOR_QUESTION_TYPE.short || question[qID].type === EDITOR_QUESTION_TYPE.long) {
       return response[qID];
-    } else if (
-      question[qID].type === EDITOR_QUESTION_TYPE.radio ||
-      question[qID].type === EDITOR_QUESTION_TYPE.dropdown
-    ) {
-      return answer[question[qID].answerIDList[response[qID] as number]]
-        .content;
+    } else if (question[qID].type === EDITOR_QUESTION_TYPE.radio || question[qID].type === EDITOR_QUESTION_TYPE.dropdown) {
+      return answer[question[qID].answerIDList[response[qID] as number]].content;
     } else {
       const answerArray: string[] = [];
 
-      (response[qID] as number[]).map((rID) =>
-        answerArray.push(answer[question[qID].answerIDList[rID]].content)
-      );
+      (response[qID] as number[]).map((rID) => answerArray.push(answer[question[qID].answerIDList[rID]].content));
 
       return answerArray.join(',');
     }
@@ -58,9 +52,7 @@ const Result = () => {
             return (
               <Block className="flex flex-col gap-3 p-6" key={qID}>
                 <div className="text-xl font-bold">
-                  {question[qID].questionContent.length === 0
-                    ? '질문'
-                    : question[qID].questionContent}
+                  {question[qID].questionContent.length === 0 ? '질문' : question[qID].questionContent}
                 </div>
                 <div>{makeAnswerView(qID)}</div>
               </Block>

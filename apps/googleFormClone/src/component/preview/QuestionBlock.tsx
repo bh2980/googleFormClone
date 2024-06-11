@@ -1,6 +1,7 @@
+import { useRedux } from '@google-form-clone/hooks';
 import AnswerManager from './AnswerItemManager';
-import { useAppSelector } from '../../hook/useRedux';
 import { Block } from '@google-form-clone/shared-ui';
+import { store } from '../../store/store';
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<'div'> {
   questionID: string;
@@ -8,7 +9,9 @@ interface QuestionBlockProps extends React.ComponentPropsWithRef<'div'> {
 }
 
 const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
-  const questionInfo = useAppSelector((store) => store.question[questionID]);
+  const { useSelector } = useRedux<typeof store>();
+
+  const questionInfo = useSelector((store) => store.question[questionID]);
 
   const { questionContent, required } = questionInfo;
 
@@ -21,11 +24,7 @@ const QuestionBlock = ({ questionID, ...props }: QuestionBlockProps) => {
         </div>
       </div>
       <AnswerManager questionID={questionID} />
-      {required && (
-        <div className="font-bold text-right text-red-600">
-          * 필수 질문입니다
-        </div>
-      )}
+      {required && <div className="font-bold text-right text-red-600">* 필수 질문입니다</div>}
     </Block>
   );
 };

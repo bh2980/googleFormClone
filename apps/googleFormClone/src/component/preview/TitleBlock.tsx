@@ -1,9 +1,11 @@
 import { Fragment } from 'react';
-import { useAppSelector } from '../../hook/useRedux';
 import { Block } from '@google-form-clone/shared-ui';
+import { useRedux } from '@google-form-clone/hooks';
+import { store } from '../../store/store';
 
 const TitleBlock = () => {
-  const { title, content } = useAppSelector((store) => store.docs);
+  const { useSelector } = useRedux<typeof store>();
+  const { title, content } = useSelector((store) => store.docs);
 
   return (
     <Block className="flex flex-col w-full gap-2 p-6" isTitleBlock>
