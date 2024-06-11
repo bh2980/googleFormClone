@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@google-form-clone/hooks": ["library/hooks/src/index.ts"],
       "@google-form-clone/shared-ui": ["library/shared-ui/src/index.ts"]
     }
   },
