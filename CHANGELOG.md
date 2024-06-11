@@ -1,5 +1,16 @@
 # 🚦 CHANGELOG | 변경 사항을 기록해요.
 
+## [1.1.0](https://github.com/bh2980/googleFormClone/compare/v1.0.0...v1.1.0) (2024-06-11)
+
+### ✨ Features
+
+* useRedux 훅 추가 ([5b0c6a7](https://github.com/bh2980/googleFormClone/commit/5b0c6a755ffb78142610429e39445ee5e04c182c))
+
+### ♻️ Refactor
+
+* useDnD 및 useRedux 적용 ([03d94a9](https://github.com/bh2980/googleFormClone/commit/03d94a9089bded9a9c0ab3d10f5f0350479445f3))
+* useRedux 훅 적용 ([1a687b4](https://github.com/bh2980/googleFormClone/commit/1a687b47b8e94f8738331f6e0eaeafab2e073954))
+
 ## 1.0.0 (2024-06-07)
 
 ### 🐛 Bug Fixes
