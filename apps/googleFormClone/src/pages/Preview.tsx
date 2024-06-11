@@ -1,22 +1,24 @@
 import { RiEdit2Line } from 'react-icons/ri';
 
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../hook/useRedux';
 import QuestionBlock from '../component/preview/QuestionBlock';
 import TitleBlock from '../component/preview/TitleBlock';
 import { editResponse } from '../store/reducer/responseSlice';
 import { useEffect } from 'react';
 import { IconButton } from '@google-form-clone/shared-ui';
+import { useRedux } from '@google-form-clone/hooks';
+import { store } from '../store/store';
 
 const Preview = () => {
-  const dispatch = useAppDispatch();
+  const { useDispatch, useSelector } = useRedux<typeof store>();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const questionIDList = useAppSelector((store) => {
+  const questionIDList = useSelector((store) => {
     return store.docs.questionIDList;
   });
 
-  const question = useAppSelector((store) => store.question);
-  const response = useAppSelector((store) => store.response);
+  const question = useSelector((store) => store.question);
+  const response = useSelector((store) => store.response);
 
   const submitForm = () => {
     let checkRequired = true;
@@ -38,9 +40,7 @@ const Preview = () => {
 
   useEffect(() => {
     // 응답 상태 초기화
-    questionIDList.map((qID) =>
-      dispatch(editResponse({ questionID: qID, content: null }))
-    );
+    questionIDList.map((qID) => dispatch(editResponse({ questionID: qID, content: null })));
   }, []);
 
   return (

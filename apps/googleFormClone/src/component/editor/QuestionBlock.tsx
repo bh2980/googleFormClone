@@ -1,48 +1,31 @@
 import { RiDeleteBin6Line, RiDraggable, RiFileCopyLine } from 'react-icons/ri';
-import {
-  EDITOR_DROPDOWN_LIST,
-  EDITOR_QUESTION_TYPE,
-  ICON_CLASS,
-} from '../../constants';
+import { EDITOR_DROPDOWN_LIST, EDITOR_QUESTION_TYPE, ICON_CLASS } from '../../constants';
 
-import {
-  removeQuestion,
-  editQuestion,
-  copyQuestion,
-} from '../../store/reducer/questionSlice';
-import { useAppDispatch, useAppSelector } from '../../hook/useRedux';
+import { removeQuestion, editQuestion, copyQuestion } from '../../store/reducer/questionSlice';
 import AnswerManager from './AnswerItemManager';
 import { addAnswer, removeAnswer } from '../../store/reducer/answerSlice';
 import { v4 } from 'uuid';
 import useChangeEditBlockID from '../../hook/useChangeEditBlockID';
 import useBlockAutoFocus from '../../hook/useBlockAutoFocus';
 import { isTouchScreen } from '../../hook/headless/useDnDList';
-import {
-  Block,
-  Divider,
-  Dropdown,
-  IconButton,
-  Input,
-  Switch,
-  classMerge,
-} from '@google-form-clone/shared-ui';
+import { Block, Divider, Dropdown, IconButton, Input, Switch, classMerge } from '@google-form-clone/shared-ui';
+import { useRedux } from '@google-form-clone/hooks';
+import { store } from '../../store/store';
 
 interface QuestionBlockProps extends React.ComponentPropsWithRef<'div'> {
   questionID: string;
   handleDrag?: (e: React.MouseEvent | React.TouchEvent) => void;
 }
 
-const QuestionBlock = ({
-  questionID,
-  handleDrag,
-  ...props
-}: QuestionBlockProps) => {
-  const dispatch = useAppDispatch();
+const QuestionBlock = ({ questionID, handleDrag, ...props }: QuestionBlockProps) => {
+  const { useDispatch, useSelector } = useRedux<typeof store>();
+
+  const dispatch = useDispatch();
   const { changeEditingBlockID, isEditing } = useChangeEditBlockID(questionID);
   const { containerRef, questionInputRef } = useBlockAutoFocus(questionID);
 
-  const questionInfo = useAppSelector((store) => store.question[questionID]);
-  const answerMap = useAppSelector((store) => store.answer);
+  const questionInfo = useSelector((store) => store.question[questionID]);
+  const answerMap = useSelector((store) => store.answer);
 
   const { questionContent, required, answerIDList, type } = questionInfo;
 
@@ -76,14 +59,9 @@ const QuestionBlock = ({
   };
 
   const changeQuestionType = (idx: number) => {
-    dispatch(
-      editQuestion({ ...questionInfo, type: EDITOR_DROPDOWN_LIST[idx].type })
-    );
+    dispatch(editQuestion({ ...questionInfo, type: EDITOR_DROPDOWN_LIST[idx].type }));
 
-    if (
-      EDITOR_DROPDOWN_LIST[idx].type === EDITOR_QUESTION_TYPE.long ||
-      EDITOR_DROPDOWN_LIST[idx].type === EDITOR_QUESTION_TYPE.short
-    ) {
+    if (EDITOR_DROPDOWN_LIST[idx].type === EDITOR_QUESTION_TYPE.long || EDITOR_DROPDOWN_LIST[idx].type === EDITOR_QUESTION_TYPE.short) {
       answerIDList.map((aID) => {
         dispatch(removeAnswer(answerMap[aID]));
       });
@@ -93,9 +71,7 @@ const QuestionBlock = ({
   };
 
   const changeQuestionContent = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(
-      editQuestion({ ...questionInfo, questionContent: e.target.value })
-    );
+    dispatch(editQuestion({ ...questionInfo, questionContent: e.target.value }));
   };
 
   const changeRequired = () => {
@@ -103,24 +79,9 @@ const QuestionBlock = ({
   };
 
   return (
-    <Block
-      className="w-full group"
-      isEditing={isEditing}
-      onClick={changeEditingBlockID}
-      innerRef={containerRef}
-      {...props}
-    >
-      <div
-        className="z-50 flex justify-center w-full py-2 cursor-move group/dragHandle"
-        onMouseDown={handleDrag}
-        onTouchStart={handleDrag}
-      >
-        <RiDraggable
-          className={classMerge([
-            'rotate-90',
-            !isTouchScreen && 'invisible group-hover/dragHandle:visible',
-          ])}
-        />
+    <Block className="w-full group" isEditing={isEditing} onClick={changeEditingBlockID} innerRef={containerRef} {...props}>
+      <div className="z-50 flex justify-center w-full py-2 cursor-move group/dragHandle" onMouseDown={handleDrag} onTouchStart={handleDrag}>
+        <RiDraggable className={classMerge(['rotate-90', !isTouchScreen && 'invisible group-hover/dragHandle:visible'])} />
       </div>
       <div className="flex flex-col gap-4 pb-8 mt-2">
         <div className="flex items-center justify-between gap-4 group mx-[32px] mobile:flex-col mobile:items-start">
@@ -133,19 +94,12 @@ const QuestionBlock = ({
                 value={questionContent}
                 innerRef={questionInputRef}
               />
-              <Dropdown
-                className="flex mobile:w-full"
-                itemList={EDITOR_DROPDOWN_LIST}
-                onChange={changeQuestionType}
-                initialIdx={type}
-              />
+              <Dropdown className="flex mobile:w-full" itemList={EDITOR_DROPDOWN_LIST} onChange={changeQuestionType} initialIdx={type} />
             </>
           ) : (
             <div className="flex items-center cursor-text">
               {questionContent.length === 0 ? '질문' : questionContent}
-              {required && (
-                <span className="p-1 font-bold text-red-600 class">*</span>
-              )}
+              {required && <span className="p-1 font-bold text-red-600 class">*</span>}
             </div>
           )}
         </div>
@@ -161,12 +115,7 @@ const QuestionBlock = ({
                 <RiDeleteBin6Line className={ICON_CLASS} />
               </IconButton>
               <Divider direction="vertical" className="mx-2" />
-              <Switch
-                description="필수"
-                descriptionPos="before"
-                checked={required}
-                onChange={changeRequired}
-              />
+              <Switch description="필수" descriptionPos="before" checked={required} onChange={changeRequired} />
             </div>
           </div>
         )}

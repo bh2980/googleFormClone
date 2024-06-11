@@ -1,9 +1,12 @@
+import { useRedux } from '@google-form-clone/hooks';
 import { changeEditBlockID as changeEditBlockIDAction } from '../store/reducer/docsSlice';
-import { useAppDispatch, useAppSelector } from './useRedux';
+import { store } from '../store/store';
 
 const useChangeEditBlockID = (blockID: string) => {
-  const dispatch = useAppDispatch();
-  const edtingBlockID = useAppSelector((store) => store.docs.editBlockID);
+  const { useDispatch, useSelector } = useRedux<typeof store>();
+
+  const dispatch = useDispatch();
+  const edtingBlockID = useSelector((store) => store.docs.editBlockID);
   const isEditing = edtingBlockID === blockID;
 
   const changeEditingBlockID = () => dispatch(changeEditBlockIDAction(blockID));

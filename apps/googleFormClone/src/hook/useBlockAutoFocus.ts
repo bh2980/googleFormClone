@@ -1,10 +1,12 @@
 import { useEffect, useRef } from 'react';
 import useChangeEditBlockID from './useChangeEditBlockID';
-import { useAppDispatch } from './useRedux';
 import { changeSidebarPosition } from '../store/reducer/sideBarPosition';
+import { store } from '../store/store';
+import { useRedux } from '@google-form-clone/hooks';
 
 const useBlockAutoFocus = (questionID: string) => {
-  const dispatch = useAppDispatch();
+  const { useDispatch } = useRedux<typeof store>();
+  const dispatch = useDispatch();
 
   const containerRef = useRef<HTMLElement>(null);
   const questionInputRef = useRef<HTMLInputElement>(null);
@@ -25,8 +27,7 @@ const useBlockAutoFocus = (questionID: string) => {
       const updateSidebarPosition = () => {
         if (!containerRef.current) return;
 
-        const { top, left, width } =
-          containerRef.current.getBoundingClientRect();
+        const { top, left, width } = containerRef.current.getBoundingClientRect();
 
         dispatch(changeSidebarPosition({ top, left: left + width + 20 }));
       };

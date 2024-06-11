@@ -5,7 +5,6 @@ import TitleBlock from '../component/editor/TitleBlock';
 import QuestionBlock from '../component/editor/QuestionBlock';
 import { ICON_CLASS, EDITOR_QUESTION_TYPE } from '../constants';
 
-import { useAppDispatch, useAppSelector } from '../hook/useRedux';
 import { addQuestion } from '../store/reducer/questionSlice';
 import { addAnswer } from '../store/reducer/answerSlice';
 import useDnDList from '../hook/headless/useDnDList';
@@ -13,12 +12,16 @@ import { editQuestionBlockOrder } from '../store/reducer/docsSlice';
 import { Link } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import { IconButton } from '@google-form-clone/shared-ui';
+import { store } from '../store/store';
+import { useRedux } from '@google-form-clone/hooks';
 
 // TODO 관련 컴포넌트 EDITOR로 변경
 const Editor = () => {
-  const dispatch = useAppDispatch();
-  const questionIDList = useAppSelector((store) => store.docs.questionIDList);
-  const sidebarPosition = useAppSelector((store) => store.sidebarPosition);
+  const { useDispatch, useSelector } = useRedux<typeof store>();
+
+  const dispatch = useDispatch();
+  const questionIDList = useSelector((store) => store.docs.questionIDList);
+  const sidebarPosition = useSelector((store) => store.sidebarPosition);
   const prevLength = useRef(questionIDList.length);
 
   const floatingSideBarRef = useRef<HTMLDivElement>(null);
@@ -57,8 +60,7 @@ const Editor = () => {
   };
 
   useEffect(() => {
-    if (prevLength.current < questionIDList.length)
-      window.scrollTo(0, document.body.scrollHeight);
+    if (prevLength.current < questionIDList.length) window.scrollTo(0, document.body.scrollHeight);
 
     prevLength.current = questionIDList.length;
   }, [questionIDList.length]);
@@ -69,9 +71,7 @@ const Editor = () => {
     if (window.innerWidth <= 991) {
       const { width } = floatingSideBarRef.current.getBoundingClientRect();
       floatingSideBarRef.current.style.bottom = `0px`;
-      floatingSideBarRef.current.style.left = `${
-        (window.innerWidth - width) / 2
-      }px`;
+      floatingSideBarRef.current.style.left = `${(window.innerWidth - width) / 2}px`;
       floatingSideBarRef.current.style.top = ``;
       return;
     }
@@ -98,11 +98,7 @@ const Editor = () => {
           <TitleBlock />
           <div ref={dragListContainerRef} className="flex flex-col gap-4">
             {questionIDList.map((qID) => (
-              <QuestionBlock
-                key={qID}
-                questionID={qID}
-                handleDrag={handleDrag}
-              />
+              <QuestionBlock key={qID} questionID={qID} handleDrag={handleDrag} />
             ))}
           </div>
         </form>
