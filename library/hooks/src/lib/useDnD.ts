@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 
 interface useDnDProps {
   handleItem: (fromIdx: number, toIdx: number) => void;
@@ -12,6 +12,7 @@ export interface DnDAction {
 
 export const isTouchScreen = 'ontouchstart' in document.documentElement;
 
+// Utility functions
 const setStyle = (target: HTMLElement, style: Partial<CSSStyleDeclaration>) => {
   Object.assign(target.style, style);
 };
@@ -24,248 +25,299 @@ const getDragIdx = (item: HTMLElement) => Number(item.dataset.dragIdx);
 
 const isMoved = (item: HTMLElement) => item.classList.contains('moved');
 
+// Event handling
 const DRAG_MOVE_EVENT = isTouchScreen ? 'touchmove' : 'mousemove';
 const DRAG_END_EVENT = isTouchScreen ? 'touchend' : 'mouseup';
 
 const extractClientPos = (e: TouchEvent | MouseEvent) => {
   if (isTouchScreen) {
     const { clientX, clientY } = (e as TouchEvent).touches[0];
-
     return { clientX, clientY };
   }
-
   const { clientX, clientY } = e as MouseEvent;
-
   return { clientX, clientY };
+};
+
+// Drag state management
+interface DragState {
+  dragIdx: number;
+  moveToIdx: number;
+  placeholder: HTMLElement;
+  dragItem: HTMLElement;
+  aboveItems: HTMLElement[];
+  belowItems: HTMLElement[];
+  aboveItemSet: Set<number>;
+  belowItemSet: Set<number>;
+  placeholderMove: number;
+  itemGap: number;
+  itemMoveDistance: number;
+  itemList: HTMLElement[];
+  dragStartX: number;
+  dragStartY: number;
+}
+
+// Initialize drag items and categorize them
+const initializeDragItems = (
+  itemList: HTMLElement[],
+  dragTarget: HTMLElement
+): Omit<
+  DragState,
+  'moveToIdx' | 'dragItem' | 'placeholderMove' | 'itemGap' | 'itemMoveDistance' | 'itemList' | 'dragStartX' | 'dragStartY'
+> => {
+  const aboveItems: HTMLElement[] = [];
+  const belowItems: HTMLElement[] = [];
+  const aboveItemSet = new Set<number>();
+  const belowItemSet = new Set<number>();
+
+  let dragIdx = -1;
+
+  itemList.forEach((item, idx) => {
+    item.dataset.dragIdx = String(idx);
+    setStyle(item, { transition: 'transform 0.2s' });
+
+    if (item === dragTarget.closest('[data-drag-idx]')) {
+      dragIdx = idx;
+      return;
+    }
+
+    if (dragIdx < 0) {
+      aboveItems.push(item);
+      aboveItemSet.add(idx);
+    } else {
+      belowItems.push(item);
+      belowItemSet.add(idx);
+    }
+  });
+
+  belowItems.reverse(); // for easier pop/push operations
+
+  return {
+    dragIdx,
+    placeholder: itemList[dragIdx],
+    aboveItems,
+    belowItems,
+    aboveItemSet,
+    belowItemSet,
+  };
+};
+
+// Create and setup drag item clone
+const createDragClone = (placeholder: HTMLElement): HTMLElement => {
+  const dragItem = placeholder.cloneNode(true) as HTMLElement;
+  const { top, left, width, height } = placeholder.getBoundingClientRect();
+
+  setStyle(dragItem, {
+    position: 'fixed',
+    top: makePx(top),
+    left: makePx(left),
+    width: makePx(width),
+    height: makePx(height),
+    pointerEvents: 'none',
+    zIndex: '9999',
+    transition: '',
+  });
+
+  return dragItem;
+};
+
+// Setup placeholder styling
+const setupPlaceholder = (placeholder: HTMLElement, ghost: boolean) => {
+  if (ghost) {
+    setStyle(placeholder, {
+      opacity: '0.5',
+      pointerEvents: 'none',
+    });
+  } else {
+    setStyle(placeholder, {
+      visibility: 'hidden',
+      pointerEvents: 'none',
+    });
+  }
+};
+
+// Calculate gap between items
+const calculateItemGap = (itemList: HTMLElement[]): number => {
+  if (itemList.length <= 1) return 0;
+
+  const firstRect = itemList[0].getBoundingClientRect();
+  const secondRect = itemList[1].getBoundingClientRect();
+  return secondRect.top - firstRect.bottom;
+};
+
+// Check if two elements are overlapping (50% threshold)
+const isOverlapping = (dragItem: HTMLElement, targetItem: HTMLElement): boolean => {
+  const { top: itemTop, height: itemHeight } = targetItem.getBoundingClientRect();
+  const { top: dragTop, height: dragHeight } = dragItem.getBoundingClientRect();
+
+  return dragTop < itemTop + itemHeight / 2 && itemTop < dragTop + dragHeight / 2;
+};
+
+// Handle item repositioning during drag
+const handleItemReposition = (targetIdx: number, dragState: DragState): void => {
+  const { aboveItemSet, belowItemSet, aboveItems, belowItems, placeholder, itemMoveDistance } = dragState;
+
+  const direction = aboveItemSet.has(targetIdx) ? 1 : -1;
+  const [currentList, currentSet] = aboveItemSet.has(targetIdx) ? [aboveItems, aboveItemSet] : [belowItems, belowItemSet];
+  const [nextList, nextSet] = !aboveItemSet.has(targetIdx) ? [aboveItems, aboveItemSet] : [belowItems, belowItemSet];
+
+  while (currentSet.has(targetIdx)) {
+    const movingItem = currentList.pop()!;
+    const movingIdx = getDragIdx(movingItem);
+
+    currentSet.delete(movingIdx);
+    nextList.push(movingItem);
+    nextSet.add(movingIdx);
+
+    dragState.moveToIdx += -direction;
+    dragState.placeholderMove += (movingItem.getBoundingClientRect().height + dragState.itemGap) * -direction;
+
+    setStyle(placeholder, {
+      transform: makeTransition(0, dragState.placeholderMove),
+    });
+
+    // Animate item movement
+    if (isMoved(movingItem)) {
+      setStyle(movingItem, {
+        transform: makeTransition(0, 0),
+        pointerEvents: 'none',
+      });
+      movingItem.classList.remove('moved');
+    } else {
+      const itemMove = itemMoveDistance * direction;
+      movingItem.classList.add('moved');
+      setStyle(movingItem, {
+        transform: makeTransition(0, itemMove),
+        pointerEvents: 'none',
+      });
+    }
+
+    // Reset pointer events after animation
+    movingItem.addEventListener('transitionend', () => setStyle(movingItem, { pointerEvents: '' }), { once: true });
+  }
 };
 
 export const useDnDList = <T extends HTMLElement = HTMLDivElement>({ handleItem, ghost = false }: useDnDProps) => {
   const dragListContainerRef = useRef<T>(null);
+  const dragStateRef = useRef<DragState | null>(null);
 
-  // set {passive : false} and run preventDefault for removing scroll behavior
-  // in all touchmove event especially android browser
+  // Prevent scroll behavior on touch devices
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    const dragMovePrevent = () => {};
-
-    document.addEventListener('touchmove', dragMovePrevent, { passive: false });
-
-    return () => {
-      document.removeEventListener('touchmove', dragMovePrevent);
-    };
+    const preventScroll = (e: TouchEvent) => e.preventDefault();
+    document.addEventListener('touchmove', preventScroll, { passive: false });
+    return () => document.removeEventListener('touchmove', preventScroll);
   }, []);
 
-  const dragStartHandler = (dragStartEvent: React.MouseEvent | React.TouchEvent) => {
-    if (!isTouchScreen) dragStartEvent.preventDefault();
+  // Drag move handler - now at hook level
+  const dragMoveHandler = useCallback((moveEvent: MouseEvent | TouchEvent) => {
+    if (!dragStateRef.current) return;
 
-    if (!dragListContainerRef.current) return;
+    moveEvent.preventDefault();
+    const dragState = dragStateRef.current;
 
-    const { clientX: dragStartX, clientY: dragStartY } = extractClientPos(dragStartEvent.nativeEvent);
+    const { clientX, clientY } = extractClientPos(moveEvent);
+    const deltaX = clientX - dragState.dragStartX;
+    const deltaY = clientY - dragState.dragStartY;
 
-    const itemList = [...dragListContainerRef.current.childNodes] as HTMLElement[];
-    const aboveItemList: HTMLElement[] = [];
-    const belowItemList: HTMLElement[] = [];
+    setStyle(dragState.dragItem, { transform: makeTransition(deltaX, deltaY) });
 
-    const aboveItemSet = new Set();
-    const belowItemSet = new Set();
+    const targetElement = document.elementFromPoint(clientX, clientY)?.closest('[data-drag-idx]') as HTMLElement;
 
-    // drag start idx
-    let dragIdx = -1;
+    if (targetElement && isOverlapping(dragState.dragItem, targetElement)) {
+      const targetIdx = getDragIdx(targetElement);
+      handleItemReposition(targetIdx, dragState);
+    }
+  }, []);
 
-    // set data-drag-idx attribute to item and transition
-    // also set above item list, below item list and drag item idx
-    itemList.forEach((item, idx) => {
-      item.dataset.dragIdx = String(idx);
-      setStyle(item, { transition: 'transform 0.2s' });
+  // Drag end handler - now at hook level
+  const dragEndHandler = useCallback(() => {
+    if (!dragStateRef.current) return;
 
-      if (item === (dragStartEvent.target as HTMLElement).closest('[data-drag-idx]')) {
-        dragIdx = idx;
-        return;
-      }
+    const dragState = dragStateRef.current;
 
-      if (dragIdx < 0) {
-        aboveItemList.push(item);
-        aboveItemSet.add(idx);
-      } else {
-        belowItemList.push(item);
-        belowItemSet.add(idx);
-      }
+    // Remove move event listener
+    document.removeEventListener(DRAG_MOVE_EVENT, dragMoveHandler);
+
+    setStyle(dragState.dragItem, {
+      transform: makeTransition(0, dragState.placeholderMove),
+      transition: 'all 0.2s',
     });
 
-    // arrive idx
-    let moveToIdx = dragIdx;
-    const placeholder = itemList[dragIdx];
+    dragState.dragItem.addEventListener(
+      'transitionend',
+      () => {
+        if (!dragStateRef.current) return;
 
-    // reverse belowItemList to pop and push
-    belowItemList.reverse();
+        dragState.dragItem.remove();
 
-    //clone item for drag
-    const dragItem = placeholder.cloneNode(true) as HTMLElement;
+        // Reset all styles
+        setStyle(dragState.placeholder, {
+          opacity: '',
+          pointerEvents: '',
+          visibility: '',
+        });
 
-    const { top, left, width, height } = placeholder.getBoundingClientRect();
+        dragState.itemList.forEach((item) => {
+          setStyle(item, { transform: '', transition: '' });
+          item.removeAttribute('data-drag-idx');
+          item.classList.remove('moved');
+        });
 
-    // set clone style
-    setStyle(dragItem, {
-      position: 'fixed',
-      top: makePx(top),
-      left: makePx(left),
-      width: makePx(width),
-      height: makePx(height),
-      pointerEvents: 'none',
-      zIndex: '9999',
-      transition: '',
-    });
+        handleItem(dragState.dragIdx, dragState.moveToIdx);
 
-    // set ghost(placeholder) style
-    if (ghost)
-      setStyle(placeholder, {
-        opacity: '0.5',
-        pointerEvents: 'none',
-      });
-    else
-      setStyle(placeholder, {
-        visibility: 'hidden',
-        pointerEvents: 'none',
-      });
+        // Clear drag state
+        dragStateRef.current = null;
+      },
+      { once: true }
+    );
+  }, [dragMoveHandler, handleItem]);
 
-    dragListContainerRef.current.appendChild(dragItem);
+  // Drag start handler - now focused only on initialization
+  const dragStartHandler = useCallback(
+    (dragStartEvent: React.MouseEvent | React.TouchEvent) => {
+      if (!isTouchScreen) dragStartEvent.preventDefault();
+      if (!dragListContainerRef.current) return;
 
-    // calculate gap between item and move distance
-    const GAP = itemList.length > 1 ? itemList[1].getBoundingClientRect().top - itemList[0].getBoundingClientRect().bottom : 0;
+      const { clientX: dragStartX, clientY: dragStartY } = extractClientPos(dragStartEvent.nativeEvent);
+      const itemList = Array.from(dragListContainerRef.current.childNodes) as HTMLElement[];
 
-    const LIST_ITEM_MOVE = height + GAP;
+      // Initialize drag state
+      const initialState = initializeDragItems(itemList, dragStartEvent.target as HTMLElement);
+      const dragItem = createDragClone(initialState.placeholder);
+      const itemGap = calculateItemGap(itemList);
+      const itemMoveDistance = initialState.placeholder.getBoundingClientRect().height + itemGap;
 
-    // calc ghost move distance
-    let placeholderMove = 0;
+      // Store complete drag state
+      dragStateRef.current = {
+        ...initialState,
+        moveToIdx: initialState.dragIdx,
+        dragItem,
+        placeholderMove: 0,
+        itemGap,
+        itemMoveDistance,
+        itemList,
+        dragStartX,
+        dragStartY,
+      };
 
-    const dragMoveHandler = (moveEvent: MouseEvent | TouchEvent) => {
-      moveEvent.preventDefault();
+      setupPlaceholder(dragStateRef.current.placeholder, ghost);
+      dragListContainerRef.current.appendChild(dragItem);
 
-      const { clientX, clientY } = extractClientPos(moveEvent);
+      // Attach event listeners
+      document.addEventListener(DRAG_MOVE_EVENT, dragMoveHandler, { passive: false });
+      document.addEventListener(DRAG_END_EVENT, dragEndHandler, { once: true });
+    },
+    [dragMoveHandler, dragEndHandler, ghost]
+  );
 
-      // move dragItem to follow mouse only vertical
-      const deltaY = clientY - dragStartY;
-      const deltaX = clientX - dragStartX;
-
-      setStyle(dragItem, { transform: makeTransition(deltaX, deltaY) });
-
-      // find data-drag-idx element and update
-      const belowItem = document.elementFromPoint(clientX, clientY)?.closest('[data-drag-idx]') as HTMLElement;
-
-      if (belowItem) {
-        const { top: itemTop, height: itemHeight } = belowItem.getBoundingClientRect();
-        const { top: dragTop, height: dragHeight } = dragItem.getBoundingClientRect();
-
-        // check overlapping
-        const isOverlapping = dragTop < itemTop + itemHeight / 2 && itemTop < dragTop + dragHeight / 2;
-
-        if (!isOverlapping) return;
-
-        const belowDragIdx = getDragIdx(belowItem);
-
-        // calc below item move direction
-        const diff = aboveItemSet.has(belowDragIdx) ? 1 : -1;
-
-        const [currentPosList, currentPosSet] = aboveItemSet.has(belowDragIdx)
-          ? [aboveItemList, aboveItemSet]
-          : [belowItemList, belowItemSet];
-        const [nextPosList, nextPosSet] = !aboveItemSet.has(belowDragIdx) ? [aboveItemList, aboveItemSet] : [belowItemList, belowItemSet];
-
-        // move all item from currentPos to nextPos until pop below item
-        // ex: above -> below
-        while (currentPosSet.has(belowDragIdx)) {
-          const popItem = currentPosList.pop() as HTMLElement;
-          const popItemDragIdx = getDragIdx(popItem);
-          currentPosSet.delete(popItemDragIdx);
-
-          nextPosList.push(popItem);
-          nextPosSet.add(popItemDragIdx);
-
-          // update current drag position idx
-          moveToIdx += -diff;
-
-          placeholderMove += (popItem.getBoundingClientRect().height + GAP) * -diff;
-
-          setStyle(placeholder, {
-            transform: makeTransition(0, placeholderMove),
-          });
-
-          //set below list item transform ans class
-          if (isMoved(popItem)) {
-            // if already moved(item has 'moved' class), remove transition and 'moved' class
-            // set pointerEvent 'none' to avoid unintended behavior while running animation
-            setStyle(popItem, {
-              transform: makeTransition(0, 0),
-              pointerEvents: 'none',
-            });
-
-            popItem.classList.remove('moved');
-          } else {
-            // if move yet, set transition and add 'moved' class
-            const popItemMove = LIST_ITEM_MOVE * diff;
-
-            popItem.classList.add('moved');
-
-            setStyle(popItem, {
-              transform: makeTransition(0, popItemMove),
-              pointerEvents: 'none',
-            });
-          }
-
-          // reset pointerEvent when animation finished
-          popItem.addEventListener(
-            'transitionend',
-            () => {
-              setStyle(popItem, { pointerEvents: '' });
-            },
-            { once: true }
-          );
-        }
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (dragStateRef.current) {
+        document.removeEventListener(DRAG_MOVE_EVENT, dragMoveHandler);
+        document.removeEventListener(DRAG_END_EVENT, dragEndHandler);
       }
     };
-
-    const dragEndHandler = () => {
-      // remove mousemove event listener
-      document.removeEventListener(DRAG_MOVE_EVENT, dragMoveHandler);
-
-      // move dragItem to current placeholder location
-      setStyle(dragItem, {
-        transform: makeTransition(0, placeholderMove),
-        transition: 'all 0.2s',
-      });
-
-      // when animation finish
-      dragItem.addEventListener(
-        'transitionend',
-        () => {
-          // remove dragItem
-          dragItem.remove();
-
-          // reset item style, class and attribute
-          setStyle(placeholder, {
-            opacity: '',
-            pointerEvents: '',
-            visibility: '',
-          });
-
-          itemList.forEach((item) => {
-            setStyle(item, { transform: '', transition: '' });
-            item.removeAttribute('data-drag-idx');
-            item.classList.remove('moved');
-          });
-
-          // call callback function to tell fromIdx and toIdx
-          handleItem(dragIdx, moveToIdx);
-        },
-        { once: true }
-      );
-    };
-
-    document.addEventListener(DRAG_MOVE_EVENT, dragMoveHandler, {
-      passive: false,
-    });
-    document.addEventListener(DRAG_END_EVENT, dragEndHandler, { once: true });
-  };
+  }, [dragMoveHandler, dragEndHandler]);
 
   return {
     handleDrag: dragStartHandler,
