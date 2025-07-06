@@ -1,5 +1,11 @@
 # 🚦 CHANGELOG | 변경 사항을 기록해요.
 
+## [1.2.0](https://github.com/bh2980/googleFormClone/compare/v1.1.0...v1.2.0) (2025-07-06)
+
+### ♻️ Refactor
+
+* useDnD 로직 리팩토링 ([54d8b3f](https://github.com/bh2980/googleFormClone/commit/54d8b3f1bac730cd6e6102417e39729bcdcc6807))
+
 ## [1.1.0](https://github.com/bh2980/googleFormClone/compare/v1.0.0...v1.1.0) (2024-06-11)
 
 ### ✨ Features
